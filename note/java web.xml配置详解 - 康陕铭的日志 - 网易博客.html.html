@@ -1,0 +1,543 @@
+<html>
+<head>
+  <title>java web.xml配置详解 - 康陕铭的日志 - 网易博客.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="531"/>
+<h1>java web.xml配置详解 - 康陕铭的日志 - 网易博客.html</h1>
+
+<div>
+<span><p></p><p> </p><p>1.常规配置：</p><p>此处参照CSDN博客：<a href="http://blog.csdn.net/cocojiji5/article/details/1601428" rel="nofollow">http://blog.csdn.net/cocojiji5/article/details/1601428</a></p><p>每一个站的WEB-INF下都有一个web.xml的设定文件，它提供了我们站台的配置设定.</p><p>web.xml定义：<br/>
+ .站台的名称和说明<br/>
+ .针对环境参数(Context)做初始化工作<br/>
+ .Servlet的名称和映射<br/>
+ .Session的设定<br/>
+ .Tag library的对映<br/>
+ .JSP网页设定<br/>
+ .Mime Type处理<br/>
+ .错误处理<br/>
+ .利用JDNI取得站台资源</p><p>要了解web.xml的设定值，必须了解它的schema,从web.xml中知道它的schema是由Sum Microsystems公司定制的，如果你想更为详细的了解它，<br/>
+可以到<a href="http://java.sun.com/xml/ns/j2ee/web-mapp_2_5.xsd" rel="nofollow">http://java.sun.com/xml/ns/j2ee/web-mapp_2_5.xsd</a>网页，那里有更为详细的介绍。这里我介绍我们平常见得最都的.<br/>
+ <br/>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;</p><p>&lt;web-app xmlns:xsi=&quot;<a href="http://www.w3.org/2001/XMLSchema-instance" rel="nofollow">http://www.w3.org/2001/XMLSchema-instance</a>&quot;<br/>
+   xmlns=&quot;<a href="http://java.sun.com/xml/ns/javaee" rel="nofollow">http://java.sun.com/xml/ns/javaee</a>&quot; xmlns:web=&quot;<a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" rel="nofollow">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>&quot;<br/>
+   xsi:schemaLocation=&quot;<a href="http://java.sun.com/xml/ns/javaee" rel="nofollow">http://java.sun.com/xml/ns/javaee</a> <a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" rel="nofollow">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>&quot;<br/>
+   version=&quot;2.5&quot;&gt;</p><p>&lt;web-app&gt;<br/>
+这是一般在写XML时所做的声明,定义了XML的版本，编码格式,还有重要的指明schema的来源,为<a href="http://java.sun.com/xml/ns/j2ee" rel="nofollow">http://java.sun.com/xml/ns/j2ee</a><br/>
+/web-app_2_5.xsd.</p><p><br/>
+&lt;description&gt;,&lt;display-name&gt;,&lt;icon&gt;<br/>
+____________________________________________</p><p>&lt;description&gt;站台描述&lt;/discription&gt;<br/>
+对站台做出描述.</p><p>&lt;display-name&gt;站台名称&lt;/display-name&gt;<br/>
+定义站台的名称.</p><p>&lt;icon&gt;<br/>
+icon元素包含small-icon和large-icon两个子元素.用来指定web站台中小图标和大图标的路径.<br/>
+&lt;small-icon&gt;/路径/smallicon.gif&lt;/small-icon&gt;<br/>
+small-icon元素应指向web站台中某个小图标的路径,大小为16 X 16 pixel,但是图象文件必须为GIF或JPEG格式,扩展名必须为:.gif或<br/>
+.jpg.</p><p>&lt;large-icon&gt;/路径/largeicon-jpg&lt;/large-icon&gt;<br/>
+large-icon元素应指向web站台中某个大图表路径,大小为32 X 32 pixel,但是图象文件必须为GIF或JPEG的格式,扩展名必须为; gif<br/>
+或jpg.</p><p><br/>
+范例:<br/>
+&lt;display-name&gt;Develop Example&lt;/display-name&gt;<br/>
+&lt;description&gt;JSP 2.0 Tech Book's Examples&lt;/description&gt;<br/>
+&lt;icon&gt;<br/>
+   &lt;small-icon&gt;/images/small.gif&lt;/small-icon&gt;<br/>
+   &lt;large-icon&gt;/images/large.gir&lt;/large-icon&gt;<br/>
+&lt;/icon&gt;</p><p><br/>
+&lt;distributable&gt;<br/>
+______________________________________</p><p>&lt;distributable&gt;<br/>
+distributable 元素为空标签,它的存在与否可以指定站台是否可分布式处理.如果web.xml中出现这个元素,则代表站台在开发时已经<br/>
+被设计为能在多个JSP Container 之间分散执行.<br/>
+范例:<br/>
+&lt;distributable/&gt;</p><p> </p><p>&lt;context-param&gt;<br/>
+___________________________________</p><p>&lt;context-param&gt;<br/>
+context-param 元素用来设定web站台的环境参数(context),它包含两个子元素:<br/>
+param-name和param-value.<br/>
+&lt;param-name&gt;参数名称&lt;/param-name&gt;<br/>
+设定Context名称<br/>
+&lt;param-value&gt;值&lt;/param-value&gt;<br/>
+设定Context名称的值<br/>
+&lt;/context-param&gt;<br/>
+范例:<br/>
+&lt;context-param&gt;<br/>
+   &lt;param-name&gt;param_name&lt;/param-name&gt;<br/>
+   &lt;param-value&gt;param_value&lt;/param-value&gt;<br/>
+&lt;/context-param&gt;<br/>
+此所设定的参数,在JSP网页中可以使用下列方法来取得:<br/>
+${initParam.param_name}<br/>
+若在Servlet可以使用下列方法来获得:<br/>
+String param_name=getServletContext().getInitParamter(&quot;param_name&quot;);</p><p> </p><p>&lt;filter&gt;<br/>
+_________________________________<br/>
+filter元素用来声明filter的相关设定.filter元素除了下面介绍的的子元素之外,还包括&lt;servlet&gt;介绍过的&lt;icon&gt;,&lt;display-name&gt;<br/>
+,&lt;description&gt;,&lt;init-param&gt;,其用途一样.<br/>
+&lt;filter-name&gt;Filter的名称&lt;/filter-name&gt;<br/>
+定义Filter的名称.<br/>
+&lt;filter-class&gt;Filter的类名称&lt;/filter-class&gt;<br/>
+定义Filter的类名称.例如:com.foo.hello<br/>
+&lt;/filter&gt;</p><p><br/>
+范例:<br/>
+&lt;filter&gt;<br/>
+  &lt;filter-name&gt;setCharacterEncoding&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;coreservlet.javaworld.CH11.SetCharacterEncodingFilter&lt;/filter-class&gt;<br/>
+  &lt;init-param&gt;<br/>
+     &lt;param-name&gt;encoding&lt;/param-name&gt;<br/>
+     &lt;param-value&gt;GB2312&lt;/param-value&gt;<br/>
+  &lt;/init-param&gt;<br/>
+&lt;/filter&gt;</p><p><br/>
+&lt;filter-mapping&gt;<br/>
+______________________________________<br/>
+&lt;filter-mapping&gt;<br/>
+filter-mapping 元素的两个主要子元素filter-name和url-pattern.用来定义Filter所对应的URL.<br/>
+&lt;filter-name&gt;Filter的名称&lt;/filter-name&gt;<br/>
+定义Filter的名称.<br/>
+&lt;url-pattern&gt;URL&lt;/url-pattern&gt;<br/>
+Filter所对应的RUL.例如:&lt;url-pattern&gt;/Filter/Hello&lt;/url-pattern&gt;</p><p>&lt;servlet-name&gt;Servlet的名称&lt;servlet-name&gt;<br/>
+定义servlet的名称.<br/>
+&lt;dispatcher&gt;REQUEST|INCLUDE|FORWARD|ERROR&lt;/disaptcher&gt;<br/>
+设定Filter对应的请求方式,有RQUEST,INCLUDE,FORWAR,ERROR四种,默认为REQUEST.<br/>
+&lt;/filter-mapping&gt;<br/>
+范例:<br/>
+&lt;filter-mapping&gt;<br/>
+   &lt;filter-name&gt;GZIPEncoding&lt;/filter-name&gt;<br/>
+   &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br/>
+&lt;/filter-mapping&gt;</p><p> </p><p>&lt;listener&gt;<br/>
+___________________________________________<br/>
+&lt;listener&gt;<br/>
+listener元素用来定义Listener接口,它的主要子元素为&lt;listener-class&gt;<br/>
+&lt;listen-class&gt;Listener的类名称&lt;/listener-class&gt;<br/>
+定义Listener的类名称.例如: com.foo.hello<br/>
+&lt;listener&gt;<br/>
+范例:<br/>
+&lt;listener&gt;<br/>
+  &lt;listener-class&gt;coreservlet.javaworld.CH11.ContenxtListener&lt;/listener-class&gt;<br/>
+&lt;/listener&gt;</p><p> </p><p>&lt;servlet-mapping&gt;<br/>
+_____________________________________________<br/>
+servlet-mapping元素包含两个子元素servlet-name和url-pattern.用来定义servlet所对应URL.<br/>
+&lt;servlet-name&gt;Servlet的名称&lt;/servlet-name&gt;<br/>
+定义Servlet的名称.<br/>
+&lt;url-pattern&gt;Servlet URL&lt;/url-pattern&gt;<br/>
+定义Servlet所对应的RUL.例如:&lt;url-pattern&gt;/Servlet/Hello&lt;/url-pattern&gt;<br/>
+&lt;/servlet-mapping&gt;<br/>
+范例:<br/>
+&lt;servlet-mapping&gt;<br/>
+   &lt;servlet-name&gt;LoginChecker&lt;/servlet-name&gt;<br/>
+   &lt;url-pattern&gt;/LoginChecker&lt;/url-pattern&gt;<br/>
+&lt;/servlet-mapping&gt;</p><p><br/>
+&lt;session-cofing&gt;<br/>
+__________________________________<br/>
+&lt;session-config&gt;<br/>
+session-config包含一个子元素session-timeout.定义web站台中的session参数.<br/>
+&lt;session-timeout&gt;分钟&lt;/session-timeout&gt;<br/>
+定义这个web站台所有session的有效期限.单位为分钟.<br/>
+&lt;/session-config&gt;<br/>
+范例:<br/>
+&lt;session-config&gt;<br/>
+   &lt;session-timeout&gt;20&lt;/session-timeout&gt;<br/>
+&lt;/session-config&gt;</p><p><br/>
+&lt;mime-mapping&gt;<br/>
+___________________________________________________<br/>
+&lt;mima-mapping&gt;<br/>
+mime-mapping包含两个子元素extension和mime-type.定义某一个扩展名和某一MIME Type做对映.<br/>
+&lt;extension&gt;扩展名名称&lt;/extension&gt;<br/>
+扩展名称<br/>
+&lt;mime-type&gt;MIME格式&lt;/mime-type&gt;<br/>
+MIME格式.<br/>
+&lt;/mime-mapping&gt;<br/>
+范例:<br/>
+&lt;mime-mapping&gt;<br/>
+   &lt;extension&gt;doc&lt;/extension&gt;<br/>
+   &lt;mime-type&gt;application/vnd.ms-word&lt;/mime-type&gt;<br/>
+&lt;/mime-mapping&gt;<br/>
+&lt;mime-mapping&gt;<br/>
+   &lt;extension&gt;xls&lt;/extension&gt;<br/>
+   &lt;mime-type&gt;application/vnd.ms-excel&lt;/mime-type&gt;<br/>
+&lt;/mime-mapping&gt;<br/>
+&lt;mime-mapping&gt;<br/>
+   &lt;extension&gt;ppt&lt;/extesnion&gt;<br/>
+   &lt;mime-type&gt;application/vnd.ms-powerpoint&lt;/mime-type&gt;<br/>
+&lt;/mime-mapping&gt;</p><p>说明：&lt;mime-mapping&gt;主要是用在下载的地方，如果你的web项目没有下载这个模块,&lt;mime-mapping&gt;可以不用配置的，</p><p>如果有下载的模块，但是没有配置，那么别人点下载的时候，会打开一个新窗口，而且多数情况下是乱码。有该配置后，就可以用迅雷，flashGet等来下载，也可以目标另存为来下载文件，</p><p>在我的之前博客：2010-11-12 “下载的原理&quot; 里面已有详细介绍给块。</p><p><br/>
+&lt;welcome-file-list&gt;<br/>
+_____________________________________________<br/>
+&lt;welcome-file-list&gt;<br/>
+welcome-file-list包含一个子元素welcome-file.用来定义首页列单.<br/>
+&lt;welcome-file&gt;用来指定首页文件名称&lt;/welcome-flie&gt;<br/>
+welcome-file用来指定首页文件名称.我们可以用&lt;welcome-file&gt;指定几个首页,而服务器会依照设定的顺序来找首页.<br/>
+范例:<br/>
+&lt;welcome-file-list&gt;<br/>
+  &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;<br/>
+  &lt;welcome-file&gt;index.htm&lt;/welcome-file&gt;<br/>
+&lt;/welcome-file-list&gt;</p><p> </p><p>&lt;error-page&gt;<br/>
+_________________________<br/>
+&lt;error-page&gt;<br/>
+error-page元素包含三个子元素error-code,exception-type和location.将错误代码(Error Code)或异常(Exception)的种类对应<br/>
+到web站台资源路径.<br/>
+&lt;error-code&gt;错误代码&lt;/error-code&gt;<br/>
+HTTP Error code,例如: 404<br/>
+&lt;exception-type&gt;Exception&lt;/exception-type&gt;<br/>
+一个完整名称的Java异常类型<br/>
+&lt;location&gt;/路径&lt;/location&gt;<br/>
+在web站台内的相关资源路径<br/>
+&lt;/error-page&gt;<br/>
+范例:<br/>
+&lt;error-page&gt;<br/>
+   &lt;error-code&gt;404&lt;/error-code&gt;<br/>
+   &lt;location&gt;/error404.jsp&lt;/location&gt;<br/>
+&lt;/error-page&gt;<br/>
+&lt;error-page&gt;<br/>
+   &lt;exception-type&gt;java.lang.Exception&lt;/exception-type&gt;<br/>
+   &lt;location&gt;/except.jsp&lt;/location&gt;<br/>
+&lt;/error-page&gt;</p><p> </p><p>&lt;jsp-config&gt;<br/>
+_______________________________________________<br/>
+&lt;jsp-config&gt;<br/>
+jsp-config元素主要用来设定JSP的相关配置,&lt;jsp:config&gt;包括&lt;taglib&gt;和&lt;jsp-property-group&gt;两个子元素.其中&lt;taglib&gt;元素<br/>
+在JSP 1.2时就已经存在了;而&lt;jsp-property-group&gt;是JSP 2.0新增的元素.</p><p>&lt;taglib&gt;<br/>
+taglib元素包含两个子元素taglib-uri和taglib-location.用来设定JSP网页用到的Tag Library路径.<br/>
+&lt;taglib-uri&gt;URI&lt;/taglib-uri&gt;<br/>
+   taglib-uri定义TLD文件的URI,JSP网页的taglib指令可以经由这个URI存取到TLD文件.<br/>
+&lt;taglib-location&gt;/WEB-INF/lib/xxx.tld&lt;/taglib-laction&gt;<br/>
+   TLD文件对应Web站台的存放位置.<br/>
+&lt;/taglib&gt;</p><p>&lt;jsp-property-group&gt;<br/>
+jsp-property-group元素包含8个元素,分别为:<br/>
+&lt;description&gt;Description&lt;/descrition&gt;<br/>
+此设定的说明</p><p>&lt;display-name&gt;Name&lt;/display-name&gt;<br/>
+此设定的名称</p><p>&lt;url-pattern&gt;URL&lt;/url-pattern&gt;<br/>
+设定值所影响的范围,如:/CH2 或者/*.jsp</p><p>&lt;el-ignored&gt;true|false&lt;/el-ignored&gt;<br/>
+若为true,表示不支持EL语法.</p><p>&lt;scripting-invalid&gt;true|false&lt;/scripting-invalid&gt;<br/>
+若为true表示不支持&lt;%scription%&gt;语法.</p><p>&lt;page-encoding&gt;encoding&lt;/page-encoding&gt;<br/>
+设定JSP网页的编码</p><p>&lt;include-prelude&gt;.jspf&lt;/include-prelude&gt;<br/>
+设置JSP网页的抬头,扩展名为.jspf</p><p>&lt;include-coda&gt;.jspf&lt;/include-coda&gt;<br/>
+设置JSP网页的结尾,扩展名为.jspf<br/>
+&lt;/jsp-property-group&gt;<br/>
+&lt;/jsp-config&gt;<br/>
+范例:<br/>
+&lt;jsp-config&gt;<br/>
+&lt;taglib&gt;<br/>
+   &lt;taglib-uri&gt;Taglib&lt;/taglib-uri&gt;<br/>
+   &lt;taglib-location&gt;/WEB-INF/tlds/MyTaglib.tld&lt;/taglib-location&gt;<br/>
+&lt;/taglib&gt;<br/>
+&lt;jsp-property-group&gt;<br/>
+   &lt;description&gt;<br/>
+      Special property group for JSP Configuration JSP example.<br/>
+   &lt;/description&gt;<br/>
+   &lt;display-name&gt;JSPConfiguration&lt;/display-name&gt;<br/>
+   &lt;uri-pattern&gt;/*&lt;/uri-pattern&gt;<br/>
+   &lt;el-ignored&gt;true&lt;/el-ignored&gt;<br/>
+   &lt;page-encoding&gt;GB2312&lt;/page-encoding&gt;<br/>
+   &lt;scripting-inivalid&gt;true&lt;/scripting-inivalid&gt;<br/>
+   ............<br/>
+&lt;/jsp-property-group&gt;<br/>
+&lt;/jsp-config&gt;</p><p> </p><p>&lt;resource-ref&gt;<br/>
+________________________________________________<br/>
+&lt;resource-ref&gt;<br/>
+resource-ref元素包括五个子元素description,res-ref-name,res-type,res-auth,res-sharing-scope.利用JNDI取得站台可<br/>
+利用资源.<br/>
+&lt;description&gt;说明&lt;/description&gt;<br/>
+资源说明</p><p>&lt;rec-ref-name&gt;资源名称&lt;/rec-ref-name&gt;<br/>
+资源名称</p><p>&lt;res-type&gt;资源种类&lt;/res-type&gt;<br/>
+资源种类</p><p>&lt;res-auth&gt;Application|Container&lt;/res-auth&gt;<br/>
+资源由Application或Container来许可</p><p>&lt;res-sharing-scope&gt;Shareable|Unshareable&lt;/res-sharing-scope&gt;<br/>
+ 资源是否可以共享.默认值为 Shareable<br/>
+范例:<br/>
+&lt;resource-ref&gt;<br/>
+   &lt;description&gt;JNDI JDBC DataSource of JSPBook&lt;/description&gt;<br/>
+   &lt;res-ref-name&gt;jdbc/sample_db&lt;/res-ref-name&gt;<br/>
+   &lt;res-type&gt;javax.sql.DataSoruce&lt;/res-type&gt;<br/>
+   &lt;res-auth&gt;Container&lt;/res-auth&gt;<br/>
+&lt;/resource-ref&gt;</p><p>这些都是些比较常用的,详细可以登录: <a href="http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" rel="nofollow">http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd</a></p><p> </p><p> </p><p> </p><p>2.以前的一个项目Spring MVC + freemarker的web.xml的完整配置：</p><p>&lt;web-app xmlns:xsi=&quot;<a href="http://www.w3.org/2001/XMLSchema-instance" rel="nofollow">http://www.w3.org/2001/XMLSchema-instance</a>&quot;<br/>
+   xmlns=&quot;<a href="http://java.sun.com/xml/ns/javaee" rel="nofollow">http://java.sun.com/xml/ns/javaee</a>&quot; xmlns:web=&quot;<a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" rel="nofollow">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>&quot;<br/>
+   xsi:schemaLocation=&quot;<a href="http://java.sun.com/xml/ns/javaee" rel="nofollow">http://java.sun.com/xml/ns/javaee</a> <a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" rel="nofollow">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>&quot;<br/>
+   version=&quot;2.5&quot;&gt;</p><p><br/>
+ &lt;display-name&gt;AAAA Web Application&lt;/display-name&gt;</p><p> &lt;context-param&gt;<br/>
+  &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;<br/>
+  &lt;param-value&gt;<br/>
+   classpath*:applicationContext-dao.xml<br/>
+   classpath*:applicationContext-datasource.xml<br/>
+   classpath:applicationContext-resources.xml<br/>
+   classpath*:applicationContext-service.xml<br/>
+   /WEB-INF/applicationContext-filter.xml<br/>
+   /WEB-INF/applicationContext-security.xml<br/>
+        &lt;/param-value&gt;<br/>
+ &lt;/context-param&gt;</p><p> &lt;context-param&gt;<br/>
+  &lt;param-name&gt;webAppRootKey&lt;/param-name&gt;  <br/>
+  &lt;param-value&gt;AAAA_web.root&lt;/param-value&gt;  <br/>
+ &lt;/context-param&gt;  </p><p> &lt;context-param&gt;<br/>
+  &lt;param-name&gt;log4jConfigLocation&lt;/param-name&gt;<br/>
+  &lt;param-value&gt;classpath:log4j.properties&lt;/param-value&gt;<br/>
+ &lt;/context-param&gt;</p><p> &lt;filter&gt;<br/>
+  &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;<br/>
+  &lt;init-param&gt;<br/>
+   &lt;param-name&gt;encoding&lt;/param-name&gt;<br/>
+   &lt;param-value&gt;UTF-8&lt;/param-value&gt;<br/>
+  &lt;/init-param&gt;<br/>
+  &lt;init-param&gt;<br/>
+   &lt;param-name&gt;forceEncoding&lt;/param-name&gt;<br/>
+   &lt;param-value&gt;true&lt;/param-value&gt;<br/>
+  &lt;/init-param&gt;<br/>
+ &lt;/filter&gt;</p><p> &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ <br/>
+ <br/>
+ &lt;!-- 分发服务器服务、和订购消息服务、暂时屏蔽<br/>
+ &lt;filter&gt;<br/>
+  &lt;filter-name&gt;AAAANotifyFilter&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;<br/>
+ &lt;/filter&gt;<br/>
+ &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;AAAANotifyFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;/notify.html&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ <br/>
+ &lt;filter&gt;<br/>
+  &lt;filter-name&gt;AAAACallbackFilter&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;<br/>
+ &lt;/filter&gt;<br/>
+ &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;AAAACallbackFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;/callback.shtml&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+  --&gt;<br/>
+ &lt;!--<br/>
+   &lt;filter&gt;<br/>
+   &lt;filter-name&gt;openSessionInViewFilter&lt;/filter-name&gt;<br/>
+   &lt;filter-class&gt;org.springframework.orm.hibernate3.support.OpenSessionInViewFilter&lt;/filter-class&gt;<br/>
+   &lt;/filter&gt;<br/>
+   &lt;filter-mapping&gt;<br/>
+   &lt;filter-name&gt;openSessionInViewFilter&lt;/filter-name&gt;<br/>
+   &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;<br/>
+   &lt;/filter-mapping&gt;<br/>
+ --&gt;<br/>
+ &lt;listener&gt;<br/>
+  &lt;listener-class&gt;org.springframework.web.util.Log4jConfigListener&lt;/listener-class&gt;<br/>
+ &lt;/listener&gt;</p><p> &lt;listener&gt;<br/>
+  &lt;listener-class&gt;<br/>
+            org.springframework.web.util.IntrospectorCleanupListener&lt;/listener-class&gt;<br/>
+ &lt;/listener&gt;</p><p> &lt;listener&gt;<br/>
+  &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;<br/>
+ &lt;/listener&gt;</p><p> &lt;servlet&gt;<br/>
+  &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;<br/>
+  &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;<br/>
+  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;<br/>
+ &lt;/servlet&gt;</p><p> &lt;servlet-mapping&gt;<br/>
+  &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;<br/>
+  &lt;url-pattern&gt;*.html&lt;/url-pattern&gt;<br/>
+  &lt;url-pattern&gt;*.shtml&lt;/url-pattern&gt;<br/>
+  &lt;url-pattern&gt;/track/*&lt;/url-pattern&gt;<br/>
+ &lt;/servlet-mapping&gt;</p><p> &lt;!-- &lt;servlet&gt;--&gt;<br/>
+ &lt;!--    &lt;servlet-name&gt;default&lt;/servlet-name&gt;--&gt;<br/>
+ &lt;!--    &lt;servlet-class&gt;org.mortbay.jetty.servlet.DefaultServlet&lt;/servlet-class&gt;--&gt;<br/>
+ &lt;!--    &lt;init-param&gt;--&gt;<br/>
+ &lt;!--      &lt;param-name&gt;useFileMappedBuffer&lt;/param-name&gt;--&gt;<br/>
+ &lt;!--      &lt;param-value&gt;false&lt;/param-value&gt;--&gt;<br/>
+ &lt;!--    &lt;/init-param&gt;--&gt;<br/>
+ &lt;!--    &lt;load-on-startup&gt;0&lt;/load-on-startup&gt;--&gt;<br/>
+ &lt;!--  &lt;/servlet&gt;--&gt;</p><p><br/>
+ &lt;filter&gt;<br/>
+  &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;<br/>
+ &lt;/filter&gt;</p><p> &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;*.shtml&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;</p><p> &lt;session-config&gt;<br/>
+  &lt;session-timeout&gt;30&lt;/session-timeout&gt;<br/>
+ &lt;/session-config&gt;</p><p> &lt;error-page&gt;<br/>
+  &lt;error-code&gt;500&lt;/error-code&gt;<br/>
+  &lt;location&gt;/500.html&lt;/location&gt;<br/>
+ &lt;/error-page&gt;<br/>
+ &lt;error-page&gt;<br/>
+  &lt;error-code&gt;403&lt;/error-code&gt;<br/>
+  &lt;location&gt;/403.html&lt;/location&gt;<br/>
+ &lt;/error-page&gt;<br/>
+&lt;/web-app&gt;<br/></p><p> </p><p>3.以前的SSH架构 ，加了spring，加了freemarker的web.xml配置：</p><p>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br/>
+&lt;web-app id=&quot;WebApp_ID&quot; version=&quot;2.5&quot;<br/>
+xmlns=&quot;<a href="http://java.sun.com/xml/ns/javaee" rel="nofollow">http://java.sun.com/xml/ns/javaee</a>&quot;<br/>
+xmlns:xsi=&quot;<a href="http://www.w3.org/2001/XMLSchema-instance" rel="nofollow">http://www.w3.org/2001/XMLSchema-instance</a>&quot; xsi:schemaLocation=&quot;<a href="http://java.sun.com/xml/ns/javaee" rel="nofollow">http://java.sun.com/xml/ns/javaee</a> <a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" rel="nofollow">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>&quot; xmlns:web=&quot;<a href="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" rel="nofollow">http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd</a>&quot;&gt;</p><p> &lt;display-name&gt;网创运营平台&lt;/display-name&gt;<br/>
+ &lt;context-param&gt;<br/>
+  &lt;!-- spring配置文件 --&gt;<br/>
+  &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;<br/>
+  &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;<br/>
+ &lt;/context-param&gt;</p><p> &lt;!-- Spring Security<br/>
+  &lt;filter&gt;<br/>
+  &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;<br/>
+ &lt;/filter&gt;<br/>
+ &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ OpenSessionInViewFilter  --&gt;<br/>
+ &lt;!-- 字符编码过滤器 --&gt;<br/>
+     &lt;filter&gt;<br/>
+    &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;<br/>
+    &lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;<br/>
+    &lt;init-param&gt;<br/>
+      &lt;param-name&gt;encoding&lt;/param-name&gt;<br/>
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;<br/>
+    &lt;/init-param&gt;<br/>
+    &lt;init-param&gt;<br/>
+      &lt;param-name&gt;forceEncoding&lt;/param-name&gt;<br/>
+      &lt;param-value&gt;true&lt;/param-value&gt;<br/>
+    &lt;/init-param&gt;<br/>
+  &lt;/filter&gt;<br/>
+  &lt;filter-mapping&gt;<br/>
+    &lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;<br/>
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br/>
+  &lt;/filter-mapping&gt;<br/>
+ <br/>
+ &lt;filter&gt;<br/>
+  &lt;filter-name&gt;hibernateFilter&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;org.springframework.orm.hibernate3.support.OpenSessionInViewFilter&lt;/filter-class&gt;<br/>
+  &lt;init-param&gt;<br/>
+   &lt;param-name&gt;singleSession&lt;/param-name&gt;<br/>
+   &lt;param-value&gt;true&lt;/param-value&gt;<br/>
+  &lt;/init-param&gt;<br/>
+ &lt;/filter&gt;<br/>
+ &lt;!-- System Auth Filter --&gt;<br/>
+ &lt;filter&gt;<br/>
+  &lt;filter-name&gt;AuthFilter&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;cn.com.ecenter.system.interceptors.AuthFilter&lt;/filter-class&gt;<br/>
+ &lt;/filter&gt;<br/>
+ &lt;filter&gt;<br/>
+  &lt;filter-name&gt;osivFilter&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;cn.com.ecenter.system.util.OpenSessionInViewFilter&lt;/filter-class&gt;<br/>
+  &lt;init-param&gt;<br/>
+   &lt;param-name&gt;singleSession&lt;/param-name&gt;<br/>
+   &lt;param-value&gt;true&lt;/param-value&gt;<br/>
+  &lt;/init-param&gt;<br/>
+ &lt;/filter&gt;<br/>
+ &lt;!-- struts2 --&gt;<br/>
+ &lt;filter&gt;<br/>
+  &lt;filter-name&gt;struts2&lt;/filter-name&gt;<br/>
+  &lt;filter-class&gt;org.apache.struts2.dispatcher.FilterDispatcher&lt;/filter-class&gt;<br/>
+  &lt;init-param&gt;<br/>
+   &lt;param-name&gt;actionPackages&lt;/param-name&gt;<br/>
+   &lt;param-value&gt;cn.com.ecenter.dragonclaws.action&lt;/param-value&gt;<br/>
+  &lt;/init-param&gt;<br/>
+ &lt;/filter&gt;<br/>
+ &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;hibernateFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;*.action&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;hibernateFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ <br/>
+  &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;hibernateFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;*.shtml&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ <br/>
+ <br/>
+ &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;AuthFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;*.action&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ <br/>
+  &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;AuthFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;*.shtml&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ <br/>
+  &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;AuthFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;/pages/*&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ <br/>
+   &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;AuthFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;/views/*&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ <br/>
+ &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;osivFilter&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;/system/*&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;struts2&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;*.action&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ &lt;filter-mapping&gt;<br/>
+  &lt;filter-name&gt;struts2&lt;/filter-name&gt;<br/>
+  &lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;<br/>
+ &lt;/filter-mapping&gt;<br/>
+ <br/>
+ <br/>
+ &lt;!-- Spring Framework --&gt;<br/>
+ &lt;listener&gt;<br/>
+  &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;<br/>
+ &lt;/listener&gt;<br/>
+ &lt;!-- ServletContextListener，需要服务器启动时加载的 --&gt;<br/>
+ &lt;listener&gt;<br/>
+  &lt;listener-class&gt;cn.com.ecenter.dragonclaws.web.WebContextListerner&lt;/listener-class&gt;<br/>
+ &lt;/listener&gt;<br/>
+ <br/>
+ &lt;!-- 兼容ftl --&gt;<br/>
+  &lt;servlet&gt;<br/>
+    &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;<br/>
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;<br/>
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;<br/>
+  &lt;/servlet&gt;<br/>
+  &lt;servlet-mapping&gt;<br/>
+    &lt;servlet-name&gt;dispatcher&lt;/servlet-name&gt;<br/>
+    &lt;url-pattern&gt;*.shtml&lt;/url-pattern&gt;<br/>
+    &lt;url-pattern&gt;/track/*&lt;/url-pattern&gt;<br/>
+  &lt;/servlet-mapping&gt;<br/>
+ <br/>
+ <br/>
+ <br/>
+ &lt;servlet&gt;<br/>
+  &lt;display-name&gt;ElFinderServlet&lt;/display-name&gt;<br/>
+  &lt;servlet-name&gt;ElFinderServlet&lt;/servlet-name&gt;<br/>
+  &lt;servlet-class&gt;cn.com.ecenter.elfinder.ElFinderServlet&lt;/servlet-class&gt;<br/>
+ &lt;/servlet&gt;<br/>
+   &lt;servlet&gt;<br/>
+ &lt;servlet-name&gt;ShowImageServlet&lt;/servlet-name&gt;<br/>
+    &lt;servlet-class&gt;cn.com.ecenter.dragonclaws.util.ShowImageServlet&lt;/servlet-class&gt;<br/>
+ &lt;/servlet&gt;<br/>
+ &lt;servlet-mapping&gt;<br/>
+  &lt;servlet-name&gt;ElFinderServlet&lt;/servlet-name&gt;<br/>
+  &lt;url-pattern&gt;/ElFinderServlet&lt;/url-pattern&gt;<br/>
+ &lt;/servlet-mapping&gt;<br/>
+ &lt;servlet-mapping&gt;<br/>
+   &lt;servlet-name&gt;ShowImageServlet&lt;/servlet-name&gt;<br/>
+   &lt;url-pattern&gt;/ShowImageServlet&lt;/url-pattern&gt;<br/>
+ &lt;/servlet-mapping&gt;<br/>
+ <br/>
+ &lt;!-- jFreeChart add by xiongt 20110616 --&gt;<br/>
+   &lt;servlet&gt;<br/>
+         &lt;servlet-name&gt;DisplayChart&lt;/servlet-name&gt;<br/>
+         &lt;servlet-class&gt;org.jfree.chart.servlet.DisplayChart&lt;/servlet-class&gt;<br/>
+ &lt;/servlet&gt;<br/>
+ &lt;servlet-mapping&gt;<br/>
+         &lt;servlet-name&gt;DisplayChart&lt;/servlet-name&gt;<br/>
+         &lt;url-pattern&gt;/DisplayChart&lt;/url-pattern&gt;<br/>
+ &lt;/servlet-mapping&gt;<br/>
+ <br/>
+ &lt;session-config&gt;<br/>
+  &lt;session-timeout&gt;1200&lt;/session-timeout&gt;<br/>
+ &lt;/session-config&gt;<br/>
+ &lt;!--&lt;jsp-config&gt;<br/>
+  &lt;jsp-property-group&gt;<br/>
+   &lt;url-pattern&gt;*.jsp&lt;/url-pattern&gt;<br/>
+   &lt;trim-directive-whitespaces&gt;true&lt;/trim-directive-whitespaces&gt;<br/>
+  &lt;/jsp-property-group&gt;<br/>
+ &lt;/jsp-config&gt;--&gt;<br/>
+ &lt;welcome-file-list&gt;<br/>
+  &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;<br/>
+ &lt;/welcome-file-list&gt;<br/>
+ &lt;login-config&gt;<br/>
+  &lt;auth-method&gt;BASIC&lt;/auth-method&gt;<br/>
+ &lt;/login-config&gt;<br/>
+&lt;/web-app&gt;<br/><br/>
+最后，请读者慢慢品味其中差异。</p></span>
+</div></body></html> 

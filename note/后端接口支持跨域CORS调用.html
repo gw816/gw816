@@ -1,0 +1,132 @@
+<html>
+<head>
+  <title>后端接口支持跨域CORS调用</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="3788"/>
+<h1>后端接口支持跨域CORS调用</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div style="font-size: 16px; display: inline-block;"><div style="box-sizing:border-box;font-family:sans-serif;text-size-adjust:100%;font-size:10px;-webkit-tap-highlight-color:transparent;"><div style="box-sizing:border-box;font-size:17px;line-height:1.42857;color:rgb(51, 51, 51);background-color:rgb(255, 255, 255);min-width:768px;font-family:-apple-system, &quot;SF UI Text&quot;, Arial, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, &quot;WenQuanYi Micro Hei&quot;, sans-serif;"><div style="box-sizing:border-box;"><div style="box-sizing:border-box;"><div style="box-sizing:border-box;">
+        <h1 style="box-sizing:border-box;color:inherit;margin-top:20px;margin-bottom:10px;font-size:34px;margin:20px 0px 0px;font-family:-apple-system, &quot;SF UI Display&quot;, Arial, &quot;PingFang SC&quot;, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, &quot;WenQuanYi Micro Hei&quot;, sans-serif;font-weight:700;line-height:1.3;word-break:break-word;"> 后端接口支持跨域CORS调用</h1>
+
+        
+        <div style="box-sizing:border-box;margin:30px 0px 40px;">
+          <a href="http://www.jianshu.com/u/c88d14adbebe" style="box-sizing:border-box;background-color:transparent;color:rgb(51, 51, 51);text-decoration:none;cursor:pointer;width:48px;height:48px;display:inline-block;vertical-align:middle;">
+            <img src="后端接口支持跨域CORS调用_files/144.png" type="image/png" data-filename="144.png" alt="144" height="46" style="box-sizing:border-box;vertical-align:middle;border:1px solid rgb(221, 221, 221);width:100%;height:100%;border-radius:50%;" width="46"/>
+</a>          <div style="box-sizing:border-box;vertical-align:middle;display:inline-block;margin-left:8px;">
+            <span style="box-sizing:border-box;padding:1px 2px;font-size:12px;color:rgb(234, 111, 90);border:1px solid rgb(234, 111, 90);border-radius:3px;">作者</span>
+            <span style="box-sizing:border-box;margin-left:3px;margin-right:3px;font-size:16px;vertical-align:middle;"><a href="http://www.jianshu.com/u/c88d14adbebe" style="box-sizing:border-box;background-color:transparent;color:rgb(51, 51, 51);text-decoration:none;cursor:pointer;">happeace</a></span>
+            
+            <a style="cursor:pointer;background-color:rgb(66, 192, 46);color:rgb(255, 255, 255);text-decoration:none;display:inline-block;margin-bottom:0px;font-weight:400;text-align:center;vertical-align:middle;touch-action:manipulation;box-sizing:border-box;background-image:none;border:1px solid transparent;white-space:nowrap;user-select:none;border-radius:40px;line-height:normal;border-color:rgb(66, 192, 46);font-size:12px;padding:0px 7px 0px 5px;"><i style="box-sizing:border-box;font-size:inherit;font-style:normal;-webkit-font-smoothing:antialiased;font-family:iconfont;font-weight:400;"><span style="font-size:inherit;font-style:normal;font-family:iconfont;font-weight:400;"></span></i><span style="box-sizing:border-box;margin-left:2px;display:inline;">关注</span></a>
+            
+            <div style="box-sizing:border-box;margin-top:5px;font-size:12px;color:rgb(150, 150, 150);">
+              
+                <span style="box-sizing:border-box;padding-right:5px;">2016.06.08 15:54</span>
+              <span style="box-sizing:border-box;padding-right:5px;">字数 489</span>
+            <span style="box-sizing:border-box;padding-right:5px;">阅读 708</span><span style="box-sizing:border-box;padding-right:5px;">评论 0</span><span style="box-sizing:border-box;padding-right:5px;">喜欢 2</span></div>
+          </div>
+          
+        </div>
+        
+
+        
+        <div style="box-sizing:border-box;color:rgb(47, 47, 47);word-break:break-word;font-size:16px;font-weight:400;line-height:1.7;">
+          <p style="box-sizing:border-box;margin:0px 0px 25px;word-break:break-word;">Spring MVC 从4.2版本开始增加了对CORS的支持，可以全局配置，也可以对类或方法配置；可以通过Java代码，也可以通过xml配置方式。<br style="box-sizing:border-box;"/>对于低版本的Spring MVC 可以通过Filter 往response写http header来实现<br style="box-sizing:border-box;"/>还有一种更省事的办法是在Nginx上加入支持。</p>
+<h4 style="box-sizing:border-box;font-family:inherit;margin-top:10px;margin-bottom:10px;font-weight:700;line-height:1.7;color:rgb(47, 47, 47);font-size:20px;margin:0px 0px 15px;text-rendering:optimizeLegibility;">Java配置</h4>
+<p style="box-sizing:border-box;margin:0px 0px 25px;word-break:break-word;">新建一个类，做跨域的配置</p>
+<pre style="word-wrap:normal;background-color:rgb(245, 245, 245);border:1px solid rgb(204, 204, 204);box-sizing:border-box;display:block;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;margin:0px 0px 10px;line-height:1.42857;color:rgb(101, 123, 131);background:rgb(246, 246, 246);text-size-adjust:none;word-break:break-word;padding:15px;font-size:13px;border-radius:0px;margin-bottom:20px;white-space:pre;overflow:auto;"><code style="box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;border-radius:0px;font-size:12px;color:rgb(101, 123, 131);border:none;background-color:transparent;padding:0px;white-space:pre;"><span style="box-sizing:border-box;">@Configuration</span>
+<span style="box-sizing:border-box;">@EnableWebMvc</span>
+<span style="box-sizing:border-box;color:rgb(133, 153, 0);">public</span> <span style="box-sizing:border-box;"><span style="box-sizing:border-box;color:rgb(133, 153, 0);">class</span> <span style="box-sizing:border-box;color:rgb(181, 137, 0);">CorsConfigureAdapter</span> <span style="box-sizing:border-box;color:rgb(133, 153, 0);">extends</span> <span style="box-sizing:border-box;color:rgb(181, 137, 0);">WebMvcConfigurerAdapter</span> </span>{
+    <span style="box-sizing:border-box;">@Override</span>
+    <span style="box-sizing:border-box;"><span style="box-sizing:border-box;color:rgb(133, 153, 0);">public</span> <span style="box-sizing:border-box;color:rgb(133, 153, 0);">void</span> <span style="box-sizing:border-box;color:rgb(38, 139, 210);">addCorsMappings</span><span style="box-sizing:border-box;">(CorsRegistry registry)</span> </span>{
+        <span style="box-sizing:border-box;color:rgb(133, 153, 0);">super</span>.addCorsMappings(registry);
+        registry.addMapping(<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;/**&quot;</span>);
+    }
+}</code></pre>
+<h4 style="box-sizing:border-box;font-family:inherit;margin-top:10px;margin-bottom:10px;font-weight:700;line-height:1.7;color:rgb(47, 47, 47);font-size:20px;margin:0px 0px 15px;text-rendering:optimizeLegibility;">在Controller上或方法上使用@CrossOrigin注解</h4>
+<pre style="word-wrap:normal;background-color:rgb(245, 245, 245);border:1px solid rgb(204, 204, 204);box-sizing:border-box;display:block;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;margin:0px 0px 10px;line-height:1.42857;color:rgb(101, 123, 131);background:rgb(246, 246, 246);text-size-adjust:none;word-break:break-word;padding:15px;font-size:13px;border-radius:0px;margin-bottom:20px;white-space:pre;overflow:auto;"><code style="box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;border-radius:0px;font-size:12px;color:rgb(101, 123, 131);border:none;background-color:transparent;padding:0px;white-space:pre;"><span style="box-sizing:border-box;">@CrossOrigin</span>(maxAge = <span style="box-sizing:border-box;color:rgb(42, 161, 152);">3600</span>)
+<span style="box-sizing:border-box;">@RestController</span>
+<span style="box-sizing:border-box;">@RequestMapping</span>(<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;/account&quot;</span>)
+<span style="box-sizing:border-box;color:rgb(133, 153, 0);">public</span> <span style="box-sizing:border-box;"><span style="box-sizing:border-box;color:rgb(133, 153, 0);">class</span> <span style="box-sizing:border-box;color:rgb(181, 137, 0);">AccountController</span> </span>{
+
+    <span style="box-sizing:border-box;">@CrossOrigin</span>(<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;http://domain2.com&quot;</span>)
+    <span style="box-sizing:border-box;">@RequestMapping</span>(<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;/{id}&quot;</span>)
+    <span style="box-sizing:border-box;"><span style="box-sizing:border-box;color:rgb(133, 153, 0);">public</span> Account <span style="box-sizing:border-box;color:rgb(38, 139, 210);">retrieve</span><span style="box-sizing:border-box;">(@PathVariable Long id)</span> </span>{
+        <span style="box-sizing:border-box;color:rgb(147, 161, 161);">// ...</span>
+    }
+
+    <span style="box-sizing:border-box;">@RequestMapping</span>(method = RequestMethod.DELETE, path = <span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;/{id}&quot;</span>)
+    <span style="box-sizing:border-box;"><span style="box-sizing:border-box;color:rgb(133, 153, 0);">public</span> <span style="box-sizing:border-box;color:rgb(133, 153, 0);">void</span> <span style="box-sizing:border-box;color:rgb(38, 139, 210);">remove</span><span style="box-sizing:border-box;">(@PathVariable Long id)</span> </span>{
+        <span style="box-sizing:border-box;color:rgb(147, 161, 161);">// ...</span>
+    }
+}</code></pre>
+<h4 style="box-sizing:border-box;font-family:inherit;margin-top:10px;margin-bottom:10px;font-weight:700;line-height:1.7;color:rgb(47, 47, 47);font-size:20px;margin:0px 0px 15px;text-rendering:optimizeLegibility;">基于XML的配置</h4>
+<pre style="word-wrap:normal;background-color:rgb(245, 245, 245);border:1px solid rgb(204, 204, 204);box-sizing:border-box;display:block;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;margin:0px 0px 10px;line-height:1.42857;color:rgb(101, 123, 131);background:rgb(246, 246, 246);text-size-adjust:none;word-break:break-word;padding:15px;font-size:13px;border-radius:0px;margin-bottom:20px;white-space:pre;overflow:auto;"><code style="box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;border-radius:0px;font-size:12px;color:rgb(101, 123, 131);border:none;background-color:transparent;padding:0px;white-space:pre;"><span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">mvc:cors</span>&gt;</span>
+    <span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">mvc:mapping</span> <span style="box-sizing:border-box;">path</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;/**&quot;</span> /&gt;</span>
+<span style="box-sizing:border-box;">&lt;/<span style="box-sizing:border-box;color:rgb(38, 139, 210);">mvc:cors</span>&gt;</span></code></pre>
+<p style="box-sizing:border-box;margin:0px 0px 25px;word-break:break-word;">这个配置和上面JAVA方式的第一种作用一样。<br style="box-sizing:border-box;"/>同样，你可以做更复杂的配置：</p>
+<pre style="word-wrap:normal;background-color:rgb(245, 245, 245);border:1px solid rgb(204, 204, 204);box-sizing:border-box;display:block;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;margin:0px 0px 10px;line-height:1.42857;color:rgb(101, 123, 131);background:rgb(246, 246, 246);text-size-adjust:none;word-break:break-word;padding:15px;font-size:13px;border-radius:0px;margin-bottom:20px;white-space:pre;overflow:auto;"><code style="box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;border-radius:0px;font-size:12px;color:rgb(101, 123, 131);border:none;background-color:transparent;padding:0px;white-space:pre;"><span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">mvc:cors</span>&gt;</span>
+    <span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">mvc:mapping</span> <span style="box-sizing:border-box;">path</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;/api/**&quot;</span> <span style="box-sizing:border-box;">allowed-origins</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;http://domain1.com, http://domain2.com&quot;</span> <span style="box-sizing:border-box;">allowed-methods</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;GET, PUT&quot;</span> <span style="box-sizing:border-box;">allowed-headers</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;header1, header2, header3&quot;</span> <span style="box-sizing:border-box;">exposed-headers</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;header1, header2&quot;</span> <span style="box-sizing:border-box;">allow-credentials</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;false&quot;</span> <span style="box-sizing:border-box;">max-age</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;123&quot;</span> /&gt;</span>
+    <span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">mvc:mapping</span> <span style="box-sizing:border-box;">path</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;/resources/**&quot;</span> <span style="box-sizing:border-box;">allowed-origins</span>=<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;http://domain1.com&quot;</span> /&gt;</span>
+<span style="box-sizing:border-box;">&lt;/<span style="box-sizing:border-box;color:rgb(38, 139, 210);">mvc:cors</span>&gt;</span></code></pre>
+<h4 style="box-sizing:border-box;font-family:inherit;margin-top:10px;margin-bottom:10px;font-weight:700;line-height:1.7;color:rgb(47, 47, 47);font-size:20px;margin:0px 0px 15px;text-rendering:optimizeLegibility;">SpringMVC 3 支持跨域</h4>
+<p style="box-sizing:border-box;margin:0px 0px 25px;word-break:break-word;">SpringMVC 3不支持以上方法，通过Filter的方式实现。</p>
+<pre style="word-wrap:normal;background-color:rgb(245, 245, 245);border:1px solid rgb(204, 204, 204);box-sizing:border-box;display:block;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;margin:0px 0px 10px;line-height:1.42857;color:rgb(101, 123, 131);background:rgb(246, 246, 246);text-size-adjust:none;word-break:break-word;padding:15px;font-size:13px;border-radius:0px;margin-bottom:20px;white-space:pre;overflow:auto;"><code style="box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;border-radius:0px;font-size:12px;color:rgb(101, 123, 131);border:none;background-color:transparent;padding:0px;white-space:pre;"><span style="box-sizing:border-box;">@Component</span>
+<span style="box-sizing:border-box;color:rgb(133, 153, 0);">public</span> <span style="box-sizing:border-box;"><span style="box-sizing:border-box;color:rgb(133, 153, 0);">class</span> <span style="box-sizing:border-box;color:rgb(181, 137, 0);">SimpleCORSFilter</span> <span style="box-sizing:border-box;color:rgb(133, 153, 0);">implements</span> <span style="box-sizing:border-box;color:rgb(181, 137, 0);">Filter</span> </span>{
+
+    <span style="box-sizing:border-box;"><span style="box-sizing:border-box;color:rgb(133, 153, 0);">public</span> <span style="box-sizing:border-box;color:rgb(133, 153, 0);">void</span> <span style="box-sizing:border-box;color:rgb(38, 139, 210);">doFilter</span><span style="box-sizing:border-box;">(ServletRequest req, ServletResponse res, FilterChain chain)</span> <span style="box-sizing:border-box;color:rgb(133, 153, 0);">throws</span> IOException, ServletException </span>{
+        HttpServletResponse response = (HttpServletResponse) res;
+        response.setHeader(<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;Access-Control-Allow-Origin&quot;</span>, <span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;*&quot;</span>);
+        response.setHeader(<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;Access-Control-Allow-Methods&quot;</span>, <span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;POST, GET, OPTIONS, DELETE&quot;</span>);
+        response.setHeader(<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;Access-Control-Max-Age&quot;</span>, <span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;3600&quot;</span>);
+        response.setHeader(<span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;Access-Control-Allow-Headers&quot;</span>, <span style="box-sizing:border-box;color:rgb(42, 161, 152);">&quot;x-requested-with&quot;</span>);
+        chain.doFilter(req, res);
+    }
+
+    <span style="box-sizing:border-box;"><span style="box-sizing:border-box;color:rgb(133, 153, 0);">public</span> <span style="box-sizing:border-box;color:rgb(133, 153, 0);">void</span> <span style="box-sizing:border-box;color:rgb(38, 139, 210);">init</span><span style="box-sizing:border-box;">(FilterConfig filterConfig)</span> </span>{}
+    <span style="box-sizing:border-box;"><span style="box-sizing:border-box;color:rgb(133, 153, 0);">public</span> <span style="box-sizing:border-box;color:rgb(133, 153, 0);">void</span> <span style="box-sizing:border-box;color:rgb(38, 139, 210);">destroy</span><span style="box-sizing:border-box;">()</span> </span>{}
+}</code></pre>
+<p style="box-sizing:border-box;margin:0px 0px 25px;word-break:break-word;"><code style="box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;border-radius:4px;font-size:12px;color:rgb(101, 123, 131);background-color:rgb(246, 246, 246);padding:2px 4px;border:none;white-space:pre-wrap;">web.xml</code>里配置</p>
+<pre style="word-wrap:normal;background-color:rgb(245, 245, 245);border:1px solid rgb(204, 204, 204);box-sizing:border-box;display:block;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;margin:0px 0px 10px;line-height:1.42857;color:rgb(101, 123, 131);background:rgb(246, 246, 246);text-size-adjust:none;word-break:break-word;padding:15px;font-size:13px;border-radius:0px;margin-bottom:20px;white-space:pre;overflow:auto;"><code style="box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;border-radius:0px;font-size:12px;color:rgb(101, 123, 131);border:none;background-color:transparent;padding:0px;white-space:pre;"><span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter</span>&gt;</span>
+    <span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter-name</span>&gt;</span>cors<span style="box-sizing:border-box;">&lt;/<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter-name</span>&gt;</span>
+    <span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter-class</span>&gt;</span>test.cors.SimpleCORSFilter<span style="box-sizing:border-box;">&lt;/<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter-class</span>&gt;</span>
+<span style="box-sizing:border-box;">&lt;/<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter</span>&gt;</span>
+<span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter-mapping</span>&gt;</span>
+    <span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter-name</span>&gt;</span>cors<span style="box-sizing:border-box;">&lt;/<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter-name</span>&gt;</span>
+    <span style="box-sizing:border-box;">&lt;<span style="box-sizing:border-box;color:rgb(38, 139, 210);">url-pattern</span>&gt;</span>/*<span style="box-sizing:border-box;">&lt;/<span style="box-sizing:border-box;color:rgb(38, 139, 210);">url-pattern</span>&gt;</span>
+<span style="box-sizing:border-box;">&lt;/<span style="box-sizing:border-box;color:rgb(38, 139, 210);">filter-mapping</span>&gt;</span></code></pre>
+<h4 style="box-sizing:border-box;font-family:inherit;margin-top:10px;margin-bottom:10px;font-weight:700;line-height:1.7;color:rgb(47, 47, 47);font-size:20px;margin:0px 0px 15px;text-rendering:optimizeLegibility;">Nginx支持跨域请求</h4>
+<p style="box-sizing:border-box;margin:0px 0px 25px;word-break:break-word;">需要在配置里添加<code style="box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;border-radius:4px;font-size:12px;color:rgb(101, 123, 131);background-color:rgb(246, 246, 246);padding:2px 4px;border:none;white-space:pre-wrap;">add_header Access-Control*</code>指令，如：</p>
+<pre style="word-wrap:normal;background-color:rgb(245, 245, 245);border:1px solid rgb(204, 204, 204);box-sizing:border-box;display:block;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;margin:0px 0px 10px;line-height:1.42857;color:rgb(101, 123, 131);background:rgb(246, 246, 246);text-size-adjust:none;word-break:break-word;padding:15px;font-size:13px;border-radius:0px;margin-bottom:20px;white-space:pre;overflow:auto;"><code style="box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;border-radius:0px;font-size:12px;color:rgb(101, 123, 131);border:none;background-color:transparent;padding:0px;white-space:pre;">location /{
+add_header <span style="box-sizing:border-box;color:rgb(42, 161, 152);">'Access-Control-Allow-Origin'</span> <span style="box-sizing:border-box;color:rgb(42, 161, 152);">'http://other.subdomain.com'</span>;
+add_header <span style="box-sizing:border-box;color:rgb(42, 161, 152);">'Access-Control-Allow-Credentials'</span> <span style="box-sizing:border-box;color:rgb(42, 161, 152);">'true'</span>;
+add_header <span style="box-sizing:border-box;color:rgb(42, 161, 152);">'Access-Control-Allow-Methods'</span> <span style="box-sizing:border-box;color:rgb(42, 161, 152);">'GET'</span>; 
+...
+the rest <span style="box-sizing:border-box;color:rgb(133, 153, 0);">of</span> your configuration here
+...
+}</code></pre>
+
+        </div>
+        
+
+        <div style="box-sizing:border-box;margin:40px 0px 30px;">
+          <a href="http://www.jianshu.com/nb/4603818" style="box-sizing:border-box;background-color:transparent;text-decoration:none;cursor:pointer;color:rgb(155, 155, 155);font-size:12px;">
+            <i style="box-sizing:border-box;font-style:normal;-webkit-font-smoothing:antialiased;font-size:15px;margin-right:2px;font-family:iconfont;font-weight:400;"><span style="font-size:15px;font-style:normal;font-family:iconfont;font-weight:400;"></span></i> <span style="box-sizing:border-box;">Java</span>
+</a>          <div style="box-sizing:border-box;float:right;margin-top:5px;font-size:12px;line-height:1.7;color:rgb(155, 155, 155);">
+            © 著作权归作者所有
+          </div>
+          <div style="box-sizing:border-box;float:right;margin-top:5px;margin-right:20px;font-size:12px;line-height:1.7;">
+            <a style="box-sizing:border-box;background-color:transparent;text-decoration:none;cursor:pointer;color:rgb(155, 155, 155);">举报文章</a>
+          </div>
+        </div>
+    </div></div></div></div></div></div><br/></div></span>
+</div></body></html> 

@@ -1,0 +1,234 @@
+<html>
+<head>
+  <title>自定义注解实现AOP日志记录 - importdate - 博客园</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="4247"/>
+<h1>自定义注解实现AOP日志记录 - importdate - 博客园</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div><div><div><div><h1> 自定义注解实现AOP日志记录 </h1><div><div></div></div></div>
+		
+		
+			<p>自定义注解</p>
+<div>
+<pre>package com.annotation;  
+  
+import java.lang.annotation.*;  
+  
+/** 
+ *自定义注解 拦截Controller 
+ */  
+  
+@Target({ElementType.PARAMETER, ElementType.METHOD})  
+@Retention(RetentionPolicy.RUNTIME)  
+@Documented  
+public  @interface SystemLog {  
+  
+    String module()  default &quot;&quot;;  //模块名称 系统管理-用户管理－列表页面
+    String methods()  default &quot;&quot;;  //新增用户
+    String description()  default &quot;&quot;;  //
+  
+  
+}  
+  </pre>
+</div>
+<p>AOP切点类</p>
+<div>
+<pre>package com.logAop;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.apache.shiro.SecurityUtils;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import com.lanyuan.annotation.SystemLog;
+import com.lanyuan.entity.LogFormMap;
+import com.lanyuan.mapper.LogMapper;
+import com.lanyuan.util.Common;
+/**
+ * 切点
+ * @version 1.0
+ */
+@Aspect
+@Component
+public  class LogAopAction {
+    //本地异常日志记录对象
+     private  static  final Logger logger = LoggerFactory.getLogger(LogAopAction. class);
+     @Inject
+     private LogMapper logMapper;
+     //Controller层切点
+    @Pointcut(&quot;@annotation(com.annotation.SystemLog)&quot;)
+     public  void controllerAspect() {
+    }
+    
+    /**
+     * 操作异常记录
+     *@descript
+     *@param point
+     *@version 1.0
+     */
+    @AfterThrowing(pointcut = &quot;controllerAspect()&quot;, throwing = &quot;e&quot;)  
+    public  void doAfterThrowing(JoinPoint point, Throwable e) {  
+        LogFormMap logForm = new LogFormMap();
+         Map&lt;String, Object&gt; map = null;
+        String user = null;
+        String ip = null;
+        try {
+            ip = SecurityUtils.getSubject().getSession().getHost();
+        } catch (Exception ee) {
+            ip = &quot;无法获取登录用户Ip&quot;;
+        }
+        try {
+            map=getControllerMethodDescription(point);
+            // 登录名
+            user = SecurityUtils.getSubject().getPrincipal().toString();
+            if (Common.isEmpty(user)) {
+                user = &quot;无法获取登录用户信息！&quot;;
+            }
+        } catch (Exception ee) {
+            user = &quot;无法获取登录用户信息！&quot;;
+        }
+        
+        logForm.put(&quot;accountName&quot;,user);
+        logForm.put(&quot;module&quot;,map.get(&quot;module&quot;));
+        logForm.put(&quot;methods&quot;,&quot;&lt;font color=\&quot;red\&quot;&gt;执行方法异常:--&gt;&quot;+map.get(&quot;methods&quot;)+&quot;&lt;/font&gt;&quot;);
+        logForm.put(&quot;description&quot;,&quot;&lt;font color=\&quot;red\&quot;&gt;执行方法异常:--&gt;&quot;+e+&quot;&lt;/font&gt;&quot;);
+        logForm.put(&quot;actionTime&quot;,&quot;0&quot;);
+        logForm.put(&quot;userIP&quot;,ip);
+        try {
+            logMapper.addEntity(logForm);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    }
+    /**
+     * 前置通知 用于拦截Controller层记录用户的操作
+     *
+     * @param joinPoint 切点
+     */
+    @Around(&quot;controllerAspect()&quot;)
+     public Object doController(ProceedingJoinPoint point) {
+        Object result = null;
+        // 执行方法名
+        String methodName = point.getSignature().getName();
+        String className = point.getTarget().getClass().getSimpleName();
+        LogFormMap logForm = new LogFormMap();
+         Map&lt;String, Object&gt; map = null;
+        String user = null;
+        Long start = 0L;
+        Long end = 0L;
+        Long time = 0L;
+        String ip = null;
+        try {
+            ip = SecurityUtils.getSubject().getSession().getHost();
+        } catch (Exception e) {
+            ip = &quot;无法获取登录用户Ip&quot;;
+        }
+        try {
+            // 登录名
+            user = SecurityUtils.getSubject().getPrincipal().toString();
+            if (Common.isEmpty(user)) {
+                user = &quot;无法获取登录用户信息！&quot;;
+            }
+        } catch (Exception e) {
+            user = &quot;无法获取登录用户信息！&quot;;
+        }
+        // 当前用户
+        try {
+            map=getControllerMethodDescription(point);
+            // 执行方法所消耗的时间
+            start = System.currentTimeMillis();
+            result = point.proceed();
+            end = System.currentTimeMillis();
+            time = end - start;
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
+         try {
+             logForm.put(&quot;accountName&quot;,user);
+             logForm.put(&quot;module&quot;,map.get(&quot;module&quot;));
+             logForm.put(&quot;methods&quot;,map.get(&quot;methods&quot;));
+             logForm.put(&quot;description&quot;,map.get(&quot;description&quot;));
+             logForm.put(&quot;actionTime&quot;,time.toString());
+             logForm.put(&quot;userIP&quot;,ip);
+             logMapper.addEntity(logForm);
+            //*========控制台输出=========*//
+            System.out.println(&quot;=====通知开始=====&quot;);
+            System.out.println(&quot;请求方法:&quot; + className + &quot;.&quot; + methodName + &quot;()&quot;);
+            System.out.println(&quot;方法描述:&quot; + map);
+            System.out.println(&quot;请求IP:&quot; + ip);
+            System.out.println(&quot;=====通知结束=====&quot;);
+        }  catch (Exception e) {
+            //记录本地异常日志
+            logger.error(&quot;====通知异常====&quot;);
+            logger.error(&quot;异常信息:{}&quot;, e.getMessage());
+        }
+         return result;
+    }
+    /**
+     * 获取注解中对方法的描述信息 用于Controller层注解
+     *
+     * @param joinPoint 切点
+     * @return 方法描述
+     * @throws Exception
+     */
+     @SuppressWarnings(&quot;rawtypes&quot;)
+    public Map&lt;String, Object&gt; getControllerMethodDescription(JoinPoint joinPoint)  throws Exception {
+         Map&lt;String, Object&gt; map = new HashMap&lt;String, Object&gt;();
+         String targetName = joinPoint.getTarget().getClass().getName();
+        String methodName = joinPoint.getSignature().getName();
+        Object[] arguments = joinPoint.getArgs();
+        Class targetClass = Class.forName(targetName);
+        Method[] methods = targetClass.getMethods();
+         for (Method method : methods) {
+             if (method.getName().equals(methodName)) {
+                Class[] clazzs = method.getParameterTypes();
+                 if (clazzs.length == arguments.length) {
+                     map.put(&quot;module&quot;, method.getAnnotation(SystemLog.class).module());
+                     map.put(&quot;methods&quot;, method.getAnnotation(SystemLog.class).methods());
+                     String de = method.getAnnotation(SystemLog.class).description();
+                     if(Common.isEmpty(de))de=&quot;执行成功!&quot;;
+                     map.put(&quot;description&quot;, de);
+                     break;
+                }
+            }
+        }
+         return map;
+    }
+}</pre>
+</div>
+<p>需要记录日志的加</p>
+<div>
+<pre>@ResponseBody
+    @RequestMapping(&quot;deleteEntity&quot;)
+    @Transactional(readOnly=false)//需要事务操作必须加入此注解
+    @SystemLog(module=&quot;系统管理&quot;,methods=&quot;组管理-删除组&quot;)//凡需要处理业务逻辑的.都需要记录操作日志
+    public String deleteEntity() throws Exception {
+        String[] ids = getParaValues(&quot;ids&quot;);
+        for (String id : ids) {
+            roleMapper.deleteByAttribute(&quot;id&quot;, id, RoleFormMap.class);
+        }
+        return &quot;success&quot;;
+    </pre>
+</div></div></div></div><br/></div></span>
+</div></body></html> 

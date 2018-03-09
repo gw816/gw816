@@ -1,0 +1,187 @@
+<html>
+<head>
+  <title>连接ftp报错：500 OOPS: cannot change directory 解决方法_蓝蓝鱼_新浪博客</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="3987"/>
+<h1>连接ftp报错：500 OOPS: cannot change directory 解决方法_蓝蓝鱼_新浪博客</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div style="font-size: 16px; display: inline-block;"><div><div style="list-style:none;font-size:12px;font-family:Verdana, 宋体, sans-serif;color:rgb(50, 62, 50);background-color:rgb(138, 138, 138);"><div style="background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/sinabloga.jpg&quot;);background-repeat:no-repeat;background-position:center bottom;"><div style="background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/sinablogb.jpg&quot;);background-repeat:no-repeat;background-position:center top;"><div><div style="overflow:hidden;"><div style="text-align:left;overflow:hidden;"><div style="background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/modelbody.png&quot;);background-position:1450px 0px;"><div style="zoom:1;">
+		<div style="clear:both;line-height:20px;padding-bottom:10px;"> 
+			
+								<h2 style="margin:0px;padding:0px;border:0px;list-style:none;color:rgb(9, 67, 130);font-size:18px;font-family:微软雅黑, 黑体;font-weight:300;display:inline;">连接ftp报错：500 OOPS: cannot change directory 解决方法</h2>
+			
+					<span style="color:rgb(99, 113, 96);white-space:nowrap;font-family:Arial;font-size:10px;margin-left:5px;margin-right:13px;">(2016-08-11 17:11:01)</span><div style="float:right;"><a href="#" style="display:inline-block;text-decoration:none;cursor:pointer;padding:0px 0px 0px 3px;overflow:hidden;white-space:nowrap;background-repeat:no-repeat;background-position:0px 0px;color:rgb(50, 62, 50);margin-right:6px;zoom:1;background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/sg_newsp.png&quot;);position:relative;letter-spacing:5px;width:86px;font-family:Verdana, 宋体, sans-serif;font-size:12px;"><cite style="min-width:1px;font-style:normal;overflow-x:visible;padding:0px 20px 0px 32px;height:23px;background-repeat:no-repeat;background-position:right -28px;line-height:23px;background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/sg_newsp.png&quot;);white-space:nowrap;text-align:left;width:34px;font-size:12px;display:inline-block;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/sg_trans.gif" type="image/gif" data-filename="sg_trans.gif" align="absmiddle" height="15" style="margin:0px;padding:0px;border:0px;list-style:none;background-image:url("http://simg.sinajs.cn/blog7style/css/common/../../images/common/sg_icon.png?20131218");background-position:495px -60px;position:absolute;top:4px;left:11px;" width="15"/>转载<em style="font-style:normal;text-size-adjust:none;font-size:7px;position:absolute;right:5px;top:2px;">▼</em></cite></a></div>		</div>
+		<div style="width:100%;clear:both;word-break:break-all;line-height:20px;">
+			<table style="font-size:inherit;font-weight:inherit;font-style:inherit;font-variant:inherit;margin:0px;padding:0px;">
+				<tbody><tr>
+					<td style="margin:0px;padding:0px;font-size:12px;vertical-align:top;font-family:宋体;padding-right:10px;">
+					
+										</td>
+					<td style="margin:0px;padding:0px;font-size:12px;vertical-align:top;font-family:宋体;width:220px;white-space:nowrap;">
+										</td>
+				</tr>
+			</tbody></table>
+		</div>
+						
+		<div style="width:690px;clear:both;padding-top:18px;font-size:14px;padding-bottom:30px;overflow:hidden;font-family:&quot;Microsoft YaHei&quot;, &quot;Helvetica Neue&quot;, SimSun;word-wrap:normal;word-break:normal;line-height:150%;">
+			<p style="margin:0px;padding:0px;border:0px;list-style:none;word-wrap:normal;word-break:normal;line-height:150%;margin-bottom:5px;">报错：<br/>
+331 Please specify the password.<br/>
+Password:<br/>
+500 OOPS: cannot change directory:/home/oracle<br/>
+Login failed.<br/>
+ <span></span><br/>
+原因：这是因为服务器开启了selinux，这限制了FTP的登录。</p>
+<p style="margin:0px;padding:0px;border:0px;list-style:none;word-wrap:normal;word-break:normal;line-height:150%;margin-bottom:5px;">解决方法：<br/>
+1.执行setsebool -P ftpd_disable_trans 1<br/>
+ <span></span> <span></span> 然后重启ftp :service vsftpd
+restart</p>
+<p style="margin:0px;padding:0px;border:0px;list-style:none;word-wrap:normal;word-break:normal;line-height:150%;margin-bottom:5px;"><br/>
+2.执行setsebool -P ftpd_disable_trans 1报错Boolean ftpd_disable_trans
+is not defined的话<br/>
+ <span></span> <span></span> <span></span>
+（[root@windos-test-01 vsftpd]# setsebool -P ftpd_disable_trans
+1<br/>
+ <span></span> <span></span> <span></span> <span></span>
+Boolean ftpd_disable_trans is not defined）<br/>
+先执行setsebool <span></span> -P <span></span> ftp_home_dir
+1<br/>
+ <span></span> 查看getsebool -a |grep ftp_home 结果如下：<br/>
+　ftp_home_dir --&gt; on<br/>
+ <span></span>然后再照第1种方法执行；</p>
+<p style="margin:0px;padding:0px;border:0px;list-style:none;word-wrap:normal;word-break:normal;line-height:150%;margin-bottom:5px;">3.如果还是不成功的话，执行以下命令，然后重启FTP<br/>
+[root@windos-test-01 vsftpd]# setsebool allow_ftpd_full_access
+1<br/>
+[root@windos-test-01 vsftpd]# setsebool allow_ftpd_use_cifs 1<br/>
+[root@windos-test-01 vsftpd]# setsebool allow_ftpd_use_nfs 1<br/>
+[root@windos-test-01 vsftpd]# setsebool -P ftp_home_dir 1<br/>
+[root@windos-test-01 vsftpd]# setsebool httpd_enable_ftp_server
+1<br/>
+[root@windos-test-01 vsftpd]# setsebool tftp_anon_write 1<br/>
+[root@windos-test-01 vsftpd]# service vsftpd restart</p>							
+		</div>
+						
+		<div style="clear:both;position:relative;zoom:1;">
+        	<div style="color:rgb(99, 113, 96);float:left;padding-top:180px;">
+			分享： 
+			<div style="font-size:13px;line-height:16px;display:inline;margin-left:5px;"><a href="#" style="zoom:1;text-decoration:none;padding-left:19px;height:16px;opacity:1;color:rgb(9, 67, 130);vertical-align:middle;cursor:pointer;margin-right:3px;display:inline-block;background:url(&quot;http://static.bshare.cn/frame/images/logos/s4/sprite/top_logos_sprite.png&quot;) 0px -270px no-repeat;" title="分享到新浪微博"></a><a href="#" style="zoom:1;text-decoration:none;padding-left:19px;height:16px;opacity:1;color:rgb(9, 67, 130);vertical-align:middle;cursor:pointer;margin-right:3px;display:inline-block;background:url(&quot;http://static.bshare.cn/frame/images/logos/s4/weixin.png&quot;) no-repeat;" title="分享到微信"></a><a href="#" style="zoom:1;text-decoration:none;padding-left:19px;height:16px;opacity:1;color:rgb(9, 67, 130);vertical-align:middle;cursor:pointer;margin-right:3px;display:inline-block;background:url(&quot;http://static.bshare.cn/frame/images/logos/s4/sprite/top_logos_sprite.png&quot;) 0px -234px no-repeat;" title="分享到QQ空间"></a><a href="#" style="zoom:1;text-decoration:none;padding-left:19px;height:16px;opacity:1;color:rgb(9, 67, 130);vertical-align:middle;cursor:pointer;margin-right:3px;display:inline-block;background:url(&quot;http://static.bshare.cn/frame/images/logos/s4/sprite/top_logos_sprite.png&quot;) 0px -36px no-repeat;" title="分享到豆瓣"></a><a style="zoom:1;text-decoration:none;opacity:1;height:16px;margin-right:3px;cursor:pointer;vertical-align:middle;display:inline-block;background:url(&quot;http://static.bshare.cn/frame/images/logos/s4/more-style-addthis.png&quot;) no-repeat;color:rgb(51, 51, 51);padding-left:19px;" title="更多平台"></a>
+			</div>
+			</div>
+            <div style="float:right;width:80px;height:62px;position:relative;top:34px;z-index:1;">
+	        	<div style="width:100px;height:62px;overflow:hidden;background:url(&quot;http://simg.sinajs.cn/blog7style/css/common/../../images/common/up_bg.png&quot;) left top no-repeat;color:rgb(255, 66, 0);position:absolute;left:-372px;cursor:pointer;" title="喜欢后让更多人看到">
+	            	<p style="margin:0px;padding:0px;border:0px;list-style:none;height:24px;line-height:24px;font-size:14px;font-family:宋体;text-align:center;font-weight:bold;">4</p>
+	                <p style="line-height:38px;margin:0px;border:0px;list-style:none;padding:0px;height:38px;text-align:center;font-size:14px;font-weight:bold;color:rgb(63, 108, 0);cursor:pointer;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/sg_trans [1].gif" type="image/gif" data-filename="sg_trans.gif" align="absmiddle" height="15" style="margin:0px;padding:0px;border:0px;list-style:none;background-image:url("http://simg.sinajs.cn/blog7style/css/common/../../images/common/sg_icon.png?20131218");background-position:585px -30px;" width="15"/>喜欢</p>
+	            </div>
+
+                                <div style="width:100px;height:62px;overflow:hidden;background:url(&quot;http://simg.sinajs.cn/blog7style/css/common/../../images/common/up_bg1.png&quot;) left top no-repeat;position:absolute;left:-245px;">
+                    <p style="margin:0px;padding:0px;border:0px;list-style:none;height:24px;line-height:24px;font-size:14px;font-family:宋体;text-align:center;font-weight:bold;">1</p>
+                    <p style="line-height:38px;margin:0px;border:0px;list-style:none;padding:0px;height:38px;text-align:center;font-size:14px;font-weight:bold;color:rgb(51, 51, 51);cursor:pointer;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/sg_trans [2].gif" type="image/gif" data-filename="sg_trans.gif" align="absmiddle" height="16" style="margin:0px;padding:0px;border:0px;list-style:none;background-image:url("http://simg.sinajs.cn/blog7style/css/common/../../images/common/sg_icon.png?20131218");background-position:-510px -229px;" title="赠金笔" width="20"/>赠金笔</p>
+                </div>
+                
+	        </div>
+            <div style="clear:both;height:0px;overflow:hidden;"></div>
+		</div>
+		<div style="clear:both;padding-top:10px;">
+			
+			<div style="float:left;width:65%;padding-top:2px;">
+				阅读<span style="color:rgb(99, 113, 96);font-family:宋体;">(1762)</span><em style="font-style:normal;color:rgb(99, 113, 96);margin:0px 2px;">┊</em> 
+				<a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#commonComment" style="text-decoration:none;color:rgb(9, 67, 130);">评论</a> <span style="color:rgb(99, 113, 96);font-family:宋体;">(3)</span><em style="font-style:normal;color:rgb(99, 113, 96);margin:0px 2px;">┊</em>				<a href="#" style="text-decoration:none;color:rgb(9, 67, 130);">收藏</a><span style="color:rgb(99, 113, 96);font-family:宋体;">(0)</span>
+				<em style="font-style:normal;color:rgb(99, 113, 96);margin:0px 2px;">┊</em><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);">转载</a><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);font-family:宋体;">(1)</a>				<span style="color:rgb(99, 113, 96);font-family:宋体;"></span><em style="font-style:normal;color:rgb(99, 113, 96);margin:0px 2px;">┊</em>
+				<a href="#" style="text-decoration:none;color:rgb(9, 67, 130);"><cite style="font-style:normal;">喜欢</cite></a><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);"><b style="font-family:Verdana, Helvetica;font-size:9px;">▼</b></a>
+									<em style="font-style:normal;color:rgb(99, 113, 96);margin:0px 2px;">┊</em><a href="http://blog.sina.com.cn/main_v5/ria/print.html?blog_id=blog_7f2a8f960102wvfx" style="text-decoration:none;color:rgb(9, 67, 130);" target="_blank">打印</a><em style="font-style:normal;color:rgb(99, 113, 96);margin:0px 2px;">┊</em><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);">举报</a>
+											</div>
+			<div style="float:right;width:35%;">
+				<table style="font-size:inherit;font-weight:inherit;font-style:inherit;font-variant:inherit;margin:0px;padding:0px;float:right;">
+					<tbody><tr>
+											<th style="margin:0px;padding:0px;font-size:12px;font-family:Verdana, 宋体, sans-serif;color:rgb(99, 113, 96);vertical-align:top;font-weight:normal;width:60px;text-align:right;">已投稿到：</th>
+						<td style="margin:0px;padding:0px;font-size:12px;font-family:Verdana, 宋体, sans-serif;vertical-align:top;font-weight:normal;">
+							<div style="float:left;">
+								<span style="margin-right:5px;height:22px;display:block;float:left;white-space:nowrap;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/sg_trans [3].gif" type="image/gif" data-filename="sg_trans.gif" align="absmiddle" height="15" style="margin:0px;padding:0px;border:0px;list-style:none;background-image:url("http://simg.sinajs.cn/blog7style/css/common/../../images/common/sg_icon.png?20131218");background-position:525px -30px;margin-right:0px;" title="排行榜" width="15"/> <a href="http://blog.sina.com.cn/lm/114/117/day.html" style="text-decoration:none;color:rgb(99, 113, 96);word-break:break-all;" target="_blank">排行榜</a></span>							</div>
+						</td>
+										</tr>
+									</tbody></table>
+			</div>
+		</div>
+		<div style="clear:both;height:0px;overflow:hidden;"></div>
+		
+		<div style="background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/SG_linedot.gif&quot;);background-repeat:repeat-x;display:block;clear:both;margin:20px 0px 0px;padding:24px 0px;font-size:14px;">
+							<div style="line-height:24px;min-height:24px;font-family:宋体;"><span style="color:rgb(99, 113, 96);">前一篇：</span><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfu.html" style="text-decoration:none;color:rgb(9, 67, 130);">vsftpd 530 Login incorrect错误与530 Permission denied错误的解决方案</a></div>
+										<div style="line-height:24px;min-height:24px;font-family:宋体;"><span style="color:rgb(99, 113, 96);">后一篇：</span><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvg1.html" style="text-decoration:none;color:rgb(9, 67, 130);">Could not execute auto check for display colors using&amp;nb</a></div>
+					<span style="font-size:14px;clear:both;display:block;height:0px;visibility:hidden;overflow:hidden;">.</span></div>
+		<div style="clear:both;height:0px;overflow:hidden;"></div>
+							
+		<div></div>
+				<div style="zoom:1;">
+			<div style="background:url(&quot;http://simg.sinajs.cn/blog7style/css/common/../../images/common/SG_newsp.png&quot;) left -400px repeat-x;height:25px;line-height:25px;background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/sg_newsp.png&quot;);">
+				<div style="float:left;display:inline;padding-left:10px;">
+				    <strong style="margin-right:25px;">评论</strong>
+				    <span style="display:inline-block;">
+				        <span style="margin-left:15px;width:220px;display:inline-block;"><a href="http://blog.sina.com.cn/lm/8/2009/0325/105340.html" style="text-decoration:none;color:rgb(9, 67, 130);" target="_blank">重要提示：警惕虚假中奖信息</a></span>
+				    </span>
+				</div>
+				<div style="float:right;display:inline;padding-right:10px;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#post" style="font-family:宋体;font-size:12px;font-weight:normal;white-space:nowrap;zoom:1;color:rgb(9, 67, 130);margin:0px;text-decoration:none;">[<cite style="font-style:normal;font-family:Verdana;text-decoration:none;cursor:pointer;">发评论</cite>]</a></div>
+			</div>
+			<ul style="margin:0px;padding:0px;border:0px;list-style:none;overflow:hidden;width:100%;"><li style="margin:0px;border:0px;list-style:none;padding:20px 0px;width:100%;overflow:hidden;background-position:center top;"><div style="float:none;width:652px;font-family:宋体;padding-top:2px;margin-left:20px;"><p style="margin:0px;padding:0px;border:0px;list-style:none;width:100%;clear:both;overflow:hidden;font-size:12px;"><span style="float:left;font-weight:bold;"><a href="http://blog.sina.com.cn/u/5889305355" style="text-decoration:none;color:rgb(9, 67, 130);vertical-align:middle;">ALLE1412</a></span></p><div style="color:rgb(99, 113, 96);line-height:22px;clear:both;width:100%;font-size:14px;margin-top:9px;word-break:break-all;">哇！！找了好多教程都说的模模糊糊；要么就是直接叫关闭selinux，博主解决我的大问题<img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/E___0438EN00SIGT.gif" type="image/gif" data-filename="E___0438EN00SIGT.gif" border="0" height="50" style="margin:1px;padding:0px;border:0px;list-style:none;" title="ye" width="50"/></div><p style="margin:0px;padding:0px;border:0px;list-style:none;width:100%;clear:both;overflow:hidden;font-size:12px;padding-top:10px;"><em style="font-style:normal;color:rgb(99, 113, 96);margin-right:12px;">2016-10-21  09:57</em><span style="float:right;"><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);margin:0px 5px;visibility:hidden;"><cite style="font-style:normal;">举报</cite></a><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);margin:0px 5px;visibility:hidden;"><cite style="font-style:normal;">分享</cite></a><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);margin:0px 5px;"><cite style="font-style:normal;">回复(0)</cite></a></span></p></div></li><li style="margin:0px;border:0px;list-style:none;background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/SG_linedot.gif&quot;);background-repeat:repeat-x;padding:20px 0px;width:100%;overflow:hidden;background-position:center top;"><div style="float:none;width:652px;font-family:宋体;padding-top:2px;margin-left:20px;"><p style="margin:0px;padding:0px;border:0px;list-style:none;width:100%;clear:both;overflow:hidden;font-size:12px;"><span style="float:left;font-weight:bold;"><a href="http://blog.sina.com.cn/u/1760393902" style="text-decoration:none;color:rgb(9, 67, 130);vertical-align:middle;">阿萌哒小胖</a></span></p><div style="color:rgb(99, 113, 96);line-height:22px;clear:both;width:100%;font-size:14px;margin-top:9px;word-break:break-all;">为什么我已经手动关闭了selinux（修改其配置文件）后，仍然不行呢？ 一定要将这几个全部开启才行？</div><p style="margin:0px;padding:0px;border:0px;list-style:none;width:100%;clear:both;overflow:hidden;font-size:12px;padding-top:10px;"><em style="font-style:normal;color:rgb(99, 113, 96);margin-right:12px;">2016-12-9  15:36</em><span style="float:right;"><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);margin:0px 5px;visibility:hidden;"><cite style="font-style:normal;">举报</cite></a><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);margin:0px 5px;visibility:hidden;"><cite style="font-style:normal;">分享</cite></a><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);margin:0px 5px;"><cite style="font-style:normal;">回复(0)</cite></a></span></p></div></li><li style="margin:0px;border:0px;list-style:none;background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/SG_linedot.gif&quot;);background-repeat:repeat-x;padding:20px 0px;width:100%;overflow:hidden;background-position:center top;"><div style="float:none;width:652px;font-family:宋体;padding-top:2px;margin-left:20px;"><p style="margin:0px;padding:0px;border:0px;list-style:none;width:100%;clear:both;overflow:hidden;font-size:12px;"><span style="float:left;font-weight:bold;"><a href="http://blog.sina.com.cn/u/6230734858" style="text-decoration:none;color:rgb(9, 67, 130);vertical-align:middle;">用户6230734858</a></span></p><div style="color:rgb(99, 113, 96);line-height:22px;clear:both;width:100%;font-size:14px;margin-top:9px;word-break:break-all;">然并卵</div><p style="margin:0px;padding:0px;border:0px;list-style:none;width:100%;clear:both;overflow:hidden;font-size:12px;padding-top:10px;"><em style="font-style:normal;color:rgb(99, 113, 96);margin-right:12px;">5月7日 15:44</em><span style="float:right;"><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);margin:0px 5px;visibility:hidden;"><cite style="font-style:normal;">举报</cite></a><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);margin:0px 5px;visibility:hidden;"><cite style="font-style:normal;">分享</cite></a><a href="#" style="text-decoration:none;color:rgb(9, 67, 130);margin:0px 5px;"><cite style="font-style:normal;">回复(0)</cite></a></span></p></div></li></ul>
+			<div style="clear:both;height:0px;overflow:hidden;"></div>
+			
+			<a name="post" style="text-decoration:none;color:rgb(9, 67, 130);"></a>
+			<div style="padding:15px 0px;width:684px;margin:0px auto;">
+				<div style="background:url(&quot;http://simg.sinajs.cn/blog7style/css/common/../../images/common/SG_newsp.png&quot;) left -400px repeat-x;height:25px;line-height:25px;background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/sg_newsp.png&quot;);">
+					<div style="float:left;display:inline;padding-left:10px;">
+					    <strong style="margin-right:25px;">发评论</strong>
+					    <span></span>
+					</div>
+					<div style="float:right;display:inline;padding-right:10px;"></div>
+				</div>
+				<div style="clear:both;width:684px;overflow:hidden;margin-top:18px;">
+					<div style="float:left;display:inline;line-height:28px;overflow:hidden;">北派三叔 :</div>
+				</div>
+				<div style="padding-bottom:10px;">
+					<div style="float:left;">
+					<div style="border:1px solid #C7C7C7;height:158px;width:448px;maring-top:1px;background-color:white;position:relative;"><div style="font-size: 16px; display: inline-block;"><div style="cursor:text;"><div style="margin:0px;padding:10px;word-wrap:break-word;overflow-y:scroll;overflow-x:auto;height:90%;font-size:14px;font-family:&quot;&quot;, Verdana, Arial, Helvetica, sans-serif;line-height:1.5;">
+</div></div></div></div>
+					
+					</div>
+					
+					<div style="width:230px;height:158px;border-top:1px solid rgb(199, 199, 199);border-right:1px solid rgb(199, 199, 199);border-bottom:1px solid rgb(199, 199, 199);border-image:initial;background-color:rgb(245, 245, 245);border-left:none;margin-top:0px;float:left;">
+						<div style="clear:both;padding:8px 0px 6px 7px;height:27px;overflow:hidden;">
+						<div style="float:left;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:27px;height:27px;float:left;margin-right:3px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/302-25.gif" type="image/gif" data-filename="302-25.gif" alt="小新小浪" height="25" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);width:25px;height:25px;" title="小新小浪" width="25"/></a><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:27px;height:27px;float:left;margin-right:3px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/308-25.gif" type="image/gif" data-filename="308-25.gif" alt="炮炮兵" height="25" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);width:25px;height:25px;" title="炮炮兵" width="25"/></a><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:27px;height:27px;float:left;margin-right:3px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/315-25.gif" type="image/gif" data-filename="315-25.gif" alt="张富贵" height="25" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);width:25px;height:25px;" title="张富贵" width="25"/></a><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:27px;height:27px;float:left;margin-right:3px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/316-25.gif" type="image/gif" data-filename="316-25.gif" alt="旺狗" height="25" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);width:25px;height:25px;" title="旺狗" width="25"/></a><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:27px;height:27px;float:left;margin-right:3px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/331-25.gif" type="image/gif" data-filename="331-25.gif" alt="悠嘻猴" height="25" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);width:25px;height:25px;" title="悠嘻猴" width="25"/></a><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:27px;height:27px;float:left;margin-right:3px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/351-25.gif" type="image/gif" data-filename="351-25.gif" alt="酷巴熊" height="25" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);width:25px;height:25px;" title="酷巴熊" width="25"/></a></div><span style="color:rgb(9, 67, 130);font-family:宋体;line-height:27px;float:left;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);">更多&gt;&gt;</a></span><div style="clear:both;height:0px;overflow:hidden;"></div></div>
+						<ul style="margin:0px;border:0px;list-style:none;padding:0px 0px 0px 7px;clear:both;"><li style="margin:0px;padding:0px;border:0px;list-style:none;position:relative;float:left;margin-right:3px;margin-bottom:3px;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:52px;height:52px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/E___0321EN00SIGT.gif" type="image/gif" data-filename="E___0321EN00SIGT.gif" alt="就不买你" height="50" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);" title="就不买你" width="50"/></a></li><li style="margin:0px;padding:0px;border:0px;list-style:none;position:relative;float:left;margin-right:3px;margin-bottom:3px;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:52px;height:52px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/E___0320EN00SIGT.gif" type="image/gif" data-filename="E___0320EN00SIGT.gif" alt="股市" height="50" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);" title="股市" width="50"/></a></li><li style="margin:0px;padding:0px;border:0px;list-style:none;position:relative;float:left;margin-right:3px;margin-bottom:3px;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:52px;height:52px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/E___0319EN00SIGT.gif" type="image/gif" data-filename="E___0319EN00SIGT.gif" alt="发霉" height="50" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);" title="发霉" width="50"/></a></li><li style="margin:0px;padding:0px;border:0px;list-style:none;position:relative;float:left;margin-right:3px;margin-bottom:3px;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:52px;height:52px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/E___0318EN00SIGT.gif" type="image/gif" data-filename="E___0318EN00SIGT.gif" alt="陈水边" height="50" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);" title="陈水边" width="50"/></a></li><li style="margin:0px;padding:0px;border:0px;list-style:none;position:relative;float:left;margin-right:3px;margin-bottom:3px;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:52px;height:52px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/E___0317EN00SIGT.gif" type="image/gif" data-filename="E___0317EN00SIGT.gif" alt="裁员" height="50" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);" title="裁员" width="50"/></a></li><li style="margin:0px;padding:0px;border:0px;list-style:none;position:relative;float:left;margin-right:3px;margin-bottom:3px;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:52px;height:52px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/E___0316EN00SIGT.gif" type="image/gif" data-filename="E___0316EN00SIGT.gif" alt="音乐" height="50" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);" title="音乐" width="50"/></a></li><li style="margin:0px;padding:0px;border:0px;list-style:none;position:relative;float:left;margin-right:3px;margin-bottom:3px;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:52px;height:52px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/E___0315EN00SIGT.gif" type="image/gif" data-filename="E___0315EN00SIGT.gif" alt="贴你" height="50" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);" title="贴你" width="50"/></a></li><li style="margin:0px;padding:0px;border:0px;list-style:none;position:relative;float:left;margin-right:3px;margin-bottom:3px;"><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfx.html#" style="text-decoration:none;color:rgb(9, 67, 130);width:52px;height:52px;outline:none;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/E___0314EN00SIGT.gif" type="image/gif" data-filename="E___0314EN00SIGT.gif" alt="抢车位" height="50" style="margin:0px;padding:0px;list-style:none;border:1px solid rgb(182, 182, 182);" title="抢车位" width="50"/></a></li></ul>
+					</div>
+					<div style="clear:both;height:0px;overflow:hidden;"></div>
+				</div>
+				<div style="width:100%;clear:both;">
+					<div style="float:left;display:inline;"> 
+					<p style="margin:0px;padding:0px;border:0px;list-style:none;margin-bottom:8px;"> <span style="margin:0px;padding:0px;border:0px;list-style:none;cursor:pointer;"><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/sg_trans [4].gif" type="image/gif" data-filename="sg_trans.gif" align="absmiddle" height="18" style="margin:0px;padding:0px;border:0px;list-style:none;background-image:url("http://simg.sinajs.cn/blog7style/css/common/../../images/common/sg_icon.png?20131218");background-position:525px -60px;margin-right:2px;" title="" width="18"/>分享到微博 <img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/sg_trans [5].gif" type="image/gif" data-filename="sg_trans.gif" align="absmiddle" height="15" style="margin:0px;padding:0px;border:0px;list-style:none;background-image:url("http://simg.sinajs.cn/blog7style/css/common/../../images/common/sg_icon.png?20131218");background-position:465px top;" title="新" width="15"/></span>   <span style="margin:0px;padding:0px;border:0px;list-style:none;cursor:pointer;">评论并转载此博文</span><img src="连接ftp报错：500 OOPS cannot change directory 解决方法_files/sg_trans [6].gif" type="image/gif" data-filename="sg_trans.gif" align="absmiddle" height="15" style="margin:0px;padding:0px;border:0px;list-style:none;background-image:url("http://simg.sinajs.cn/blog7style/css/common/../../images/common/sg_icon.png?20131218");background-position:465px top;" title="新" width="15"/></p>
+					<p style="margin:0px;padding:0px;border:0px;list-style:none;margin-bottom:8px;"><div style="box-sizing:content-box;overflow:visible;position:relative;zoom:1;width:261px;letter-spacing:0px;font-family:&quot;Open Sans&quot;, Arial, &quot;Hiragino Sans GB&quot;, &quot;Microsoft YaHei&quot;, STHeiti, &quot;WenQuanYi Micro Hei&quot;, SimSun, sans-serif;touch-action:none;"><div style="background-repeat:no-repeat;background-image:url(&quot;http://static.geetest.com/static/golden/sprite.3.2.0.png&quot;);height:28px;width:261px;background-position:0px 0px;position:relative;overflow:visible;left:0px;"><div style="cursor:default;position:absolute;left:40px;color:rgb(72, 108, 128);opacity:1;height:28px;text-align:center;width:220px;font-size:12px;line-height:28px;">按住左边滑块，拖动完成上方拼图</div><div style="display:block;background-repeat:no-repeat;height:44px;width:44px;background-position:0px -84px;cursor:pointer;background-image:url(&quot;http://static.geetest.com/static/golden/sprite.3.2.0.png&quot;);position:absolute;left:0px;top:-9px;box-shadow:none;border-radius:13px;z-index:399;"></div><div style="color:rgb(182, 169, 152);cursor:default;left:0px;width:100%;text-align:center;position:absolute;height:28px;opacity:0;visibility:hidden;font-size:12px;line-height:28px;">点击上图按钮并沿道路拖动到终点处</div><div style="left:0px;background-repeat:no-repeat;height:28px;width:100%;background-position:0px -360px;cursor:default;position:absolute;background-image:url(&quot;http://static.geetest.com/static/golden/sprite.3.2.0.png&quot;);text-align:center;color:rgb(182, 169, 152);opacity:0;visibility:hidden;font-size:12px;line-height:28px;">移动到此开始验证</div><div style="position:absolute;right:-35px;top:2px;background-repeat:no-repeat;background-image:url(&quot;http://static.geetest.com/static/golden/sprite.3.2.0.png&quot;);height:26px;width:26px;background-position:0px -1153px;"></div></div></div></p>
+					</div>
+
+					
+
+											<div style="float:right;display:inline;"><span style="margin:0px;padding:0px;border:0px;list-style:none;cursor:pointer;">匿名评论</span></div>
+									</div>
+				<div style="text-align:center;padding:25px 0px 0px;width:100%;clear:both;">
+					<a href="#" style="background-repeat:no-repeat;background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/sg_newsp.png&quot;);cursor:pointer;padding:0px 0px 0px 3px;overflow:hidden;white-space:nowrap;color:rgb(50, 62, 50);background-position:0px 0px;display:inline-block;margin-right:6px;text-decoration:none;font-size:12px;"><cite style="background-position:right -28px;font-style:normal;min-width:48px;padding:0px 10px 0px 8px;height:23px;background-repeat:no-repeat;line-height:23px;display:inline-block;overflow-x:visible;white-space:nowrap;text-align:center;background-image:url(&quot;http://simg.sinajs.cn/blog7newtpl/css/3/3_11/../../../image/3/3_11/images/sg_newsp.png&quot;);font-size:12px;">发评论</cite></a>
+					<p style="margin:0px;border:0px;list-style:none;color:rgb(99, 113, 96);padding:15px 0px 25px;">以上网友发言只代表其个人观点，不代表新浪网的观点或立场。</p>
+				</div>
+			</div>
+		</div>
+				<div style="clear:both;height:0px;overflow:hidden;"></div>
+		
+				<div style="display:block;clear:both;margin:20px 0px 0px;padding:24px 0px;font-size:14px;margin-top:0px;padding-top:0px;">
+						  <div style="float:left;display:inline;line-height:24px;min-height:24px;font-family:宋体;width:340px;"><span style="color:rgb(99, 113, 96);clear:both;display:block;">&lt; 前一篇</span><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvfu.html" style="text-decoration:none;color:rgb(9, 67, 130);">vsftpd 530 Login incorrect错误与530 Permission denied错误的解决方案</a></div>
+									  <div style="float:right;display:inline;line-height:24px;min-height:24px;font-family:宋体;text-align:right;width:340px;"><span style="color:rgb(99, 113, 96);clear:both;display:block;">后一篇 &gt;</span><a href="http://blog.sina.com.cn/s/blog_7f2a8f960102wvg1.html" style="text-decoration:none;color:rgb(9, 67, 130);">Could not execute auto check for display colors using&amp;nb</a></div>
+					<span style="font-size:14px;clear:both;display:block;height:0px;visibility:hidden;overflow:hidden;">.</span></div>
+		<div style="clear:both;height:0px;overflow:hidden;"></div>
+				
+	</div></div></div></div></div></div></div></div></div></div><br/></div></span>
+</div></body></html> 

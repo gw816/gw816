@@ -1,0 +1,77 @@
+<html>
+<head>
+  <title>maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="4315"/>
+<h1>maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div><div><div><div><h1> maven之一：maven安装和eclipse集成 </h1><div><div></div></div></div>
+		
+		
+			<p>maven作为一个项目构建工具，在开发的过程中很受欢迎，可以帮助管理项目中的bao依赖问题，另外它的很多功能都极大的减少了开发的难度，下面来介绍maven的安装及与eclipse的集成。</p>
+<p>maven的官网地址为：http://maven.apache.org/，打开网页之后，看到最新的版本是3.3.9，从对3.3.9版本的介绍，可以知道3.3以上的版本需要JDK1.7的支持，下面是maven各版本需要的JDK的支持，我这里电脑上是JDK1.6，所以我这里下载的是3.2.2版本的maven。</p>
+<p></p><div><img src="maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园_files/985599-20160925165505697-772439898.png" type="image/png" data-filename="985599-20160925165505697-772439898.png" height="275" width="576"/></div><p></p>
+<p>由于maven需要JDK的支持，所以在安装maven之前请确保电脑上已经安装了JDK，且配置好了环境变量，具体的JDK的安装及配置可自行百度。下面进入安装</p>
+<p>一、maven安装</p>
+<p>前面已经下载了相应版本的maven，且已经配置好JDK的环境；</p>
+<p>    1、把下载好的压缩包解压到一个路径，我这里解压的路径为：e:\maven\apache-maven-3.2.2，</p>
+<p>    2、解压之后需要配置环境变量，新建MAVEN_HOME环境变量，值为：e:\maven\apache-maven-3.2.2，然后向path环境变量值的最后添加如下内容：%maven_home%\bin;，注意在向path中添加值的时候不同的值需要以英文状态下分号隔开，且最后一个值也需要以分号结尾，点击确定完成环境变量的配置。</p>
+<p>    3、测试，在命令行中输入：mvn -v ，回车，如果出现如下图所示，则证明maven安装成功，</p>
+<p></p><div><img src="maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园_files/985599-20160925170607744-2119735801.png" type="image/png" data-filename="985599-20160925170607744-2119735801.png" height="149" width="576"/></div><p></p>
+<p>maven安装完成之后可以单独使用，独立使用maven创建项目、构建工程等。这里不介绍其单独使用的方式，这里介绍它和eclipse集成的方法。</p>
+<p>二、和eclipse的集成</p>
+<p>eclipse一个集成的开发环境，在开发过程中用的很广泛，下面看如何在eclipse中使用maven，在eclipse的4.4以上的版本加入了对maven的支持，即不需要安装maven插件，但对4.4以下的版本需要自己安装插件，可以在下面的网址：http://marketplace.eclipse.org/content/maven-integration-eclipse-luna，去了解安装过程，安装完成之后，</p>
+<p>    1、在windows--&gt;&gt;preferences中找到maven选项，下图，</p>
+<p></p><div><img src="maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园_files/985599-20160925172027367-390461291.png" type="image/png" data-filename="985599-20160925172027367-390461291.png" height="444" width="576"/></div><p></p>
+<p>上图中我们找到maven--&gt;&gt;installations看到，已经有了，但是我们要使用刚才安装的maven，选择add按钮，找到刚才解压的maven的路径，如下，</p>
+<p></p><div><img src="maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园_files/985599-20160925172230813-468127317.png" type="image/png" data-filename="985599-20160925172230813-468127317.png" height="398" width="543"/></div><p></p>
+<p>由于我这里已经安装过，所以提示已经存在，修改完maven的位置之后，我们需要修改配置文件</p>
+<p>    2、修改配置文件，找到maven的解压目录，之后进入conf文件夹，编辑settings.xml，在settings找到注释掉的localRespository标签，此标签的目的是配置本地的maven仓库，我们加入这样一个配置：&lt;localRepository&gt;E:/apache-maven-3.3.1-bin/mvn/mvnrepository&lt;/localRepository&gt;，即把本地仓库设置为我的本地目录。然后保存即可。</p>
+<p>    3、eclipse中更新配置文件</p>
+<p>    在eclipse中windows--&gt;preferences，找到maven，然后如下图所示，找到User settings，修改配置文件为刚才修改的配置文件，</p>
+<p></p><div><img src="maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园_files/985599-20160925172923404-1265994932.png" type="image/png" data-filename="985599-20160925172923404-1265994932.png" height="299" width="576"/></div><p></p>
+<p>修改完成之后，则和eclipse的集成完成。</p>
+<p>经过以上的步骤则maven和eclipse的集成完成，接下来可以使用maven了，但，如果你的电脑是通过代理上网的话，必须在settings.xml文件中配置代理，这样才可以从maven的仓库中下载所需的文件，配置的代理的方式如下，在settings.xml文件中添加如下内容，</p>
+<div>
+<pre>&lt;proxy&gt;  
+     &lt;id&gt;myProxy&lt;/id&gt;  
+     &lt;active&gt;true&lt;/active&gt;  
+     &lt;protocol&gt;http&lt;/protocol&gt;
+     &lt;username&gt;&lt;/username&gt;
+      &lt;password&gt;&lt;/password&gt;     
+     &lt;host&gt;proxy.xxxxx&lt;/host&gt;  
+     &lt;port&gt;910&lt;/port&gt;    
+   &lt;/proxy&gt; </pre>
+</div>
+<p>id  代理ID 标识代理</p>
+<p>active  设置代理是否启用</p>
+<p>protocol  代理使用的协议</p>
+<p>username  连接代理的用户名，如，此代理不需要用户名则可以把此标签删掉</p>
+<p>password  连接代理的密码，如，同上</p>
+<p>host  代理的网址</p>
+<p>port  代理使用的端口</p>
+<p>上面是使用代理上网的配置，如果上网没使用代理，则不需要配置。</p>
+<p>三、使用maven创建项目</p>
+<p>java开发过程中使用的最多的是java、javaWeb项目，</p>
+<p>file--&gt;&gt;new---&gt;project，然后找到maven，如下图选择，</p>
+<p></p><div><img src="maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园_files/985599-20160925173727985-1628996985.png" type="image/png" data-filename="985599-20160925173727985-1628996985.png" height="496" width="561"/></div><p></p>
+<p>点击next,</p>
+<p></p><div><img src="maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园_files/985599-20160925173810426-273158137.png" type="image/png" data-filename="985599-20160925173810426-273158137.png" height="411" width="576"/></div><p></p>
+<p>在点击next,</p>
+<p></p><div><img src="maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园_files/985599-20160925173903195-29932328.png" type="image/png" data-filename="985599-20160925173903195-29932328.png" height="475" width="576"/></div><p></p>
+<p>第一个红框内表示的是新建java项目，第二个是javaWeb项目，这里选择第一个，</p>
+<p></p><div><img src="maven之一：maven安装和eclipse集成 - 迷茫中守候 - 博客园_files/985599-20160925174036295-1205981750.png" type="image/png" data-filename="985599-20160925174036295-1205981750.png" height="487" width="576"/></div><p></p>
+<p>输入红框的内容之后，点击finish，ecplise则会开始创建项目，此时会连接网络从网上下载需要的jar包，jar包存放的路径就是配置的本地仓库的路径，我的在：E:\apache-maven-3.3.1-bin\mvn\mvnrepository路径下，在E:\apache-maven-3.3.1-bin\mvn\mvnrepository\org\apache\maven\plugins文件夹下是maven插件所需的依赖插件。</p>
+<p>maven环境已经搭建好，且创建了一个maven项目，接下来是maven的使用，放在下次。</p>
+<p>有不正之处欢迎指出，谢谢！</p></div></div></div><br/></div></span>
+</div></body></html> 

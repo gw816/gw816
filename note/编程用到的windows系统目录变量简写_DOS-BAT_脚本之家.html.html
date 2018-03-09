@@ -1,0 +1,86 @@
+<html>
+<head>
+  <title>编程用到的windows系统目录变量简写_DOS-BAT_脚本之家.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="798"/>
+<h1>编程用到的windows系统目录变量简写_DOS-BAT_脚本之家.html</h1>
+
+<div>
+<span><div><h1>编程用到的windows系统目录变量简写</h1><p>作者： 字体：[<a>增加</a> <a>减小</a>] 类型：转载 时间：2012-12-17 <a href="#comments">我要评论</a></p></div><div>windows系统目录变量在编程时会经常用到，本文提供了简写对比，方便使用，需要了解的朋友可以参考下</div><div>%ALLUSERSPROFILE% C:\Documents and Settings\All Users<br/>
+%USERPROFILE% C:\Documents and Settings\当前用户名<br/>
+%HOMEPATH% C:\Documents and Settings\当前用户名<br/>
+%SYSTEMROOT% C:\WINDOWS<br/>
+%WINDIR% C:\WINDOWS<br/>
+%ComSpec% C:\WINDOWS\System32\cmd.exe<br/>
+%APPDATA% C:\Documents and Settings\当前用户名\Application Data<br/>
+%ALLAPPDATA% C:\Documents and Settings\All Users\Application Data<br/>
+%SYSTEMDRIVE% C:<br/>
+%HOMEDRIVE% C:<br/>
+%TEMP% 和 %TMP% C:\Documents and Settings\当前用户名\Local Settings\Temp<br/>
+%ProgramFiles% C:\Program Files<br/>
+%CommonProgramFiles% C:\Program Files\Common Files<br/>
+Docum~1 Documents and Settings<br/>
+progra~1 Program Files<br/><br/><strong>编程用的到</strong>：<br/>
+%ALLUSERSPROFILE% C:\Documents and Settings\All Users<br/>
+%USERPROFILE% C:\Documents and Settings\当前用户名<br/>
+%HOMEPATH% C:\Documents and Settings\当前用户名<br/>
+%SYSTEMROOT% C:\WINDOWS<br/>
+%WINDIR% C:\WINDOWS<br/>
+%ComSpec% C:\WINDOWS\System32\cmd.exe<br/>
+%APPDATA% C:\Documents and Settings\当前用户名\Application Data<br/>
+%ALLAPPDATA% C:\Documents and Settings\All Users\Application Data<br/>
+%SYSTEMDRIVE% C:<br/>
+%HOMEDRIVE% C:<br/>
+%TEMP% 和 %TMP% C:\Documents and Settings\当前用户名\Local Settings\Temp<br/>
+%ProgramFiles% C:\Program Files<br/>
+%CommonProgramFiles% C:\Program Files\Common Files<br/>
+Docum~1 Documents and Settings<br/>
+progra~1 Program Files<br/>
+%systemdrive%：Windows系统所在磁盘分区，通常就是C盘的根目录<br/>
+%systemroot%,%windir%：Windows系统所在的目录，通常是C:\Winows<br/>
+%programfiles%：通常情况下是C:\program files<br/>
+%commonprogramfiles%：公用文件目录，通常是C:\program files\common files<br/>
+%userprofile%：当前账户的用户目录，通常是C:\documents and settings\当前用户名<br/>
+%alluserprofile%：所有用户的用户目录，通常是C:\documents and settings\all user<br/>
+%temp%,%tmp%：当前用户的临时文件目录，通常是C:\documents and settings\当前用户名\local settings\temp<br/><br/>
+所谓的Windows系统目录简写环境变量，就是为一些常用且固定的Windows系统目录的路径建立一个与之对应的相对简单的缩写，使之更容易输入或定位。<br/><br/>
+Windows系统默认情况下都是安装在电脑C盘的Windows目录下，但这并不是固定的，如果你的系统不是安装在这个目录下，那么程序想要定位你的某个系统目录的话，就需要使用到目录简写环境变量了。使用这些环境变量，程序员或系统管理员无需事先了?解你的系统安装位置，就能轻易的找到所要使用的系统目录路径。<br/><br/>
+下面，我就来为大家介绍一些常见的Windows系统目录简写环境变量：<br/>
+%SYSTEMDRIVE%<br/>
+这代表的是Windows系统所在磁盘分区，也就是Windows系统所安装到的盘符根目录，通常就是C盘的根目录了。<br/>
+%HOMEDRIVE%<br/>
+这和上面介绍的%SYSTEMDRIVE%的功能是一样的。<br/>
+%SYSTEMROOT%<br/>
+它所指向的是Windows系统所在的目录，通常就是C:\Windows。<br/>
+%WINDIR%<br/>
+和%SYSTEMROOT%的功能相同，指向Windows所在目录。<br/>
+%ProgramFiles%<br/>
+指向Program Files的路径，通常情况下是C:\Program Files。<br/>
+%CommonProgramFiles%<br/>
+指向公用文件（Common Files）目录，通常是C:\Program Files\Common Files。<br/>
+%USERPROFILE%<br/>
+指向当前帐户的用户目录，通常是C:\Documents and Settings\当前用户名。<br/>
+%HOMEPATH%<br/>
+功能和上面的%USERPROFILE%是一样的。<br/>
+%ALLUSERSPROFILE%<br/>
+指向所有用户的用户目录，通常是C:\Documents and Settings\All Users。<br/>
+%APPDATA%<br/>
+指向当前用户的Application Data目录，通常是C:\Documents and Settings\当前用户名\Application Data。<br/>
+很多文章都会介绍一个叫做%ALLAPPDATA%的变量，说它是指向C:\Documents and Settings\All Users\Application Data的，但其实这个变量并不能使用。<br/>
+%TEMP%<br/>
+它指向的是当前用户的临时文件目录，通常是C:\Documents and Settings\当前用户名\Local Settings\Temp。<br/>
+%TMP%<br/>
+与%TEMP%的指向相同。<br/>
+%ComSpec%<br/>
+指向C:\WINDOWS\System32\cmd.exe，也就是命令提示符。</div><div><strong>Tags：</strong><a href="http://img.jb51.net/tag/%B1%E4%C1%BF%BC%F2%D0%B4/1.htm" target="_blank" title="搜索关于变量简写的文章">变量简写</a> <a href="http://img.jb51.net/tag/%CF%B5%CD%B3%C4%BF%C2%BC/1.htm" target="_blank" title="搜索关于系统目录的文章">系统目录</a></div><div><h2>相关文章</h2><ul><li>2011-01-01<a target="_blank" title="批处理中的预处理实现代码">批处理中的预处理实现代码</a></li><li>2015-09-09<a target="_blank" title="Takeown 获取文件or文件夹所有权">Takeown 获取文件or文件夹所有权</a></li><li>2013-05-05<a target="_blank" title="批处理BAT替换与截取字符串的用法t1=%a:~3%是什么意思">批处理BAT替换与截取字符串的用法t1=%a:~3%是什么意思</a></li><li>2007-08-08<a target="_blank" title="可疑文件的批处理最好能用循环来写主体部分">可疑文件的批处理最好能用循环来写主体部分</a></li><li>2014-05-05<a target="_blank" title="批处理中Copy与Xcopy命令的区别小结">批处理中Copy与Xcopy命令的区别小结</a></li><li>2009-04-04<a target="_blank" title="ren 命令在使用通配符时需要注意的地方">ren 命令在使用通配符时需要注意的地方</a></li><li>2014-07-07<a target="_blank" title="批处理bat下载FTP服务器上指定天数之前的文件">批处理bat下载FTP服务器上指定天数之前的文件</a></li><li>2006-12-12<a target="_blank" title="DOS 命令字典">DOS 命令字典</a></li><li>2007-08-08<a target="_blank" title="中文显示ping结果的批处理bat文件">中文显示ping结果的批处理bat文件</a></li><li>2007-03-03<a target="_blank" title="在DOS下使用长文件名的方法">在DOS下使用长文件名的方法</a></li></ul></div><a href="#comments"></a><div><h2>最新评论</h2><div style="width: 100%; height: auto;"><div style="position: relative;"><div style="position: relative; z-index: 2;"><div><strong>评论</strong>(<em>0</em>人参与<i>，</i><em>0</em>条评论)</div></div><img src="编程用到的windows系统目录变量简写_DOS-BAT_脚本之家.html_files/Image.gif" type="image/gif" data-filename="Image.gif" style="position: absolute; top: 0px; right: 0px; height: auto;"/><div style="position: relative; z-index: 2;"><div style="display: none;"><a href="http://zt.pinglun.sohu.com/s2014/sljyhgy/index.shtml" target="_blank">搜狐“我来说两句”用户公约</a></div></div></div><div style="position: relative; z-index: 1;"><div style="width:1px;height:1px;overflow:hidden;"><img src="编程用到的windows系统目录变量简写_DOS-BAT_脚本之家.html_files/Image.jpg" type="image/jpeg" data-filename="Image.jpg" style="visibility:hidden;width:1px;height:1px;"/></div><div><a target="_self"><img src="编程用到的windows系统目录变量简写_DOS-BAT_脚本之家.html_files/Image [1].gif" type="image/gif" data-filename="Image.gif" height="42" style="height: auto;" width="42"/></a></div><div style="position: relative;"><div style="position: relative; z-index: 2;"><ul><li><a title="表情"></a></li><li><a title="上传图片"></a></li></ul></div><img src="编程用到的windows系统目录变量简写_DOS-BAT_脚本之家.html_files/Image.png" type="image/png" data-filename="Image.png" style="position: absolute; top: 0px; right: 88px; height: 39px;"/></div><div><ul><li style="display:block"><div><a target="_self" title="新浪微博">微博登录</a></div></li><li style="display:block"><div><a target="_self" title="QQ">QQ登录</a></div></li><li><div><a target="_self">手机登录</a></div></li></ul></div><div style="display: none;">等级不够，发表评论升至指定级别才能获得该特权。详情请参见<a>等级说明</a>。</div></div><div>还没有评论，快来抢沙发吧！</div><div><a href="http://changyan.sohu.com/?from=changyan" target="_blank">Powered by 畅言</a></div></div></div></span>
+</div></body></html> 

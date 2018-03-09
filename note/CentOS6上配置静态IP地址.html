@@ -1,0 +1,255 @@
+<html>
+<head>
+  <title>CentOS6上配置静态IP地址</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="3975"/>
+<h1>CentOS6上配置静态IP地址</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div style="font-size: 16px; display: inline-block;"><div style="background:rgb(255, 255, 255);"><div style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:normal;font-family:Verdana, Arial, Tahoma;"><div style="overflow:hidden;"><div style="overflow:hidden;">
+		<div style="border-bottom:1px solid rgb(224, 236, 243);margin:0px;padding:0px;background:rgb(242, 252, 254);border-top:1px solid rgb(224, 236, 243);height:24px;text-indent:12px;color:rgb(204, 204, 204);overflow:hidden;line-height:24px;width:712px;">
+			<strong style="padding:0px;margin:0px;color:rgb(57, 124, 190);font-weight:normal;letter-spacing:1px;">当前位置:</strong> <a href="http://www.centoscn.com/" style="padding:0px;text-decoration:none;color:rgb(57, 124, 190);margin:0px 2px;"></a> &gt; <a href="http://www.centoscn.com/CentOS/" style="padding:0px;text-decoration:none;color:rgb(57, 124, 190);margin:0px 2px;">CentOS入门</a> &gt; <a href="http://www.centoscn.com/CentOS/help/" style="padding:0px;text-decoration:none;color:rgb(57, 124, 190);margin:0px 2px;">基础命令</a> &gt; 
+		</div>
+		<div style="padding:0px;margin:0px;width:712px;overflow:hidden;padding-bottom:8px;">
+			<div style="padding:0px;margin:0px;height:56px;line-height:56px;text-align:center;overflow:hidden;padding-top:10px;">
+				<h2 style="padding:0px;margin:0px;font-size:24px;color:rgb(51, 102, 153);">CentOS6上配置静态IP地址</h2>
+			</div>
+			<div style="padding:0px;margin:0px;height:24px;line-height:17px;text-align:center;overflow:hidden;color:rgb(102, 102, 102);">
+				<small style="padding:0px;margin:0px;margin-left:8px;margin-right:3px;color:rgb(153, 153, 153);font-size:12px;">时间:</small>2014-10-01 22:36<small style="padding:0px;margin:0px;margin-left:8px;margin-right:3px;color:rgb(153, 153, 153);font-size:12px;">来源:</small>csdn  <small style="padding:0px;margin:0px;margin-left:8px;margin-right:3px;color:rgb(153, 153, 153);font-size:12px;">作者:</small>Think-througher <a href="http://www.centoscn.com/plus/erraddsave.php?aid=3892&amp;title=CentOS6%C9%CF%C5%E4%D6%C3%BE%B2%CC%ACIP%B5%D8%D6%B7" style="padding:0px;margin:0px;text-decoration:none;color:rgb(102, 153, 0);" target="_blank">举报</a>   <small style="padding:0px;margin:0px;margin-left:8px;margin-right:3px;color:rgb(153, 153, 153);font-size:12px;">点击:</small>3602次</div>
+
+			<div style="margin:0px;font-size:14px;padding:12px 16px;line-height:25px;color:rgb(51, 51, 51);">
+
+
+
+<h3 style="padding:0px;margin:0px;color:rgb(51, 51, 51);font-family:Arial;line-height:26px;">
+	问题</h3>
+<div style="padding:0px;margin:0px;color:rgb(51, 51, 51);font-family:Arial;font-size:14px;line-height:26px;">
+	默认情况下，CentOS 6安装没有网络接入相关配置，需要你对网络接口进行配置。</div>
+<h3 style="padding:0px;margin:0px;color:rgb(51, 51, 51);font-family:Arial;line-height:26px;">
+	解决方案</h3>
+<h4 style="padding:0px;margin:0px;color:rgb(51, 51, 51);font-family:Arial;font-size:14px;line-height:26px;">
+	查看缺省接口配置</h4>
+<div style="padding:0px;margin:0px;color:rgb(51, 51, 51);font-family:Arial;font-size:14px;line-height:26px;">
+	接口相关配置保存在/etc/sysconfig/network-scripts目录下，下面显示的是缺省的接口配置。</div>
+<div style="padding:0px;margin:0px;color:rgb(51, 51, 51);font-family:Arial;font-size:14px;line-height:26px;">
+	<div style="padding:0px;margin:18px 0px !important;font-family:Consolas, 'Courier New', Courier, mono, serif;font-size:12px;width:700.90625px;overflow:auto;padding-top:1px;background-color:rgb(231, 229, 220);">
+		<div style="padding:0px;margin:0px;padding-left:45px;">
+			<div style="padding:3px 8px 10px 10px;margin:0px;font-size:9px;line-height:normal;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;color:silver;border-left-width:3px;border-left-style:solid;border-left-color:rgb(108, 226, 108);background-color:rgb(248, 248, 248);">
+				<b style="padding:0px;margin:0px;">[plain]</b> view plaincopy
+				<div style="padding:0px;margin:0px;position:absolute;left:717px;top:601px;width:18px;height:18px;z-index:99;">
+					 </div>
+			</div>
+		</div>
+		<ol start="1" style="padding:0px;margin:0px 0px 1px 45px !important;padding-right:0px;padding-left:0px;border:none;list-style-position:initial;list-style-image:initial;color:rgb(92, 92, 92);background-color:rgb(255, 255, 255);">
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;"><span style="padding:0px;margin:0px;border:none;background-color:inherit;">[root@CentOS65 network-scripts]# more /etc/sysconfig/network-scripts/ifcfg-eth0   </span></span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">DEVICE=eth0  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">HWADDR=00:0C:29:C1:48:03  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">TYPE=Ethernet  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">UUID=b2bbb718-caa6-46c3-ae12-587cbedfd5fa  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">ONBOOT=no  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">NM_CONTROLLED=yes  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">BOOTPROTO=dhcp  </span></li>
+		</ol>
+	</div>
+	<h4 style="padding:0px;margin:0px;">
+		配置接口静态地址</h4>
+	<div style="padding:0px;margin:0px;">
+		<div style="padding:0px;margin:18px 0px !important;font-family:Consolas, 'Courier New', Courier, mono, serif;font-size:12px;width:700.90625px;overflow:auto;padding-top:1px;background-color:rgb(231, 229, 220);">
+			<div style="padding:0px;margin:0px;padding-left:45px;">
+				<div style="padding:3px 8px 10px 10px;margin:0px;font-size:9px;line-height:normal;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;color:silver;border-left-width:3px;border-left-style:solid;border-left-color:rgb(108, 226, 108);background-color:rgb(248, 248, 248);">
+					<b style="padding:0px;margin:0px;">[plain]</b> view plaincopy
+					<div style="padding:0px;margin:0px;position:absolute;left:717px;top:840px;width:18px;height:18px;z-index:99;">
+						 </div>
+				</div>
+			</div>
+			<ol start="1" style="padding:0px;margin:0px 0px 1px 45px !important;padding-right:0px;padding-left:0px;border:none;list-style-position:initial;list-style-image:initial;color:rgb(92, 92, 92);background-color:rgb(255, 255, 255);">
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;"><span style="padding:0px;margin:0px;border:none;background-color:inherit;"># vi /etc/sysconfig/network-scripts/ifcfg-eth0  </span></span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">   </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">DEVICE=&quot;eth0&quot;  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">NM_CONTROLLED=&quot;yes&quot;  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">ONBOOT=yes  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">HWADDR=A4:BA:DB:37:F1:04  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">TYPE=Ethernet  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">BOOTPROTO=static  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">UUID=5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">IPADDR=10.220.33.108  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">NETMASK=255.255.255.0  </span></li>
+			</ol>
+		</div>
+		<h4 style="padding:0px;margin:0px;">
+			配置网关</h4>
+		<div style="padding:0px;margin:18px 0px !important;font-family:Consolas, 'Courier New', Courier, mono, serif;font-size:12px;width:700.90625px;overflow:auto;padding-top:1px;background-color:rgb(231, 229, 220);">
+			<div style="padding:0px;margin:0px;padding-left:45px;">
+				<div style="padding:3px 8px 10px 10px;margin:0px;font-size:9px;line-height:normal;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;color:silver;border-left-width:3px;border-left-style:solid;border-left-color:rgb(108, 226, 108);background-color:rgb(248, 248, 248);">
+					<b style="padding:0px;margin:0px;">[plain]</b> view plaincopy
+					<div style="padding:0px;margin:0px;position:absolute;left:717px;top:1133px;width:18px;height:18px;z-index:99;">
+						 </div>
+				</div>
+			</div>
+			<ol start="1" style="padding:0px;margin:0px 0px 1px 45px !important;padding-right:0px;padding-left:0px;border:none;list-style-position:initial;list-style-image:initial;color:rgb(92, 92, 92);background-color:rgb(255, 255, 255);">
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;"><span style="padding:0px;margin:0px;border:none;background-color:inherit;"># vi /etc/sysconfig/network  </span></span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">   </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">NETWORKING=yes  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">HOSTNAME=centos6  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">GATEWAY=10.220.33.1  </span></li>
+			</ol>
+		</div>
+		<h4 style="padding:0px;margin:0px;">
+			 重启网络接口</h4>
+	</div>
+</div>
+<div style="padding:0px;margin:0px;color:rgb(51, 51, 51);font-family:Arial;font-size:14px;line-height:26px;">
+	<div style="padding:0px;margin:18px 0px !important;font-family:Consolas, 'Courier New', Courier, mono, serif;font-size:12px;width:700.90625px;overflow:auto;padding-top:1px;background-color:rgb(231, 229, 220);">
+		<div style="padding:0px;margin:0px;padding-left:45px;">
+			<div style="padding:3px 8px 10px 10px;margin:0px;font-size:9px;line-height:normal;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;color:silver;border-left-width:3px;border-left-style:solid;border-left-color:rgb(108, 226, 108);background-color:rgb(248, 248, 248);">
+				<b style="padding:0px;margin:0px;">[plain]</b> view plaincopy
+				<div style="padding:0px;margin:0px;position:absolute;left:717px;top:1318px;width:18px;height:18px;z-index:99;">
+					 </div>
+			</div>
+		</div>
+		<ol start="1" style="padding:0px;margin:0px 0px 1px 45px !important;padding-right:0px;padding-left:0px;border:none;list-style-position:initial;list-style-image:initial;color:rgb(92, 92, 92);background-color:rgb(255, 255, 255);">
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;"><span style="padding:0px;margin:0px;border:none;background-color:inherit;">[root@CentOS65 network-scripts]# /etc/rc.d/init.d/network restart  </span></span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">Shutting down interface eth0:  [  OK  ]  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">Shutting down loopback interface:  [  OK  ]  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">Bringing up loopback interface:  [  OK  ]  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">Bringing up interface eth0:  Determining if ip address 10.220.33.108 is already in use for device eth0...  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">  </span></li>
+			<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+				<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">[  OK  ]  </span></li>
+		</ol>
+	</div>
+	<h4 style="padding:0px;margin:0px;">
+		配置DNS服务器</h4>
+	<div style="padding:0px;margin:0px;">
+		<div style="padding:0px;margin:18px 0px !important;font-family:Consolas, 'Courier New', Courier, mono, serif;font-size:12px;width:700.90625px;overflow:auto;padding-top:1px;background-color:rgb(231, 229, 220);">
+			<div style="padding:0px;margin:0px;padding-left:45px;">
+				<div style="padding:3px 8px 10px 10px;margin:0px;font-size:9px;line-height:normal;font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;color:silver;border-left-width:3px;border-left-style:solid;border-left-color:rgb(108, 226, 108);background-color:rgb(248, 248, 248);">
+					<b style="padding:0px;margin:0px;">[plain]</b> view plaincopy
+					<div style="padding:0px;margin:0px;position:absolute;left:717px;top:1556px;width:18px;height:18px;z-index:99;">
+						 </div>
+				</div>
+			</div>
+			<ol start="1" style="padding:0px;margin:0px 0px 1px 45px !important;padding-right:0px;padding-left:0px;border:none;list-style-position:initial;list-style-image:initial;color:rgb(92, 92, 92);background-color:rgb(255, 255, 255);">
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;"><span style="padding:0px;margin:0px;border:none;background-color:inherit;"># vi /etc/resolv.conf  </span></span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">   </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;color:inherit;line-height:18px;">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">nameserver x.x.x.x # Replace with your nameserver ip  </span></li>
+				<li style="padding:0px 3px 0px 10px !important;margin:0px !important;border-style:none none none solid;border-left-width:3px;border-left-color:rgb(108, 226, 108);list-style:decimal-leading-zero outside;line-height:18px;background-color:rgb(248, 248, 248);">
+					<span style="padding:0px;margin:0px;border:none;color:black;background-color:inherit;">nameserver y.y.y.y # Replace with your nameserver ip  </span></li>
+			</ol>
+		</div>
+		<h4 style="padding:0px;margin:0px;">
+			查看接口配置</h4>
+		<div style="padding:0px;margin:0px;">
+			使用&quot;ip a&quot;或ifconfig命令可以查看当前接口配置信息</div>
+		<h3 style="padding:0px;margin:0px;">
+			参考资料</h3>
+		<div style="padding:0px;margin:0px;">
+			1. Centos:Interface configuration files</div>
+	</div>
+</div>
+<br style="padding:0px;margin:0px;"/>
+
+			<table style="font-size:inherit;font-weight:inherit;font-style:inherit;font-variant:inherit;padding:0px;margin:0px;" width="100%">
+				
+			</table>
+			</div><div style="padding:0px;margin:0px;width:712px;float:none;overflow:hidden;text-align:center;">
+				<ul style="list-style:none;padding:12px 0px 12px 16px;float:none;margin:0px auto;clear:both;overflow:hidden;text-align:center;white-space:nowrap;">
+          
+				</ul>
+			</div>
+			
+			
+			<div style="padding:0px;width:710px;height:90px;margin:8px auto;clear:both;overflow:hidden;padding-left:8px;">
+
+
+			
+			<div style="padding:0px;height:10px;overflow:hidden;clear:both;background:url(&quot;http://www.centoscn.com/templets/style/../images/boxoff.gif&quot;) left 15px repeat-x;margin:4px auto;padding-top:10px;">				<strong style="padding:0px;margin:0px;display:block;width:8px;height:10px;overflow:hidden;font-size:0px;line-height:100px;background:url(&quot;http://www.centoscn.com/templets/style/../images/boxoff.gif&quot;) right -10px no-repeat;float:left;">------分隔线----------------------------</strong>
+			</div>
+			<div style="padding:0px;margin:0px;height:59px;padding-top:12px;overflow:hidden;clear:both;"></div>
+				<div style="padding:0px;margin:0px;">
+					<ul style="padding:0px;margin:0px;list-style:none;">
+						<li style="padding:0px;margin:0px;">上一篇：<a href="http://www.centoscn.com/CentOS/help/2014/1001/3891.html" style="padding:0px;margin:0px;color:rgb(37, 110, 177);text-decoration:none;">CentOS下查找文件安装路径</a> </li>
+						<li style="padding:0px;margin:0px;">下一篇：<a href="http://www.centoscn.com/CentOS/help/2014/1003/3895.html" style="padding:0px;margin:0px;color:rgb(37, 110, 177);text-decoration:none;">CentOS下su和sudo命令对比</a> </li>
+					</ul>
+				</div>
+				<div style="padding:0px;margin:0px;width:260px;text-align:center;float:right;padding-top:20px;padding-right:10px;">
+					<ul style="padding:0px;margin:0px;list-style:none;">
+						<li style="padding:0px;margin:0px;display:inline;padding-left:22px;background-image:url(&quot;http://www.centoscn.com/templets/style/../images/actbox-ico.gif&quot;);background-repeat:no-repeat;margin-right:10px;background-position:4px 0px;"><a href="http://www.centoscn.com/plus/stow.php?aid=3892" style="padding:0px;margin:0px;text-decoration:none;color:rgb(102, 102, 102);" target="_blank">收藏</a></li>
+						<li style="padding:0px;margin:0px;display:inline;padding-left:22px;background-image:url(&quot;http://www.centoscn.com/templets/style/../images/actbox-ico.gif&quot;);background-repeat:no-repeat;margin-right:10px;background-position:4px -37px;"><a href="http://www.centoscn.com/plus/erraddsave.php?aid=3892&amp;title=CentOS6%C9%CF%C5%E4%D6%C3%BE%B2%CC%ACIP%B5%D8%D6%B7" style="padding:0px;margin:0px;text-decoration:none;color:rgb(102, 102, 102);" target="_blank">举报</a></li>
+						<li style="padding:0px;margin:0px;display:inline;padding-left:22px;background-image:url(&quot;http://www.centoscn.com/templets/style/../images/actbox-ico.gif&quot;);background-repeat:no-repeat;margin-right:10px;background-position:4px -73px;"><a href="http://www.centoscn.com/plus/recommend.php?aid=3892" style="padding:0px;margin:0px;text-decoration:none;color:rgb(102, 102, 102);" target="_blank">推荐</a></li>
+						<li style="padding:0px;margin:0px;display:inline;padding-left:22px;background-image:url(&quot;http://www.centoscn.com/templets/style/../images/actbox-ico.gif&quot;);background-repeat:no-repeat;margin-right:10px;background-position:4px -109px;"><a href="http://www.centoscn.com/CentOS/help/2014/1001/3892.html#" style="padding:0px;margin:0px;text-decoration:none;color:rgb(102, 102, 102);">打印</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+
+
+<a name="postform" style="padding:0px;margin:0px;color:rgb(37, 110, 177);text-decoration:none;"></a>
+<div style="padding:0px;margin:0px;margin-top:8px;">
+		<dl style="padding:0px;margin:0px 0px 8px;border-bottom:1px solid rgb(223, 242, 245);overflow:hidden;background:url(&quot;http://www.centoscn.com/templets/style/../images/fl-bg.gif&quot;) 0px 0px repeat-x;">
+			<dt style="padding:0px;margin:0px;height:25px;border:1px solid rgb(223, 242, 245);overflow:hidden;clear:both;">
+				<strong style="float:left;margin:0px;padding:0px;padding-right:4px;display:block;line-height:25px;color:rgb(57, 124, 190);background:url(&quot;http://www.centoscn.com/templets/style/../images/fbico.gif&quot;) 5px 6px no-repeat;letter-spacing:1px;padding-left:22px;height:26px;">发表评论</strong>
+				<span style="padding:0px;margin:0px;float:right;position:relative;line-height:26px;padding-right:8px;color:rgb(57, 124, 190);"></span>
+			</dt>
+			<dd style="margin:0px;border-left:1px solid rgb(223, 242, 245);border-right:1px solid rgb(223, 242, 245);padding:4px 4px 0px;overflow:hidden;">
+				<div style="margin:0px;padding:5px;">
+          <div style="padding:0px;margin:0px;">
+          
+          
+          
+          
+          <div style="padding:0px;margin:0px;line-height:25px;">
+						<small style="padding:0px;margin:0px;font-size:12px;color:rgb(153, 153, 153);">为了和诣的生活，我关闭了评论页面，请大家到QQ群里交流吧：348944156,也欢迎关注本站微信公众号：centoscn </small>
+					
+				
+			</div></div></div></dd>
+		</dl>
+	</div>
+
+
+
+</div></div></div></div></div><br/></div></span>
+</div></body></html> 

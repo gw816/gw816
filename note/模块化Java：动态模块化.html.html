@@ -1,0 +1,176 @@
+<html>
+<head>
+  <title>模块化Java：动态模块化.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="1062"/>
+<h1>模块化Java：动态模块化.html</h1>
+
+<div>
+<span><p>本文是“模块化Java”系列文章的第三篇，我们将讨论<b>动态模块化</b>。内容涉及如何解析bundle类、bundle如何变化、以及bundle之间如何通信。</p><p>在前一篇文章《<a href="http://www.infoq.com/cn/articles/modular-java-static-modularity">模块化Java：静态模块化</a>》中，我们讨论了如何构建Java模块并将其作为一个单独的JAR进行部署。文中的例子给出了一个client和一个server bundle（两者在同一个VM中），client通过工厂方法找到server。在该例子中，工厂实例化了一个已知类，当然也可以使用反射来获取一个服 务实现；Spring就是大量运用这种技术把spring对象绑定在一起的。</p><p>在我们讨论动态服务之前，有必要回顾一下类路径，因为标准Java代码和模块化Java代码的区别之一就是依赖在运行时是如何绑定的。在此之后，我们还将简单讨论一下类的垃圾回收；如果你对此已非常熟悉，则可以<a href="#services">跳过这部分内容</a>。</p><div><p>相关厂商内容</p><div><h3><a target="_blank">更多活动，更多选择，尽在活动专区。</a></h3><h3><a>利用 Amazon ElastiCache 保障规模化条件下的性能水平</a></h3><h3><a>AWS云上的Active Directory Domain Services：快速入门参考部署</a></h3><h3><a>如何通过使用 AWS对IT资源实现高级别管控，并大规模实现更高级别的安全性？</a></h3><h3><a>通过demo学习OpenStack开发所需的基础知识 — 软件包管理</a></h3></div></div><h2>Bundle ClassPath</h2><p>对于一个普通Java程序，只有一个classpath——启动应用程序所使用的那个。该路径通常是在命令行中用-classpath选项指定的，或者通 过CLASSPATH 环境变量来设定。Java类装载器在运行时解析类的时候会扫描此路径，无论这一过程是静态地（已编译进代码）还是动态地（使用反射及 class.forName()）。然而，在运行时也可以使用多个类加载器；像<a href="http://www.eclipse.org/jetty/">Jetty</a>和<a href="http://tomcat.apache.org/">Tomcat</a>这样的Web应用引擎都是使用多个类加载器，以便支持应用热部署。</p><p>在OSGi中，每个bundle都有其自己的类加载器。需要被其他bundle访问的类则被<b>委派（delegated）</b>给这些其他bundle的类装载器。因此，尽管在传统应用中，来自logging类库、client和server JAR中的类都是由同一个类加载器加载的，但在OSGi模块系统中，他们都是由自己的类加载器加载的。</p><p>结果是，一个VM中有可能有多个类加载器，其中可能存在名字相同的不同Class的对象。也就是说，在同一个VM中，一个叫做 com.infoq.example.App的类，其不同版本可以由com.infoq.example bundle的第1版和第2版同时输出。Client bundle版本1使用该类的第1版，而client版本2使用该类的第2版。这在模块化系统中相当普遍；在同一个VM中，有些代码可能需要装载一个类库 的老版本，同时更新点的代码（在另一个bundle中）却需要该类库的新版本。好在OSGi为你管理起这种依赖传递，确保不再出现不兼容类引发的问题。</p><h2>类的垃圾回收</h2><p>每个类都有一个对其类装载器的引用。因此如果想要从不同的bundle访问这些类，不但要有对该类实例的引用，而且还要有对该类的类装载器的引用。当一个bundle持有另一个bundle的类时，它也会将该bundle<b>固定</b>在内存中。在前篇文章的例子中，client被固定到该server上。</p><p>在静态世界里，无论你是否把自己的类固定到其他类（或类库）都无所谓；因为不会有什么变化。可是，在动态世界里，在运行时将类库或工具替换成新版本就有可 能了。这听起来可能有点复杂，但是在可热部署应用的Web应用引擎早期就出现了（如Tomcat，最早发布于1999年）。每个Web应用程序都绑定到 Servlet API的某个版本上，当其停止时，装载该Web应用的类加载器也就废弃掉了。当Web应用重新被部署时，又创建了一个新的类加载器，新版类就由其装载。只 要servlet引擎没有保持对老版应用的引用，这些类就像其他Java对象一样被垃圾回收器回收了。</p><p>并不是所有的类库都能意识到Java代码中可能存在类泄漏的问题，就像是内存泄漏。一个典型的例子就是Log4J的<a href="http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/Category.html#addAppender%28org.apache.log4j.Appender%29">addAppender()</a>调用，一旦其执行了，将会把你的类绑定在Log4J bundle的生命周期上。即使你的bundle停止了，Log4J仍将维对appender的引用，并继续发送日志事件（除非该bundle在停止时恰当地调用了<a href="http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/Category.html#removeAppender%28java.lang.String%29">removeAppender()</a>方法）。</p><p><a name="services"></a></p><h2>查找和绑定</h2><p><a name="services"></a></p><p>为了成为动态，我们需要有一个能查找服务的机制，而不是持久持有他们（以免bundle停止）。这是通过使用简单Java接口和POJO来实现的，也就是大家所熟知的<b>services</b>（注意他们与WS-DeathStar或其他任何XML底层架构都没有关系；他们就是普通Java对象——Plain Old Java Objects）。</p><p>典型工厂实现方式是使用从properties文件中获取的某种形式的类名，然后用Class.forName()来实例化相应的类，OSGi则不同，它 维护了一个‘服务注册器’，其实这是一个包含了类名和服务的映射列表。这样，OSGi系统就可以使用 context.getService(getServiceReference(&quot;java.sql.Driver&quot;))，而不是 class.forName(&quot;com.example.JDBCDriver&quot;)来获取一个JDBC驱动器。这就把client代码解放出来了，它不需 知道任何特定客户端实现；相反，它可以在运行时绑定任何可用驱动程序。移植到不同的数据库服务器也就非常简单了，只需停止一个模块并启动一个新模 块；client甚至不需要重新启动，也不需要改变任何配置。</p><p>这样做是因为client只需知道其所需的服务的API（基本上都是接口，尽管OSGi规范允许使用其他类）。在上述情况中，接口名是 java.sql.Driver；返回的接口实例是具体的数据库实现（不必了解是哪些类，编码在那里）。此外，如果服务不可用（数据库不存在，或数据库临 时停掉了），那么这个方法会返回null以说明该服务不可用。</p><p>为了完全动态，返回结果不应被缓存。换句话说，每当需要服务的时候，需要重新调用getService。框架会在底层执行缓存操作，因此不存在太大的性能 问题。但重要的是，它允许数据库服务在线被替换成新的服务，如果没有缓存代码，那么下次调用时，client将透明地绑定到新服务上。</p><h2>付诸实施</h2><p>为了证明这一点，我们将创建一个用于缩写URL的OSGi服务。其思路是服务接收一个长URL，如<a href="http://www.infoq.com/articles/modular-java-what-is-it">http://www.infoq.com/articles/modular-java-what-is-it</a>，将其转换为短点的URL，如<a href="http://tr.im/EyH1">http://tr.im/EyH1</a>。该服务也可以被广泛应用在Twitter这样的站点上，还可以用它来把长URL转成短的这样便签背后也写得下。甚至像《新科学家》和《Macworld》这样的杂志也是用这些短URL来印刷媒体链接的。</p><p>为了实现该服务，我们需要：</p><ul><li>一个缩写服务的接口</li><li>一个注册为缩写实现的bundle</li><li>一个验证用client</li></ul><p>尽管并没有禁止把这些东西都放在同一个bundle中，但是我们还是把他们分别放在不同的bundle里。（即便他们在一个bundle中，最好也让bundle通过服务来通讯，就好像他们处于不同的bundle一样；这样他们就可以方便地与其他服务提供者进行集成。</p><p>把缩写服务接口与其实现（或client）分开放在单独bundle中是很重要的。该接口代表了client和server之间的‘共享代码’，这样，该 接口在每个bundle中都会加载。正因如此，每个bundle实际上都被固定到了该接口特定版本上，所有服务都有共同的生命周期，将接口放在单独 bundle中（在整个OSGi VM生命周期中都在运行），我们的client就可以自由变化。如果我们把该接口放在某个服务实现的bundle中，那么该服务发生变化后我们就不能重新 连接到client上了。</p><p>shorten接口的manifest和实现如下：</p><blockquote><pre>
+Bundle-ManifestVersion: 2
+Bundle-Name: Shorten
+Bundle-SymbolicName: com.infoq.shorten
+Bundle-Version: 1.0.0
+Export-Package: com.infoq.shorten
+--- 
+package com.infoq.shorten;
+
+public interface IShorten {
+        public String shorten(String url) throws IOException;
+}
+</pre></blockquote><p>上面的例子建立了一个拥有单一接口（com.infoq.shorten.IShorten）的bundle（<a href="http://docs.google.com/com.infoq.shorten-1.0.0.jar">com.infoq.shorten</a>），并将其输出给client。参数是一个URL，返回一个唯一的压缩版URL。</p><p>和接口定义相比，实现就相对有趣一些了。尽管最近缩写名称的应用开始多起来了，但是所有这些应用的祖师爷都是 <a href="http://tinyurl.com/">TinyURL.com</a>。（具有讽刺意味的是，<a href="http://tinyurl.com/">http://tinyurl.com</a>实际上可以被压缩的更短<a href="http://ow.ly/AvnC">http://ow.ly/AvnC</a>）。如今比较流行有：<a href="http://ow.ly/">ow.ly</a>、<a href="http://bit.ly/">bit.ly</a>、<a href="http://tr.im/">tr.im</a>等等。这里并不是对这些服务全面介绍，也不是为其背书，我们的实现也可以使用其他同类服务。本文之所以使用TinyURL和Tr.im，是由于他们都可以匿名基于GET提交，易于实现，除此之外没有其他原因。</p><p>每种实现实际上都非常小；都以URL为参数（要缩写的东西）并返回新的压缩过的文本：</p><blockquote><pre>
+package com.infoq.shorten.tinyurl;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import com.infoq.shorten.IShorten;
+
+public class TinyURL implements IShorten {
+        private static final String lookup = 
+                &quot;http://tinyurl.com/api-create.php?url=&quot;;
+        public String shorten(String url) throws IOException {
+                String line = new BufferedReader(
+                        new InputStreamReader(
+                                new URL(lookup + url).openStream())).readLine();
+                if(line == null)
+                        throw new IllegalArgumentException( 
+                                &quot;Could not shorten &quot; + url);
+                return line;
+        }
+}
+</pre></blockquote><p>Tr.im的实现类似，只需用http://api.tr.im/v1/trim_simple?url=替代lookup的值即可。这两种实现的源代码分别在<a href="http://docs.google.com/com.infoq.shorten.tinyurl-1.0.0.jar">com.infoq.shorten.tinyurl</a>和<a href="http://docs.google.com/com.infoq.shorten.trim-1.0.0.jar">com.infoq.shorten.trim</a> bundle里。</p><p>那么，完成缩写服务的实现后，我们如何让其他程序访问它呢？为此，我们需要把实现<b>注册</b>为OSGi框架的服务。BundleContext类的registerService(<i>class</i>,<i>instance</i>,<i>properties</i>)方法可以让我们定义一个服务以供后用，该方法通常在bundle的start()调用期间被调用。如<a href="http://www.infoq.com/cn/articles/modular-java-static-modularity">上篇文章</a>所讲，我们必须定义一个BundleActivator。实现该类后，我们还要把Bundle-Activator放在MANIFEST.MF里以便找到该实现。代码如下：</p><blockquote><pre>
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: TinyURL
+Bundle-SymbolicName: com.infoq.shorten.tinyurl
+Bundle-Version: 1.0.0
+Import-Package: com.infoq.shorten,org.osgi.framework
+Bundle-Activator: com.infoq.shorten.tinyurl.Activator
+---
+package com.infoq.shorten.tinyurl;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import com.infoq.shorten.IShorten;
+
+public class Activator implements BundleActivator {
+        public void start(BundleContext context) {
+                context.registerService(IShorten.class.getName(),
+                        new TinyURL(),null);
+        }
+        public void stop(BundleContext context) {
+        }
+}
+</pre></blockquote><p>尽管registerService()方法接收一个字符串作为其第一个参数，而且用&quot;com.infoq.shorten.IShorten&quot;也是可以的，但是最好还是用<i>class</i>.class.getName()这种形式，这样如果你重构了包或改变了类名，在编译时就可发现问题。如果用字符串，进行了错误的重构，那么只有在运行时你才能知道问题所在。</p><p>registerService()的第二个参数是实例本身。之所以将其与第一个参数分开，是因为你可以将同一个服务实例输出给多个服务接口（如果需要带有版本的API，这就有用了，你可以<a href="http://wiki.eclipse.org/Evolving_Java-based_APIs_3#.222.22_Convention">进化接口</a>了）。另外，一个bundle输出同一类型的多个服务也是有可能的。</p><p>最后一个参数是<b>服务属性（service properties）</b>。允许你给服务加上额外元数据注解，比如标注优先级以表明该服务相对于其他服务的重要性，或者调用者关心的其他信息（比如功能描述和厂商）。</p><p>只要该bundle一启动，缩写服务就可用了。当bundle停止，框架将自动取消服务注册。如果我们想要自己取消注册（比方说，对错误代码和网络接口不可用所作出的响应）也很容易（用context.unregisterService()）。</p><h2>使用服务</h2><p>一旦服务起来并运行之后，我们就可以用client访问它了。如果运行的是Equinox，你可以用services命令罗列所有已安装的服务，以及它们是由谁注册的：</p><blockquote><pre>
+{com.infoq.shorten.IShorten}={service.id=27}
+  Registered by bundle: com.infoq.shorten.trim-1.0.0 [1]
+  No bundles using service.
+{com.infoq.shorten.IShorten}={service.id=28}
+  Registered by bundle: com.infoq.shorten.tinyurl-1.0.0 [2]
+  No bundles using service.
+</pre></blockquote><p>在调用服务处理URL之前，client需要解析服务。我们需要获得一个<b>服务引用</b>，它可以让我们查看服务自身内部的属性，然后利用其来获得我们感兴趣的<b>服务</b>。可是，我们需要能够重复处理相同及不同的URL，以便我们可以把它集成到Equinox或Felix的shell里。实现如下：</p><blockquote><pre>
+package com.infoq.shorten.command;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import com.infoq.shorten.IShorten;
+
+public class ShortenCommand {
+        protected BundleContext context;
+        public ShortenCommand(BundleContext context) {
+                this.context = context;
+        }
+        protected String shorten(String url) throws IllegalArgumentException, IOException {
+                ServiceReference ref =
+                        context.getServiceReference(IShorten.class.getName());
+                if(ref == null)
+                        return null;
+                IShorten shorten = (IShorten) context.getService(ref);
+                if(shorten == null)
+                        return null;
+                return shorten.shorten(url);
+        }
+}
+</pre></blockquote><p>当shorten方法被调用时，上面这段程序将查找服务引用并获得服务对象。然后我们可以把服务对象赋值给一个IShorten对象，并使用它与前面讲到 的已注册服务进行交互。注意这些都是在同一个VM中发生的；没有远程调用，没有强制异常，没有参数被序列化；只是一个POJO与另一个POJO对话。实际 上，这里与最开始class.forName()例子的唯一区别是：我们如何获得shorten POJO。</p><p>为了在Equinox和Felix里面使用这一服务，我们需要放一些样板代码进去。必须提一下，当我们定义manifest时，我们可以在Felix和 Equinox命令行上声明可选依赖，这样，当我们两者中任何一个安装之后，我们就可以运行了。（一个更好的解决方案是将其部署为单独的bundles， 这样我们可以去掉选项；但是如果bundle不存在，activator将会失败，因此无法启动）。Equinox和Felix特定命令的源代码在<a href="http://docs.google.com/com.infoq.shorten.command-1.0.0.jar">com.infoq.shorten.command</a> bundle中。</p><p>如果我们安装了命令client bundle，我们将得到一个新命令，shorten，通过OSGi shell可以调用它。要运行该命令，需要先执行java -jar equinox.jar -console -noExit或java -jar bin/felix.jar，然后安装bundle，之后你就可以使用该命令了：</p><blockquote><pre>
+java -jar org.eclipse.osgi_* -console -noExit
+osgi&gt; install <a>file:///tmp/com.infoq.shorten-1.0.0.jar</a>
+Bundle id is 1
+osgi&gt; install <a>file:///tmp/com.infoq.shorten.command-1.0.0.jar</a>
+Bundle id is 2
+osgi&gt; install <a>file:///tmp/com.infoq.shorten.tinyurl-1.0.0.jar</a>
+Bundle id is 3
+osgi&gt; install <a>file:///tmp/com.infoq.shorten.trim-1.0.0.jar</a>
+Bundle id is 4
+osgi&gt; start 1 2 3 4
+osgi&gt; shorten <a href="http://www.infoq.com/">http://www.infoq.com</a>
+http://tinyurl.com/yr2jrn
+osgi&gt; stop 3
+osgi&gt; shorten <a href="http://www.infoq.com/">http://www.infoq.com</a>
+http://tr.im/Eza8
+</pre></blockquote><p>注意，在运行时TinyURL和Tr.im服务都是可用的，但是一次只能使用一种服务。可以设置一个<b>服务级别（service ranking）</b>， 这是一个整数，取值范围在Integer.MIN_VALUE和Integer.MAX_VALUE之间，当服务最初注册时给 Constants.SERVICE_RANKING赋予相应值。值越大表示级别越高，当需要服务时，会返回最高级别的服务。如果没有服务级别（默认值为 0），或者多个服务的服务级别相同，那么就使用自动分配的Constants.SERVICE_PID，可能是任意顺序的一个服务。</p><p>另一个需注意的问题是：当我们停止一个服务时，client会自动失败转移到列表中的下一个服务。每当该命令执行时，它会获取（当前）服务来处理URL压 缩需求。如果在运行期间服务提供程序发生了变化，不会影响命令的使用，只要有此需求时有服务在就成。（如果你停止了所有服务提供程序，服务查找将返回 null，这将会打印出相应的错误信息——好的代码应该确保程序能够预防返回服务引用为null的情况发生。）</p><h2>服务跟踪</h2><p>除过每次查询服务外，还可以用<a href="http://www.osgi.org/javadoc/r4/org/osgi/util/tracker/ServiceTracker.html">ServiceTracker</a>来代替做这一工作。这就跳过了中间获得ServiceReference的几步，但是要求你在构造之后调用open，以便开始跟踪服务。</p><p>对于ServiceReference，可以调用getService()获得服务实例。而waitForService()则在服务不可用时阻塞一段时间（根据指定的timeout。如果timeout为0，则永远阻塞）。我们可以如下重新实现shorten命令：</p><blockquote><pre>
+package com.infoq.shorten.command;
+
+import java.io.IOException;
+import org.osgi.framework.BundleContext;
+import org.osgi.util.tracker.ServiceTracker;
+import com.infoq.shorten.IShorten;
+
+public class ShortenCommand {
+        protected ServiceTracker tracker;
+        public ShortenCommand(BundleContext context) {
+                this.tracker = new ServiceTracker(context,
+                        IShorten.class.getName(),null);
+                this.tracker.open();
+        }
+        protected String shorten(String url) throws IllegalArgumentException,
+                        IOException {
+                try {
+                        IShorten shorten = (IShorten)
+                                tracker.waitForService(1000);
+                        if (shorten == null)
+                                return null;
+                        return shorten.shorten(url);
+                } catch (InterruptedException e) {
+                        return null;
+                }
+        }
+}
+</pre></blockquote><p>使用Service Tracker的常见问题是在构造后忘记了调用open()。除此之外，还必须在MANIFEST.MF内部引入org.osgi.util.tracker包。</p><p>使用ServiceTracker来管理服务依赖通常被认为是管理关系的好方法。在没有使用服务的情况下，查找已输出的服务稍微有点复杂：比 如，ServiceReference在其被解析为一个服务之前突然变得不可用了。存在一个ServiceReference的原因是，相同实例能够在多 个bundle间共享，而且它可以被用来基于某些标准（手工）过滤服务。而且，它还可以使用过滤器来限制可用服务的集合。</p><h2>服务属性和过滤器</h2><p>当一个服务注册时，可以将服务属性一起注册。大多情况下属性可以为null，但是也可以提供OSGi特定或关于URL的通用属性。例如，我们想给服务分级 以便区分优先级。我们可以注册Constants.SERVICE_RANKING（代表优先级的数值），作为最初注册过程的一部分。我们可能还想放一些 client想知道的元数据，比如服务的主页在哪儿，该站点的条款链接。为达此目的，我们需要修改activator：</p><blockquote><pre>
+public class Activator implements BundleActivator {
+        public void start(BundleContext context) {
+                Hashtable properties = new Hashtable();
+                properties.put(Constants.SERVICE_RANKING, 10);
+                properties.put(Constants.SERVICE_VENDOR, &quot;http://tr.im&quot;);
+                properties.put(&quot;home.page&quot;, &quot;http://tr.im&quot;);
+                properties.put(&quot;FAQ&quot;, &quot;http://tr.im/website/faqs&quot;);
+                context.registerService(IShorten.class.getName(),
+                        new Trim(), properties);
+        }
+...
+}
+</pre></blockquote><p>服务级别自动由ServiceTracker及其他对象来管理，但也可以用特定条件来过滤。Filter是由LDAP风格的过滤器改编而来的，其使用了一种<a href="http://en.wikipedia.org/wiki/Prefix_notation">前缀表示法（prefix notation）</a>来 执行多个过滤。虽然多数情况下你想提供类的名字（Constants.OBJECTCLASS），但你也可以对值进行检验（包括限制连续变量的取值范 围）。Filter是通过BundleContext创建的；如果你想跟踪实现了IShorten接口的服务，并且定义一个FAQ，我们可以这样做：</p><blockquote><pre>
+...
+public class ShortenCommand
+        public ShortenCommand(BundleContext context) {
+                Filter filter = context.createFilter(&quot;(&amp;&quot; +
+                        &quot;(objectClass=com.infoq.shorten.IShorten)&quot; +
+                        &quot;(FAQ=*))&quot;);
+                this.tracker = new ServiceTracker(context,filter,null);
+                this.tracker.open();
+        }
+        ...
+}
+</pre></blockquote><p>在定义服务时可以被过滤或可以设置的标准属性包括：</p><ul><li>service.ranking (Constants.SERVICE_RANKING) - 整数，可以区分服务优先级</li><li>service.id (Constants.SERVICE_ID) - 整数，在服务被注册时由框架自动设置</li><li>service.vendor (Constants.SERVICE_VENDOR) - 字符串，表明服务出自谁手</li><li>service.pid (Constants.SERVICE_PID) - 字符串，代表服务的PID（persistent identifier）</li><li>service.description (Constants.SERVICE_DESCRIPTION) - 服务的描述</li><li>objectClass (Constants.OBJECTCLASS) - 接口列表，服务被注册在哪些接口下</li></ul><p>过滤器语法在<a href="http://www.osgi.org/Download/Release4V42">OSGi核心规范</a>的 3.2.7节 “Filter syntax”中有定义。最基本的，它允许如等于（=）、约等于（~=）、大于等于、小于等于以及子字符串比较等操作符。括号将过流器分组，并且可以结合 使用“&amp;”、“|” 或“!”分别代表and、or和not。属性名不是大小写敏感的，值可能是（如果不用~=作比的话）。“*”是通配符，可用来支持子字符串匹配，比如 com.infoq.*.*。</p><h2>总结</h2><p>本文中，我们介绍了如何使用服务进行bundle间通信，以替代直接类引用的方法。服务可以让模块系统动态化，这样就能应对在运行时服务的变化问题。我们 还接触到了服务级别、属性及过滤器，并使用标准服务跟踪器来更容易的访问服务并跟踪变化的服务。我们将在下一部分介绍如何用声明式服务使得服务的编写更加容易。</p><p>本文所讲例子的可安装bundle罗列如下（包含源代码）：</p><ul><li><a href="http://cdn.infoqstatic.com/statics_s1_20151222-0055/resource/articles/modular-java-dynamic-modularity/zh/resources/com.infoq.shorten-1.0.0.jar">com.infoq.shorten-1.0.0.jar</a></li><li><a href="http://cdn.infoqstatic.com/statics_s1_20151222-0055/resource/articles/modular-java-dynamic-modularity/zh/resources/com.infoq.shorten.command-1.0.0.jar">com.infoq.shorten.command-1.0.0.jar</a></li><li><a href="http://cdn.infoqstatic.com/statics_s1_20151222-0055/resource/articles/modular-java-dynamic-modularity/zh/resources/com.infoq.shorten.trim-1.0.0.jar">com.infoq.shorten.trim-1.0.0.jar</a></li><li><a href="http://cdn.infoqstatic.com/statics_s1_20151222-0055/resource/articles/modular-java-dynamic-modularity/zh/resources/com.infoq.shorten.tinyurl-1.0.0.jar">com.infoq.shorten.tinyurl-1.0.0.jar</a></li></ul><p><b>查看英文原文</b>：<a href="http://www.infoq.com/articles/modular-java-dynamic-modularity" target="_blank">Modular Java: Dynamic Modularity</a>。</p><hr/><p>感谢<a href="http://www.infoq.com/cn/bycategory.action?authorName=曹云飞">曹云飞</a>对本文的审校。</p><p>给InfoQ中文站投稿或者参与内容翻译工作，请邮件至<a href="mailto:editors@cn.infoq.com">editors@cn.infoq.com</a>。也欢迎大家加入到<a href="http://groups.google.com/group/InfoQChina" target="_blank">InfoQ中文站用户讨论组</a>中与我们的编辑和其他读者朋友交流。</p><div><ul><li><a><span>领域</span></a></li><li><a name="architecture-design"><b>架构 &amp; 设计</b></a></li><li><a name="development"><b>语言 &amp; 开发</b></a></li><li><a><span>专栏</span></a></li><li><a name="osgi">OSGi</a></li><li><a name="java">Java</a></li></ul></div><div style="display: block;"><div style="display: block;"><p>相关内容</p><div><h3><a href="http://www.infoq.com/cn/news/2015/11/java-state-module-system?utm_source=infoq&amp;utm_medium=related_content_link&amp;utm_campaign=relatedContent_articles_clk">Oracle发布Java模块系统状态报告</a></h3><h3><a href="http://www.infoq.com/cn/news/2015/03/java9-and-beyond?utm_source=infoq&amp;utm_medium=related_content_link&amp;utm_campaign=relatedContent_articles_clk">Mark Reinhold谈“Java9及其未来”</a></h3><h3><a href="http://www.infoq.com/cn/news/2015/12/java-version-strings-evolve?utm_source=infoq&amp;utm_medium=related_content_link&amp;utm_campaign=relatedContent_articles_clk">Java 9将采用新的版本字符串格式</a></h3><h3><a href="http://www.infoq.com/cn/articles/design-patterns-promise?utm_source=infoq&amp;utm_medium=related_content_link&amp;utm_campaign=relatedContent_articles_clk">Java多线程编程模式实战指南之Promise模式</a></h3><h3><a href="http://www.infoq.com/cn/news/2015/12/java-9-delay?utm_source=infoq&amp;utm_medium=related_content_link&amp;utm_campaign=relatedContent_articles_clk">Java 9跳票 发布时间将推迟到2017年3月</a></h3></div></div></div> <div><div style="display: none;"><div><h2>您好，朋友！</h2>
+您需要 <a>注册一个InfoQ账号</a> 或者 <a>登录</a> 才能进行评论。在您完成注册后还需要进行一些设置。<br/><div><h2>获得来自InfoQ的更多体验。</h2></div></div></div><a></a><h3>告诉我们您的想法</h3> 
+<p>允许的HTML标签: a,b,br,blockquote,i,li,pre,u,ul,p</p> <span>当有人回复此评论时请E-mail通知我</span></div><div>社区评论 <span><a>Watch Thread</a></span></div><div><a href="#anch53005"><strong>说的很清楚</strong> <span>by Liu Yulong Posted <span>2010年2月6日 11:12</span></span></a></div><div><a href="#anch126231"><strong>模块化、插件化开源开发平台JXADF</strong> <span>by soft wmz Posted <span>2015年8月3日 08:45</span></span></a></div><div><a name="anch53005"></a><p><b>说的很清楚</b> <span><span>2010年2月6日 11:12</span> by <q>Liu Yulong</q></span></p><div>原文好，翻译的也好，感谢。。。</div><ul><li><a>回复</a></li><li><a href="#">回到顶部</a></li></ul>  </div><div><a name="anch126231"></a><p><b>模块化、插件化开源开发平台JXADF</b> <span><span>2015年8月3日 08:45</span> by <q>soft wmz</q></span></p><div>模块化、插件化开源开发平台中JXADF（<a href="http://osgi.jxtech.net/" rel="nofollow" target="_blank">osgi.jxtech.net</a>）最为NB，值得推荐。</div><ul><li><a>回复</a></li><li><a href="#">回到顶部</a></li></ul>  </div><div><a>关闭</a><h4>by  </h4><p></p><div><span>发布于 </span></div><ul><li><a>查看</a></li><li><a>回复</a></li><li><a href="#">回到顶部</a></li></ul></div><div><a>关闭</a>主题  您的回复 <a href="#" style="float: right; text-decoration: underline; font-weight: normal; color: grey;">引用原消息</a> 
+<p></p><p>允许的HTML标签: a,b,br,blockquote,i,li,pre,u,ul,p</p> <span>当有人回复此评论时请E-mail通知我</span> </div><div><a>关闭</a>主题  您的回复 
+<p></p><p>允许的HTML标签: a,b,br,blockquote,i,li,pre,u,ul,p</p> <span>当有人回复此评论时请E-mail通知我</span><p></p> </div><div><a>关闭</a><p></p></div></span>
+</div></body></html> 

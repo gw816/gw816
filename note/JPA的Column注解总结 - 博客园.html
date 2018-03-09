@@ -1,0 +1,50 @@
+<html>
+<head>
+  <title>JPA的Column注解总结 - 博客园</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="5681"/>
+<h1>JPA的Column注解总结 - 博客园</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div><div><div><div><h1>JPA的Column注解总结</h1><div><div></div></div></div>
+                 <div>   作者及来源： ChaunceyHao - 博客园     <span>→_→：</span> 
+       
+                  </div>
+            
+            <div>
+                
+                     JPA的Column注解总结
+                     
+            </div>
+            
+       
+          
+
+
+                  
+                      
+                      
+                        
+                           <div><a href="http://mp.weixin.qq.com/s/vqIcUjB9gPUG2zj66WY8Gg" target="_blank"><h3>点击这里！！！厉害了【推荐】牛人都关注了他们，伴你前行的技术良友</h3></a>
+<a href="https://mp.weixin.qq.com/s/9XUP15X0aeNIAH9sQdMAPA" target="_blank"><h3>点击这里！！！改变命运：免费人工智能机器学习深度学习Python视频2018最新版</h3>
+	<span>冲刺80万年薪，扫码公众号回复：python 或微信群。获得视频教程↓↓★★☆☆</span>
+	   <div><img src="JPA的Column注解总结 - 博客园_files/Image.jpg" type="image/jpeg" data-filename="Image.jpg" height="165" width="126"/></div>     
+	      
+					                
+
+
+
+
+
+ </a></div><a href="https://mp.weixin.qq.com/s/9XUP15X0aeNIAH9sQdMAPA" target="_blank">
+                           &quot;JPA的Column注解总结&quot;：</a><b><a href="http://www.makaidong.com/search.jspx?q=%E5%85%B3%E9%94%AE%E8%AF%8D" target="_blank">关键词</a>：</b><a href="http://www.makaidong.com/search.jspx?q=jpa" target="_blank" title="点击搜索：jpa">jpa</a>  <a href="http://www.makaidong.com/search.jspx?q=column" target="_blank" title="点击搜索：column">column</a>  <a href="http://www.makaidong.com/search.jspx?q=%E6%B3%A8%E8%A7%A3" target="_blank" title="点击搜索：注解">注解</a>  <a href="http://www.makaidong.com/search.jspx?q=%E6%80%BB%E7%BB%93" target="_blank" title="点击搜索：总结">总结</a><br/><br/><p>就像@table注解用来标识实体类与数据表的对应关系类似，@column注解来标识实体类中属性与数据表中字段的对应关系。</p> <p>该注解的定义如下：</p> <div><div>@target({method, field}) @retention(runtime)<br/>public @interface column {<br/>	string name() default &quot;&quot;;<br/>	boolean unique() default false;<br/>	boolean nullable() default true;<br/>	boolean insertable() default true;<br/>	boolean updatable() default true;<br/>	string columndefinition() default &quot;&quot;;<br/>	string table() default &quot;&quot;;<br/>	int length() default 255;<br/>	int precision() default 0;<br/>	int scale() default 0; <br/>}</div></div> <p>从定义可以看出，@column注解一共有10个属性，这10个属性均为可选属性，各属性含义分别如下：</p> <p><strong>name</strong><br/> name属性定义了被标注字段在<a href="http://www.makaidong.com/search.jspx?q=%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank">数据库</a>表中所对应字段的名称；</p> <p><strong>unique</strong><br/> unique属性表示该字段是否为唯一标识，默认为false。如果表中有一个字段需要唯一标识，则既可以使用该标记，也可以使用@table标记中的@uniqueconstraint。</p> <p><strong>nullable</strong><br/> nullable属性表示该字段是否可以为null值，默认为true。</p> <p><strong>insertable</strong><br/> insertable属性表示在使用“insert”脚本插入数据时，是否需要插入该字段的值。</p> <p><strong>updatable</strong><br/> updatable属性表示在使用“update”脚本插入数据时，是否需要更新该字段的值。insertable和updatable属性一般多用于只读的属性，例如主键和外键等。这些字段的值通常是自动生成的。</p> <p><strong>columndefinition</strong><br/> columndefinition属性表示创建表时，该字段创建的sql语句，一般用于通过entity生成表定义时使用。（也就是说，如果db中表已经建好，该属性没有必要使用。）</p> <p><strong>table</strong><br/> table属性定义了包含当前字段的表名。</p> <p><strong>length</strong><br/> length属性表示字段的长度，当字段的类型为varchar时，该属性才有效，默认为255个字符。</p> <p><strong>precision和scale</strong><br/> precision属性和scale属性表示精度，当字段类型为double时，precision表示数值的总长度，scale表示小数点所占的位数。</p> <p>api文档地址：http://docs.oracle.com/javaee/5/api/javax/persistence/column.html</p> <p>在使用此@column标记时，需要注意以下几个问题：</p> <p>此标记可以标注在getter方法或属性前，例如以下的两种标注方法都是正确的：</p> <p>标注在属性前：</p> <div><div>import javax.persistence.column;<br/>import javax.persistence.entity;<br/>import javax.persistence.table;<br/><br/>@entity<br/>@table(name = &quot;contact&quot;)<br/>public class contacteo {<br/><br/>@column(name = &quot; contact_name &quot;)<br/>	private string name;<br/><br/>public string getname() {<br/>		return name;<br/>	}<br/><br/>public void setname(string name) {<br/>		this.name = name;<br/>	}<br/>}</div></div> <p>标注在getter方法前：</p> <div><div>import javax.persistence.column;<br/>import javax.persistence.entity;<br/>import javax.persistence.table;<br/><br/>@entity<br/>@table(name = &quot;contact&quot;)<br/>public class contacteo {<br/>	private string name;<br/><br/>@column(name = &quot; contact_name &quot;)<br/>	public string getname() {<br/>		return name;<br/>	}<br/><br/>public void setname(string name) {<br/>		this.name = name;<br/>	}<br/>}</div></div> <p>提示：jpa规范中并没</p><p>此文来自: 马开东博客  转载请注明出处 网址：<a href="http://www.makaidong.com/" target="_blank">  http://www.makaidong.com</a>   </p>有明确指定那种标注方法，只要两种标注方式任选其一都可以。这根据个人的喜好来选择，笔者习惯使用第二种方法。<p>下面举几个小例子：</p> <p>示例一：指定字段“contact_name”的长度是“512”，并且值不能为null。</p> <div><div>private string name;<br/>@column(name=&quot;contact_name&quot;,nullable=false,length=512) <br/><br/>public string getname() {<br/>return name;<br/><br/>}</div></div> <p>创建的sql语句如下所示。</p> <div><div>create table contact (<br/>	id integer not null, <br/>	contact_name varchar (512) not null,<br/>	primary key (id)<br/>)</div></div> <p>示例二：指定字段“monthly_income”月收入的类型为double型，精度为12位，小数点位数为2位。</p> <div><div>private bigdecimal monthlyincome;<br/>@column(name=&quot;monthly_income&quot;,precision=12, scale=2)<br/>	public bigdecimal getmonthlyincome() {<br/>	return monthlyincome;<br/>}</div></div> <p>创建的sql语句如下所示。</p> <div><div>create table contact (<br/>id integer not null, <br/>monthly_income double(12,2),<br/>primary key (id)<br/>)</div></div> <p>示例三：自定义生成clob类型字段的sql语句。</p> <div><div>private string name;<br/>@column(name=&quot; contact_name &quot;,columndefinition=&quot;clob not null&quot;)<br/>public string getname() {<br/>	return name;<br/>}</div></div> <p>生成表的定义sql语句如下所示。</p> <div><div>create table contact (<br/>id integer not null, <br/>contact_name clob (200) not null,<br/>primary key (id)<br/>)</div></div> <p>其中，加粗的部分为columndefinition属性设置的值。若不指定该属性，通常使用默认的类型建表，若此时需要自定义建表的类型时，可在该属性中设置。</p> <p>提示：通过entity定义生成表，还是通过表配置entity，这是两种不同的orm策略。</p> <p>示例四：字段值为只读的，不允许插入和修改。通常用于主键和外键。</p> <div><div>private integer id;<br/><br/>@column(name=&quot;id&quot;,insertable=false,updatable=false)<br/>public integer getid() {<br/>	return id;<br/>}</div></div></div></div></div><br/></div></span>
+</div></body></html> 

@@ -1,0 +1,93 @@
+<html>
+<head>
+  <title>读取js压缩gzjs格式文件，读取失败 - Draco - 博客频道 - CSDN.NET.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="3084"/>
+<h1>读取js压缩gzjs格式文件，读取失败 - Draco - 博客频道 - CSDN.NET.html</h1>
+
+<div>
+<span><a name="1489"></a><div><p><span>今天在做以Ext3.4的基础的JS项目，但是Ext插件比较大，这样一来浏览速度就变慢，就把JS文件压缩为gzjs，但是gzjs浏览不能识别，需要一定服务端的处理。</span></p><p><span>处理步骤如下：</span></p><p><span>1、将js压缩为gzjs格式文件（注：使用gzip.exe 打包压缩js文件最后生成xx.js.gz 把xx.js.gz文件改成xx.gzjs。压缩实例： ext-all.js （610KB）, gzip.exe压缩后为ext-all.gzjs（168KB）。）</span></p><p><span> </span></p><p><span>说明：gzip使用方法，在命令行下输入： gzip -9 ext-all.js ext-all.js.gz</span></p><p><span>修改ext-all.js.gz的后缀名ext-all.gzjs（注：也可以通过gzip -h命令查看帮助）<br/>
+下载地址：<a href="http://www.gzip.org/">http://www.gzip.org</a></span></p><p><span> </span></p><p><span>2、在项目web.xml中加入过滤器。</span></p><div><div><span><b>[html]</b> <a href="#" title="view plain">view plain</a><a href="#" title="copy">copy</a><a href="#" title="print">print</a><a href="#" title="?">?</a></span></div><ol start="1"><li><span>&lt;</span><span>filter</span><span>&gt;</span><span>   </span></li><li><span>      <span>&lt;</span><span>filter-name</span><span>&gt;</span><span>GzipJsFilter</span><span>&lt;/</span><span>filter-name</span><span>&gt;</span><span>   </span></span></li><li><span>      <span>&lt;</span><span>filter-class</span><span>&gt;</span><span>net.kangsoft.util.GzipJsFilter</span><span>&lt;/</span><span>filter-class</span><span>&gt;</span><span>   </span></span></li><li><span>      <span>&lt;</span><span>init-param</span><span>&gt;</span><span>   </span></span></li><li><span>          <span>&lt;</span><span>param-name</span><span>&gt;</span><span>headers</span><span>&lt;/</span><span>param-name</span><span>&gt;</span><span>   </span></span></li><li><span>          <span>&lt;</span><span>param-value</span><span>&gt;</span><span>Content-Encoding</span><span>=</span><span>gzip</span><span>&lt;/</span><span>param-value</span><span>&gt;</span><span>   </span></span></li><li><span>      <span>&lt;/</span><span>init-param</span><span>&gt;</span><span>  </span></span></li><li><span>&lt;/</span><span>filter</span><span>&gt;</span><span>  </span></li><li><span>   <span>&lt;</span><span>filter-mapping</span><span>&gt;</span><span>  </span></span></li><li><span>   <span>&lt;</span><span>filter-name</span><span>&gt;</span><span>GzipJsFilter</span><span>&lt;/</span><span>filter-name</span><span>&gt;</span><span>  </span></span></li><li><span>   <span>&lt;</span><span>url-pattern</span><span>&gt;</span><span>*.gzjs</span><span>&lt;/</span><span>url-pattern</span><span>&gt;</span><span>  </span></span></li><li><span>&lt;/</span><span>filter-mapping</span><span>&gt;</span><span>  </span></li></ol></div><pre style="display: none;">
+&lt;filter&gt; 
+      &lt;filter-name&gt;GzipJsFilter&lt;/filter-name&gt; 
+      &lt;filter-class&gt;net.kangsoft.util.GzipJsFilter&lt;/filter-class&gt; 
+      &lt;init-param&gt; 
+          &lt;param-name&gt;headers&lt;/param-name&gt; 
+          &lt;param-value&gt;Content-Encoding=gzip&lt;/param-value&gt; 
+      &lt;/init-param&gt;
+&lt;/filter&gt;
+   &lt;filter-mapping&gt;
+   &lt;filter-name&gt;GzipJsFilter&lt;/filter-name&gt;
+   &lt;url-pattern&gt;*.gzjs&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</pre><p><br/>
+ </p><p>3、加入过滤类。</p><div><div><b>[java]</b> <a href="#" title="view plain">view plain</a><a href="#" title="copy">copy</a><a href="#" title="print">print</a><a href="#" title="?">?</a></div><ol start="1"><li><span>package</span><span> net.kangsoft.util;  </span></li><li><span>  </span></li><li><span>import</span><span> java.io.IOException;  </span></li><li><span>import</span><span> java.util.HashMap;  </span></li><li><span>import</span><span> java.util.Iterator;  </span></li><li><span>import</span><span> java.util.Map;  </span></li><li><span>import</span><span> java.util.Map.Entry;  </span></li><li><span>import</span><span> java.util.Set;  </span></li><li><span>import</span><span> javax.servlet.Filter;  </span></li><li><span>import</span><span> javax.servlet.FilterChain;  </span></li><li><span>import</span><span> javax.servlet.FilterConfig;  </span></li><li><span>import</span><span> javax.servlet.ServletException;  </span></li><li><span>import</span><span> javax.servlet.ServletRequest;  </span></li><li><span>import</span><span> javax.servlet.ServletResponse;  </span></li><li><span>import</span><span> javax.servlet.http.HttpServletRequest;  </span></li><li><span>import</span><span> javax.servlet.http.HttpServletResponse;  </span></li><li><span>  </span></li><li><span>public</span><span> </span><span>class</span><span> GzipJsFilter  </span></li><li><span>implements</span><span> Filter  </span></li><li><span>{  </span></li><li><span>Map headers = <span>new</span><span> HashMap();  </span></span></li><li><span>  </span></li><li><span>public</span><span> </span><span>void</span><span> destroy() { }  </span></li><li><span>  </span></li><li><span>public</span><span> </span><span>void</span><span> doFilter(ServletRequest req, ServletResponse res, FilterChain chain)  </span></li><li><span>  </span></li><li><span>throws</span><span> IOException, ServletException {  </span></li><li><span>    <span>if</span><span> (req </span><span>instanceof</span><span> HttpServletRequest)  </span></span></li><li><span>      doFilter((HttpServletRequest)req, (HttpServletResponse)res, chain);  </span></li><li><span>    <span>else</span><span>  </span></span></li><li><span>      chain.doFilter(req, res);  </span></li><li><span>}  </span></li><li><span>  </span></li><li><span>public</span><span> </span><span>void</span><span> doFilter(HttpServletRequest request, HttpServletResponse response,  </span></li><li><span>  </span></li><li><span>FilterChain chain)  </span></li><li><span>    <span>throws</span><span> IOException, ServletException  </span></span></li><li><span>{  </span></li><li><span>    request.setCharacterEncoding(<span>&quot;UTF-8&quot;</span><span>);  </span></span></li><li><span>    <span>for</span><span> (Iterator it = </span><span>this</span><span>.headers.entrySet().iterator(); it.hasNext(); ) {  </span></span></li><li><span>      Map.Entry entry = (Map.Entry)it.next();  </span></li><li><span>      response.addHeader((String)entry.getKey(), (String)entry.getValue());  </span></li><li><span>    }  </span></li><li><span>    chain.doFilter(request, response);  </span></li><li><span>}  </span></li><li><span>  </span></li><li><span>public</span><span> </span><span>void</span><span> init(FilterConfig config) </span><span>throws</span><span> ServletException {  </span></li><li><span>    String headersStr = config.getInitParameter(<span>&quot;headers&quot;</span><span>);  </span></span></li><li><span>    String[] headers = headersStr.split(<span>&quot;,&quot;</span><span>);  </span></span></li><li><span>    <span>for</span><span> (</span><span>int</span><span> i = </span><span>0</span><span>; i &lt; headers.length; ++i) {  </span></span></li><li><span>      String[] temp = headers[i].split(<span>&quot;=&quot;</span><span>);  </span></span></li><li><span>      <span>this</span><span>.headers.put(temp[</span><span>0</span><span>].trim(), temp[</span><span>1</span><span>].trim());  </span></span></li><li><span>    }  </span></li><li><span>}  </span></li><li><span>}  </span></li></ol></div><pre style="display: none;">
+package net.kangsoft.util;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class GzipJsFilter
+implements Filter
+{
+Map headers = new HashMap();
+
+public void destroy() { }
+
+public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+
+throws IOException, ServletException {
+    if (req instanceof HttpServletRequest)
+      doFilter((HttpServletRequest)req, (HttpServletResponse)res, chain);
+    else
+      chain.doFilter(req, res);
+}
+
+public void doFilter(HttpServletRequest request, HttpServletResponse response,
+
+FilterChain chain)
+    throws IOException, ServletException
+{
+    request.setCharacterEncoding(&quot;UTF-8&quot;);
+    for (Iterator it = this.headers.entrySet().iterator(); it.hasNext(); ) {
+      Map.Entry entry = (Map.Entry)it.next();
+      response.addHeader((String)entry.getKey(), (String)entry.getValue());
+    }
+    chain.doFilter(request, response);
+}
+
+public void init(FilterConfig config) throws ServletException {
+    String headersStr = config.getInitParameter(&quot;headers&quot;);
+    String[] headers = headersStr.split(&quot;,&quot;);
+    for (int i = 0; i &lt; headers.length; ++i) {
+      String[] temp = headers[i].split(&quot;=&quot;);
+      this.headers.put(temp[0].trim(), temp[1].trim());
+    }
+}
+}
+</pre><p><br/>
+4、在需导入js的页面head里面添加导入文件，如：&lt;script type=&quot;text/javascript&quot;<br/>
+src=&quot;js/ext3/ext-all.gzjs&quot;&gt;&lt;/script&gt;</p><p>参考：<a href="http://kangsoft.iteye.com/blog/602731">http://kangsoft.iteye.com/blog/602731</a></p></div></span>
+</div></body></html> 

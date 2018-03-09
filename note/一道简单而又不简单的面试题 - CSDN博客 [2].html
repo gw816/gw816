@@ -1,0 +1,137 @@
+<html>
+<head>
+  <title>一道简单而又不简单的面试题 - CSDN博客</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="4426"/>
+<h1>一道简单而又不简单的面试题 - CSDN博客</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div><div><div><div><h1>一道简单而又不简单的面试题</h1><div><div></div></div></div>
+        
+        <div>
+                            <div>
+                        <p>这是本篇文章要讲解的题目，在main方法中定义了两个成员变量a=1，b=2. 现在需要通过swap方法把a和b的值做一个交换，交换以后输出的结果是a=2，b=1.</p>
+
+<p></p><div><img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast.png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="323" width="555"/></div><p></p>
+
+
+
+<h2>思路1</h2>
+
+<p>大家看到这道题目的时候一定觉得很简单，不用做任何思考就把代码啪啪啪写完了 </p><div><img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast [1].png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="163" width="511"/></div>
+这种思维逻辑很对，大家从开始学编程就已经学到了中间变量的作用，好比是两个瓶子，一瓶是可乐，一瓶是雪碧，要是想把两个瓶子里面的饮料交换一下，，那么我们首先想到的就是借助于中间变量（再找来一个空的瓶子）先把其中一瓶的饮料（雪碧或可乐）倒进空瓶，再把另一瓶的饮料（可乐或雪碧）倒进刚刚倒出饮料的瓶子，最后再把用来作为中间变量的瓶子里的饮料给现在空着的瓶子，这样就达到了交换两瓶饮料的的目的。这种做法再符合逻辑不过了<p></p>
+
+<h3>分析</h3>
+
+<p>我们来把变量在jvm内存中的体现通过图形的方式画出来 </p><div><img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast [2].png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="399" width="576"/></div>
+这幅图，我相信大部分人都能看懂。实际上i1,和i2传递过来的是一个参数的副本，而在swap方法里面并没有修改a,b这个地址的值，只是改变了参数副本的值，而这个值并没有影响到a, b。那这里就涉及到一个知识点<p></p>
+
+<h3>参数传递: 值传递和引用传递</h3>
+
+<p>这里有一个大家都容易误解的点：实际上在Java 应用程序有且仅有的一种参数传递机制，即按值传递 <br/>
+<strong>但是为什么又会有值传递和引用传递的说法呢？</strong> <br/>
+其实我们知道java应用程序中的变量可以分为两种类型： 引用类型和基本类型。当把这两种类型的参数传递给一个方法时，处理这两种类型的方式是相同的。两种类型都是按值传递； <br/>
+而根据这两种类型，如果传递的是基本类型时，函数接收的是原始值的一个副本。因此，如果函数中修改了该参数，仅改变副本，而原始值保持不变； <br/>
+如果传递的是引用类型时，函数接收到的是原始值的内存地址，而不是值的副本。因此，如果在函数中修改了该参数，调用代码中的原始值也随之改变 <br/>
+为什么要这么做呢？ 我们都知道，对象类型是存储在堆里面的，一方面速度相对与基本类型比较慢，另一方面对象类型本身比较大，如果采用重新复制对象值的方法，浪费内存</p>
+
+
+
+<h3>结论</h3>
+
+<p>所以这个时候，swap等于什么事都没做吧</p>
+
+
+
+<h2>思路2</h2>
+
+<p>有了第一个思路的引导以后，其实我们得出的结论是，只需要在swap方法中通过修改a,b的内存地址的值就行了对吧。 那么理所当然我们会想到反射 <br/>
+那么我们通过分析Integer这个类，Integer这个类里面有一个成员变量来存储Integer类型的值</p>
+
+<pre><code>private final int value;</code><ul><li>1</li></ul></pre>
+
+<p>我们只需要通过反射拿到这个变量再去修改就可以了，所以我们代码就可以这么写了 </p><div><img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast [3].png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="269" width="576"/></div><p></p>
+
+<h3>分析</h3>
+
+<p>这段代码写完以后，大家是不是认为大功告成了？ 如果你这么想，就太单纯了。大家如果有心来分析这道题目的话，把这段代码运行一下看看结果。 是不是a =2 , b=2 ?  <br/>
+其实已经成功了50%对吧。 原因是什么呢？</p>
+
+
+
+<h4>第一步，从第一行代码开始</h4>
+
+<p></p><div><img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast [4].png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="155" width="576"/></div>
+我们一开始定义了两个变量Integer a=1;Integer b=2;  这里面的1和2是int类型，而a 和 b是Integer类型，那么为什么他们编译的时候不报错呢？ <br/>
+那就要说到 装箱 这个概念了，如果我们规范的编写第一行代码的话，应该是Integer a=new Integer(1) , 但是在jdk5以后，jvm在这块做了优化，通过字节码来看下编译指令后发现。a=1 编译以后 是 a=Integer.valueOf(1); <p></p>
+
+<p>那么我们继续一步步看，进入Integer.valueOf()方法，看看这个函数究竟做了什么事情 </p><div><img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast [5].png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="130" width="576"/></div>
+我们看到第一行代码，如果int的值在IntegerCache.low到IntegerCache.high之间，那么就直接从IntegerCache里面获取，如果是超出这个范围才会新建一个Integer类型，而默认是在-128到127之间的数，一开始就被初始化好了，所以他们只有一个实例。那么我们来验证一下<p></p>
+
+<p></p><div><img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast [6].png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="241" width="408"/></div><p></p>
+
+<p>因为Integer i1 = 1; 实际是Integer i1 = Integer.valueOf(1)，在cache里，我们找到了1对应的对象地址，然后就直接返回了；同理，i2也是cache里找到后直接返回的。这样，他们就有相同的地址，因而双等号的地址比较就是相同的。i3和i4则不在cache里，因此他们分别新建了两个对象，所以地址不同</p>
+
+<p>那么，有了这个知识点以后，我们再继续分析前面的内容</p>
+
+<p></p><div><img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast [7].png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="231" width="576"/></div><p></p>
+
+
+
+<h4>第二步，分析关键代码</h4>
+
+<p>首先，i1和i2分别指向a和b对应的内存地址，然后将i1的值传递给int型的tmp，那么这个时候tmp的值为整数值1， <br/>
+接着, 我们把i2的整数值2设置给i1,那么我们来看f.set(i1,i2.intValue());这个方法 <br/>
+<img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast [8].png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="61" width="417"/></p>
+
+<p>两个参数都是对象类型，对于第二个参数，编译器又给我们做了一次装箱处理，最终转化出来的代码就是 <br/>
+i1.value=Integer.valueOf(i2.intValue()).intValue(); <br/>
+i1值的变化过程 <br/>
+a、i2.intValue() -&gt; 2 <br/>
+b、Integer.valueOf(2) -&gt; 0x1265 <br/>
+c、0x1265.intValue() -&gt; 2 <br/>
+d、i1.value -&gt; 2</p>
+
+<p>i2值的变化 <br/>
+这里的tmp的值等于1 ,于是执行过程如下 <br/>
+Tmp=Integer.valueOf(tmp).intValue(); <br/>
+a、Integer.valueOf(1) -&gt; 0x1234 <br/>
+b、0x1234.intValue() -&gt; 2 //因为装箱操作，所以在i1值的变化过程中修改的是同一块内存地址，因此这里的值变成了2 <br/>
+c、i2.value -&gt; 2</p>
+
+<p>因此最后的结果是，a、b 都变成了2</p>
+
+<h3>结论</h3>
+
+<p>这里面涉及到两个知识点 <br/>
+1. Integer的初始化缓存 <br/>
+2. 反射</p>
+
+<h2>最终解决方案</h2>
+
+<p>不要让Integer.valueOf装箱发挥作用，避免走cache就行 </p><div><img src="一道简单而又不简单的面试题 - CSDN博客 [2]_files/SouthEast [9].png" type="image/png" data-filename="SouthEast.png" alt="这里写图片描述" height="243" width="576"/></div><p></p>
+
+<h2>总结</h2>
+
+<p>我们发现一道小小的面试题，能够涉及到的知识点有这么多 <br/>
+1、函数调用的值传递； <br/>
+2、对象引用的值是内存地址； <br/>
+3、反射的可访问性； <br/>
+4、java编译器的自动装箱； <br/>
+5、Integer装箱的对象缓存。 <br/>
+所以，当我们工作到一段时间以后，技术水平不能再继续停留在表面上，而是需要逐步往深入挖掘，每一个技术的出现，每一个bug的出现都不是随机或者偶然的。而是有一定的原因。</p>
+
+<p>想要找我交流的，可以加群：608583947 ， michael老师。</p>                            </div>
+                
+                    </div>
+    </div></div></div><br/></div></span>
+</div></body></html> 

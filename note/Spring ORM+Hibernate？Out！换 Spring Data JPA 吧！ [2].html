@@ -1,0 +1,234 @@
+<html>
+<head>
+  <title>Spring ORM+Hibernate？Out！换 Spring Data JPA 吧！ - CSDN博客</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="5711"/>
+<h1>Spring ORM+Hibernate？Out！换 Spring Data JPA 吧！ - CSDN博客</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div><div><div><div><h1> Spring ORM+Hibernate？Out！换 Spring Data JPA 吧！ </h1><div><div></div></div></div>
+        <div>
+        
+        <div>
+        
+        <span>37179人阅读</span>
+        
+        <span>
+            <a href="#" target="_blank" title="收藏">收藏</a>
+        </span>
+                
+                    </div>
+</div>
+
+                
+                <div>
+                        <p>
+                版权声明：http://blog.csdn.net/anxpp                http://blog.csdn.net/anxpp/article/details/51415698            </p>
+                    </div>
+        
+                    
+            
+                
+<p>
+转载请注明出处：<a href="http://blog.csdn.net/anxpp/article/details/51415698" target="_blank">http://blog.csdn.net/anxpp/article/details/51415698</a>，谢谢！</p>
+<p>
+    在一切开始之前，先举个简单的例子，以提高大家的兴致！</p>
+<p>
+    如果一张表user有三个字段，id、name和age，要查找指定姓氏在某年龄以上的user，在传统的Spring+Hibernate中，dao层我们是这样写的：</p>
+<p>
+    UserDao：</p>
+<ol><li>publicinterfaceUserDao{</li><li>List&lt;User&gt; findByNameLikeAndAgeGreaterThan(String firstName,Integer age);</li><li>}</li></ol>
+<p>
+    UserDaoImpl（已经是相对简单的HibernateTemplate方式了）：</p>
+<ol><li>publicclassUserDaoImplimplementsUserDao{</li><li>@Override</li><li>publicList&lt;User&gt; findByFirstNameAndAge(String firstName,Integer age){</li><li>//具体hql查找：&quot;from User where name like '%'&quot;+firstName + &quot;and age &gt; &quot; + age;</li><li>return hibernateTemplateMysql.execute(newHibernateCallback(){</li><li>@Override</li><li>publicObject doInHibernate(Session session)throwsHibernateException{</li><li>String hql =&quot;from User where name like '?' and age &gt; ?&quot;;</li><li>Query query = session.createQuery(hql);</li><li>                query.setParameter(0, firstName+&quot;&quot;);</li><li>                query.setParameter(1, age);</li><li>return query.uniqueResult();</li><li>}</li><li>});</li><li>}</li><li>}</li></ol>
+<p>
+    然而，如果我们用Spring Data JPA呢：</p>
+<ol><li>publicinterfaceUserDaoextendsJpaRepository&lt;User,Serializable&gt;{</li><li>List&lt;User&gt; findByNameLikeAndAgeGreaterThan(String firstName,Integer age);</li><li>}</li></ol>
+<p>
+    对，就这样，已经没有了，连实现都不需要写的！service直接调用UserDao.findByNameLikeAndAgeGreaterThan(firstName+&quot;%&quot;,age)即可。</p>
+<p>
+    那么，下面就来介绍，Spring Data JPA是个什么，如何为我们简化JPA开发。</p>
+<blockquote>
+<p>    推荐两篇文章：</p>
+</blockquote>
+<h2>
+1、简介</h2>
+<p>
+    官网：<a href="http://projects.spring.io/spring-data-jpa/" target="_blank">http://projects.spring.io/spring-data-jpa/</a></p>
+<p>
+    Spring Data是一个用于简化数据库访问，并支持云服务的开源框架。其主要目标是使得对数据的访问变得方便快捷，并支持map-reduce框架和云计算数据服务。</p>
+<p>
+    Spring Data 包含多个子项目：</p>
+<p>
+    </p><div><img src="Spring ORM+Hibernate？Out！换 Spring Data JPA 吧！ [2]_files/1257144917.png" type="image/png" data-filename="1257144917.png" alt="01" height="630" title="01" width="576"/></div><p></p>
+<p>
+    JPA就是其中子项目之一，正如<a href="http://blog.csdn.net/anxpp/article/details/51388436" target="_blank">JPA规范介绍及实例</a>中的介绍，JPA属于重量级的，因为它需要运行在JAVA EE容器中，而Spring Data JPA提供了轻量级的实现，在任何servlet容器中就可以运行。</p>
+<p>
+    Spring Data JPA相对于Java EE中的JPA，更加简洁易用：</p>
+<ol><li>    配置更简单。</li><li>    Spring以轻量级的方式实现了部分在 EJB 容器环境下才具有的功能。</li><li>    Spring 将 EntityManager 的创建与销毁、事务管理等代码抽取出来，并由其统一管理。</li><li>    正如前面的例子，极大的简化了数据库访问层（dao）的代码。</li></ol><p>
+    Spring Data JPA 让一切近乎完美！Spring 对 JPA 的支持非常强大，开发者只需关心核心业务逻辑的实现代码，无需过多关注 EntityManager 的创建、事务处理等 JPA 相关的处理，这基本上也是作为一个开发框架而言所能做到的极限了。至此，开发者连仅剩的实现持久层业务逻辑的工作都省了，唯一要做的，就只是声明持久层的接口，其他都交给 Spring Data JPA 来帮你完成！</p>
+<h2>
+2、开发步骤</h2>
+<p>
+    Spring Data JPA 进行持久层开发一般分三个步骤：</p>
+<ol><li>    声明持久层的接口，该接口继承 Repository（或Repository的子接口，其中定义了一些常用的增删改查，以及分页相关的方法）。</li><li>    在接口中声明需要的业务方法。Spring Data 将根据给定的策略生成实现代码。</li><li>    在 Spring 配置文件中增加一行声明，让 Spring 为声明的接口创建代理对象。配置了 &lt;jpa:repositories&gt; 后，Spring 初始化容器时将会扫描 base-package 指定的包目录及其子目录，为继承 Repository 或其子接口的接口创建代理对象，并将代理对象注册为 Spring Bean，业务层便可以通过 Spring 自动封装的特性来直接使用该对象。</li></ol><h2>
+3、主要的接口</h2>
+<ul><li>    Repository： 仅仅是一个标识，没有任何方法，方便Spring自动扫描识别</li><li>    CrudRepository： 继承Repository，实现了一组CRUD相关的方法</li><li>    PagingAndSortingRepository： 继承CrudRepository，实现了一组分页排序相关的方法</li><li>    JpaRepository： 继承PagingAndSortingRepository，实现一组JPA规范相关的方法</li></ul><p>
+    （根据一个最小什么的原则，一下想不起了）我们通常优先考虑Repository接口，因为它已经足以完成大多时候的使用了，如果有更多的需求，再依次选择其子接口。</p>
+<p>
+    我们的dao层接口继承Repository后，如无更多需要，可以不用写任何代码，仅仅是一个空的接口就行了。</p>
+<p>
+    同时，也可以选择不继承接口，而使用注解方式，比如，下面两种方式是完全一样的：</p>
+<ol><li>publicinterfaceUserDaoextendsRepository&lt;AccountInfo,Long&gt;{}</li></ol>
+<ol><li>@RepositoryDefinition(domainClass =AccountInfo.class, idClass =Long.class)</li><li>publicinterfaceUserDao{}</li></ol>
+<h2>
+4、创建查询的方法</h2>
+<h3>
+    4.1、Query creation from method names（解析方法名）</h3>
+<p>
+    如文首例子中的 findByNameLikeAndAgeGreaterThan(String firstName,Integer age) 方法一样，我们从方法名就知道想要做什么，而此时，Spring也知道... 所以它为我们创建了对应的查询，而不需要我们多些一段代码。如何做到的呢：</p>
+<blockquote>
+<p>    框架在进行方法名解析时，会先把方法名多余的前缀截取掉，比如 find、findBy、read、readBy、get、getBy，然后对剩下部分进行解析。并且如果方法的最后一个参数是 Sort 或者 Pageable 类型，也会提取相关的信息，以便按规则进行排序或者分页查询。</p>
+</blockquote>
+<p>
+    如上面的findByNameLikeAndAgeGreaterThan，解析步骤如下：</p>
+<p>
+    1、剔除findBy</p>
+<p>
+    2、先判断 nameLikeAndAgeGreaterThan（根据 POJO 规范，首字母变为小写）是否为 User 的一个属性，如果是，则表示根据该属性进行查询；如果没有该属性，则进行下一步。</p>
+<p>
+    3、从右往左截取第一个大写字母开头的字符串（此处为Than），然后检查剩下的字符串是否为 User 的一个属性，如果是，则表示根据该属性进行查询；如果没有该属性，则重复第2步，继续从右往左截取；知道找出 name 为 User 的属性。</p>
+<p>
+    4、从已截取的部分后面开始，重新从第1步开始（剔除条件语句），循环忘后，直到整个方法名处理完毕。</p>
+<p>
+    5、通过获取的操作、条件和属性，带入参数的值，生成查询。</p>
+<p>
+    在查询时，通常需要同时根据多个属性进行查询，提供的一些表达条件查询的关键字完整的表：</p>
+<p>
+    </p><div><img src="Spring ORM+Hibernate？Out！换 Spring Data JPA 吧！ [2]_files/2236906168.png" type="image/png" data-filename="2236906168.png" alt="02" height="455" title="02" width="576"/></div><p></p>
+<p>
+    如果截取的时候，因为Entity的一些属性刚好碰到有歧义的时候，这种方式的可读性就不是太好了。</p>
+<h3>
+    4.2、通过 @Query 创建查询</h3>
+<p>
+    如果想要更好的可读性，使用@Query 创建查询也是一种很好的方法。</p>
+<p>
+    比如文首的例子，我们可以这样改写：</p>
+<ol><li>publicinterfaceUserDaoextendsJpaRepository&lt;User,Serializable&gt;{</li><li>@Query(&quot;select * from User u where u.name like ?1 and u.age&gt;?2&quot;)</li><li>List&lt;User&gt; findByNameLikeAndAgeGreaterThan(String firstName,Integer age);</li><li>}</li></ol>
+<p>
+    出了使用?+数字的方式代替参数，还可以使用如下方式：</p>
+<ol><li>publicinterfaceUserDaoextendsJpaRepository&lt;User,Serializable&gt;{</li><li>@Query(&quot;select * from User u where u.name like :first and u.age&gt;:age&quot;)</li><li>List&lt;User&gt; findByNameLikeAndAgeGreaterThan(@Param(&quot;first&quot;)String firstName,@Param(&quot;age&quot;)Integer age);</li><li>}</li></ol>
+<p>
+    @Query 也可以用来修改和删除等，加上@Modifying即可：</p>
+<ol><li>@Modifying</li><li>@Query(&quot;update User u set u.name = ?1 where u.id = ?2&quot;)</li><li>publicint increaseSalary(String name,int id);</li></ol>
+<p>
+     可以如下加上参数以使用原生查询：</p>
+<ol><li>publicinterfaceUserRepositoryextendsJpaRepository&lt;User,Long&gt;{</li><li>@Query(value =&quot;SELECT * FROM USERS WHERE EMAIL_ADDRESS = ?1&quot;, nativeQuery =true)</li><li>User findByEmailAddress(String emailAddress);</li><li>}</li></ol>
+<h3>
+    4.3、JPA NamedQueries（命名查询）</h3>
+<p>
+    有两种方式，一是通过xml配置：</p>
+<ol><li>&lt;named-queryname=&quot;User.findByLastname&quot;&gt;</li><li>&lt;query&gt;select u from User u where u.lastname = ?1&lt;/query&gt;</li><li>&lt;/named-query&gt;</li></ol>
+<p>
+    另一种是通过注解：</p>
+<ol><li>@Entity</li><li>@NamedQuery(name =&quot;User.findByEmailAddress&quot;,query =&quot;select u from User u where u.emailAddress = ?1&quot;)</li><li>publicclassUser{}</li></ol>
+<p>
+    如果要使用上面编写的两个查询，只需要dao层接口生命方法即可：</p>
+<ol><li>publicinterfaceUserDaoextendsJpaRepository&lt;User,Long&gt;{</li><li>List&lt;User&gt; findByLastname(String lastname);</li><li>User findByEmailAddress(String emailAddress);</li><li>}</li></ol>
+<p>
+    对于查询的创建，会有限查找是否有命名查询，而不是根据方法名创建查询。</p>
+<h3>
+    4.4、查询创建策略</h3>
+<ul><li>    CREATE：企图建构从查询方法名特定存储查询。在一般的方法是从该方法名中移除一组特定前缀和解析方法的其余部分。其他两种创建查询的方法会被忽略。</li><li>    USE_DECLARED_QUERY：如果方法通过 @Query 指定了查询语句，则使用该语句实现查询；如果没有，则查找是否定义了符合条件的命名查询，如果找到，则使用该命名查询；如果两者都没有找到，则抛出异常。</li><li>    CREATE_IF_NOT_FOUND（默认）：如果方法通过 @Query 指定了查询语句，则使用该语句实现查询；如果没有，则查找是否定义了符合条件的命名查询，如果找到，则使用该命名查询；如果两者都没有找到，则通过解析方法名字来创建查询。</li></ul><h3>
+    4.5、为接口中部分方法提供自定义实现</h3>
+<p>
+    虽然 Spring Data JPA 已为我们提供了如此强大的功能，但有时候，可能我们还是希望能自定义一些查询的实现。</p>
+<p>
+    自定义实现一般又两种方法：</p>
+<p>
+    方法一：</p>
+<ul><li>    将需要手动实现的方法从持久层接口（比如 UserDao ）中抽取出来，独立成一个新的接口（比如 UserDaoMore ），并让 UserDao 继承 UserDaoMore</li><li>    为 UserDaoMore 提供自定义实现（比如 UserDaoMoreImpl ）</li><li>    将 UserDaoMoreImpl 配置为 Spring Bean</li><li>    在 &lt;jpa:repositories&gt; 中如下配置：</li></ul><ol><li>&lt;jpa:repositoriesbase-package=&quot;com.anxpp.demo.core.dao&quot;&gt;</li><li>&lt;jpa:repositoryid=&quot;UserDao&quot;repository-impl-ref=&quot; UserDaoMore&quot;/&gt;</li><li>&lt;/jpa:repositories&gt;</li><li>&lt;beanid=&quot;UserDaoMore&quot;class=&quot;...&quot;/&gt;</li></ol>
+<p>
+    方法二：</p>
+<p>
+    设置自动查找时默认的自定义实现类命名规则，用以指定实现类的后缀：</p>
+<ol><li>&lt;jpa:repositoriesbase-package=&quot;com.anxpp.demo.core.dao&quot;repository-impl-postfix=&quot;Impl&quot;/&gt;</li></ol>
+<p>
+    在框架扫描到 UserDao 接口时，它将尝试在相同的包目录下查找 UserDaoImpl.java，如果找到，便将其中的实现方法作为最终生成的代理类中相应方法的实现。</p>
+<h2>
+5、调用存储过程</h2>
+<p>
+    如果需要调用存储过程，可以通过如下方式：</p>
+<p>
+    首先在实体上定义：</p>
+<ol><li>@Entity</li><li>@NamedStoredProcedureQuery(name =&quot;User.plus1&quot;, procedureName =&quot;plus1inout&quot;, parameters ={</li><li>@StoredProcedureParameter(mode =ParameterMode.IN, name =&quot;arg&quot;, type =Integer.class),</li><li>@StoredProcedureParameter(mode =ParameterMode.OUT, name =&quot;res&quot;, type =Integer.class)})</li><li>publicclassUser{}</li></ol>
+<p>
+    显示的调用存储过程：</p>
+<ol><li>@Procedure(&quot;plus1inout&quot;)</li><li>Integer explicitlyNamedPlus1inout(Integer arg);</li></ol>
+<p>
+    通过别名隐示的调用：</p>
+<ol><li>@Procedure(&quot;plus1inout&quot;)</li><li>Integer explicitlyNamedPlus1inout(Integer arg);</li></ol>
+<p>
+    或者通过实体的注解调用：</p>
+<ol><li>@Procedure(name =&quot;User.plus1IO&quot;)</li><li>Integer entityAnnotatedCustomNamedProcedurePlus1IO(@Param(&quot;arg&quot;)Integer arg);</li></ol>
+<p>
+    以及通过方法名的隐示调用：</p>
+<ol><li>Procedure</li><li>Integer plus1(@Param(&quot;arg&quot;)Integer arg);</li></ol>
+<h2>
+6、Query by Example</h2>
+<p>
+    Example API 主要由三部分组成：</p>
+<ul><li>    Probe: That is the actual example of a domain object with populated fields.</li><li>    ExampleMatcher: The ExampleMatcher carries details on how to match particular fields. It can be reused across multiple Examples.</li><li>    Example: An Example consists of the probe and the ExampleMatcher. It is used to create the query.</li></ul><p>
+    何时使用：</p>
+<ul><li>    查询您的数据存储与一组静态或动态约束</li><li>    可以对对象频繁的重构，而无需担心破坏现有的查询</li><li>    从底层数据存储API独立工作</li></ul><p>
+    限制：</p>
+<ul><li>    查询谓词使用and连接</li><li>    不支持条件嵌套（如 firstname = ?0 or (firstname = ?1 and lastname = ?2)）</li><li>    starts/contains/ends/regex 仅支持 String类型，exact 仅支持其他类型。</li></ul><p>
+    示例实体：</p>
+<ol><li>publicclassPerson{</li><li>@Id</li><li>privateString id;</li><li>privateString firstname;</li><li>privateString lastname;</li><li>privateAddress address;</li><li>// … getters and setters omitted</li><li>}</li></ol>
+<p>
+    这一块暂时不忙研究了...  感觉写完睡觉了，有时间再好好看看。我猜有点像享元模式，不过扩展了很多东西。</p>
+<h2>
+7、事务</h2>
+<p>
+    默认情况下，Spring Data JPA 实现的方法都是使用事务的。</p>
+<p>
+    针对查询类型的方法，其等价于 @Transactional(readOnly=true)。</p>
+<p>
+    增删改类型的方法，等价于 @Transactional。可以看出，除了将查询的方法设为只读事务外，其他事务属性均采用默认值。</p>
+<p>
+    也可以自定义事务：</p>
+<ol><li>publicinterfaceUserRepositoryextendsCrudRepository&lt;User,Long&gt;{</li><li>@Override</li><li>@Transactional(timeout =10)</li><li>publicList&lt;User&gt; findAll();</li><li>}</li></ol>
+<p>
+    可以将事务注解到service的一个方法上：</p>
+<ol><li>@Service</li><li>classUserManagementImplimplementsUserManagement{</li><li>privatefinalUserRepository userRepository;</li><li>privatefinalRoleRepository roleRepository;</li><li>@Autowired</li><li>publicUserManagementImpl(UserRepository userRepository,</li><li>RoleRepository roleRepository){</li><li>this.userRepository = userRepository;</li><li>this.roleRepository = roleRepository;</li><li>}</li><li>@Transactional</li><li>publicvoid addRoleToAllUsers(String roleName){</li><li>Role role = roleRepository.findByName(roleName);</li><li>for(User user : userRepository.findAll()){</li><li>      user.addRole(role);</li><li>      userRepository.save(user);</li><li>}</li><li>}</li></ol>
+<blockquote>
+<p>    注意：需要&lt;tx:annotation-driven /&gt; 或使用了 @EnableTransactionManagement</p>
+</blockquote>
+<p>
+    可以在查询的方法前面注解事务：</p>
+<ol><li>@Transactional(readOnly =true)</li><li>publicinterfaceUserRepositoryextendsJpaRepository&lt;User,Long&gt;{</li><li>List&lt;User&gt; findByLastname(String lastname);</li><li>@Modifying</li><li>@Transactional</li><li>@Query(&quot;delete from User u where u.active = false&quot;)</li><li>void deleteInactiveUsers();</li><li>}</li></ol>
+<p>
+    这里的deleteInactiveUsers()方法因为的事务注解覆盖了整体的readOnly，所以这个方法不是只读的。</p>
+<h2>
+8、附录</h2>
+<p>
+    <strong>查询关键字：</strong></p>
+<p>
+    </p><div><img src="Spring ORM+Hibernate？Out！换 Spring Data JPA 吧！ [2]_files/1125701523.png" type="image/png" data-filename="1125701523.png" alt="03" height="680" title="03" width="519"/></div><p></p>
+<p>
+    <strong>查询的返回值类型：</strong></p>
+<p>
+    </p><div><img src="Spring ORM+Hibernate？Out！换 Spring Data JPA 吧！ [2]_files/1272441414.png" type="image/png" data-filename="1272441414.png" alt="04" height="470" title="04" width="576"/></div><p></p>
+<hr/><p>
+    小结：本文大概的介绍了Spring Data JPA，如果需要了解如何搭建相关项目，请参考：<a href="http://blog.csdn.net/anxpp/article/details/51415366" target="_blank">手把手教你从最基本的Java工程搭建SpringMVC+SpringDataJPA+Hibernate(含源码下载)</a></p>
+            </div></div></div><br/></div></span>
+</div></body></html> 

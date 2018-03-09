@@ -1,0 +1,136 @@
+<html>
+<head>
+  <title>你的代码真的很健壮吗.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="1497"/>
+<h1>你的代码真的很健壮吗.html</h1>
+
+<div>
+<span><a name="462"></a><h1>你的代码真的很健壮吗</h1><div style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div style="padding-top: 3px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; border-style: initial; border-color: initial; border-image: initial; width: 600px; line-height: 24px; float: left; color: rgb(51, 51, 51); font-family: Arial, 宋体; background-color: rgb(255, 255, 255);">在编写对话框程序的时候，我们时常会需要Enable或Disable某个控件，有些追求代码健壮的程序员会写出这样的代码： <br/><br/><table align="center" bgcolor="#E3E3E3" border="1" style="padding: 0px; margin: 0px; border: 0px;" width="90%"><tbody><tr><td>void CMyDialog::OnStart()<br/>
+{<br/>
+　CWnd* pBtn = GetDlgItem( IDC_ADD_BTN);<br/>
+　if( pBtn ){<br/>
+　　pBtn-&gt;EnableWindow(FALSE);<br/>
+　}<br/>
+　…<br/>
+}<br/><br/>
+void CMyDialog::OnAdd()<br/>
+{<br/>
+　......<br/>
+}</td></tr></tbody></table><br/>
+　　由于GetDlgItem()返回的是一个CWnd的指针，按照文档的描述，如果指定的控件不存在，该函数会返回一个NULL指针，为了确保不会调用NULL指针的函数，我们先检查了返回的指针是否为NULL。<br/><br/>
+　　一切看上去很美，这段程序永远不会使你的程序崩溃。然而，不会崩溃的程序，不一定是没有问题的程序。假设在MyDialog中Add按钮被定义成IDC_BTN_ADD，并且不凑巧，在这个项目的另一个Dialog里也有一个Add按钮，而且它的ID被定义为IDC_ADD_BTN，所以你的程序在编译和连结时都不会有错误。当用户使用时，也不会注意到有什么不妥，只是Dialog上的某个按钮没有变成灰色，没有人会注意到它的。<br/><br/>
+　　然而，它并不符合你的设计，也许在程序的其他地方，你假设在任务开始后，OnAdd()函数不会被调用到。这些问题一直隐藏着，直到有一天，用户报告说按Add按钮，加入某些数据后，按Ok，结果程序崩溃了。你在自己的机器上试了一下，由于之前你没有按过Start按钮，所以你一直复制不出这个问题。经过几个来回的email或者电话交流，你找到了复制错误的方法，并且奇怪为什么Add按钮没有被禁止呢，奇怪？？忙活半天后，你发现原来是一个ID写错了。<br/><br/>
+　　一个很小的错误，修正它也许只要两分钟，找到它却花费了你几十分钟甚至更长。然而，这一切是可以避免的。这里我们要避免的不是说写错ID，粗心大意的错误，人人都会犯，而且会不停的犯。但是如果错误能够被及时发现，就会剩下许多时间。 <br/><br/>
+　　造成以上问题的原因是我们在代码中加入了一些防御性的代码，这些代码保护了程序员犯的错误。如果GetDlgItem()返回NULL，一定是由于程序员的错误。由于错误被掩盖起来，所以当问题被暴露出来时就已经面目全非了。<br/><br/>
+　　一个比较好的做法是除去防御性代码，让问题及早暴露：<br/><br/><table align="center" bgcolor="#E3E3E3" border="1" style="padding: 0px; margin: 0px; border: 0px;" width="90%"><tbody><tr><td>void CMyDialog::OnStart()<br/>
+{<br/>
+GetDlgItem( IDC_ADD_BTN)-&gt;EnableWindow(FALSE);<br/>
+…<br/>
+}</td></tr></tbody></table><br/>
+　　这样的结果是：一按Start按钮，程序立刻就崩溃了。的确，崩溃是很严重的错误，在Bug List里它的优先级是比较高的（仅次于造成整个OS崩溃）。但是，既然有错误，迟早要崩溃的，还不如早一点崩溃。至少早一点崩溃可以使你很快就发现问题，找到问题。有经验的程序员都清楚，一触即发的问题并不可怕，可怕的是那些偶然发生，不容易复制的问题。<br/><br/>
+　　需要在函数里检查参数的合法性吗？<br/><br/>
+　　在实现一个函数时，出于“健壮性”的考虑，我们经常会在函数的入口处加入许多参数检查代码。比如以下的一个例子：<br/><br/><table align="center" bgcolor="#E3E3E3" border="1" style="padding: 0px; margin: 0px; border: 0px;" width="90%"><tbody><tr><td>class CItemManager<br/>
+{<br/>
+　protected:<br/>
+　　int m_nCount;<br/>
+　　…<br/>
+　public:<br/>
+　　int GetItemCount();<br/>
+　　CItem* GetItem( int nIndex );<br/>
+};<br/><br/>
+CItem* CItemManager::GetItem( int nIndex )<br/>
+{<br/>
+　if( nIndex &lt; 0 || nIndex &gt;= m_nCount )<br/>
+　　return NULL;<br/>
+　…<br/>
+　return pItem;<br/>
+}<br/><br/>
+class CItemManager<br/>
+{<br/>
+protected:<br/>
+　int m_nCount;<br/>
+　…<br/>
+public:<br/>
+　int GetItemCount();<br/>
+　CItem* GetItem( int nIndex );<br/>
+};<br/><br/>
+CItem* CItemManager::GetItem( int nIndex )<br/>
+{<br/>
+　if( nIndex &lt; 0 || nIndex &gt;= m_nCount )<br/>
+　　return NULL;<br/>
+　…<br/>
+　return pItem;<br/>
+}</td></tr></tbody></table><br/>
+　　在实现GetItem()时，你首先检查了参数的合法性，如果不合法就返回一个NULL指针。这样你的函数在任何的输入情况下都不会导致程序崩溃，一切看上去完美无缺，无可挑剔。但是，这样做真的能使我们的程序更健壮吗？<br/><br/>
+　　我们从调用者的角度来分析一下。为什么调用者会传入一个不合法的参数呢？一种情况是调用者的程序有bug；另一种情况是调用者不确定index是不是合法，但是他不想多写两行代码来判断index的合法性，他希望GetItem()能够一次都给办了：即能检查index的合法性，又能返回CItem的指针。<br/><br/>
+　　考虑第一种情况，也许调用者写了如下的代码：<br/><br/><table align="center" bgcolor="#E3E3E3" border="1" style="padding: 0px; margin: 0px; border: 0px;" width="90%"><tbody><tr><td>int index;<br/>
+…<br/><br/>
+CItem* pItem = im.GetItem( index );<br/>
+if( pItem ){//should be executed<br/>
+…<br/>
+}</td></tr></tbody></table><br/>
+　　这是一段危险的函数，index变量在使用之前没有初始化，但是这段程序不会，永远也不会使程序崩溃，这要感谢实现CItemManager和使用CItemManager的程序员，他们都习惯于写“健壮的”代码。但是，这段程序却不会按照我们想象的那样运行。本该执行的代码并不是每次都被执行到，因为谁也不确定index变量里存的是什么东西。这段代码是健壮的，他不会使程序崩溃，但是程序的运行过程却是不确定的。一旦出现问题，这个问题即不容易复制，也不容易确定错误原因，它的表现形式往往出乎你的意料。<br/><br/>
+　　考虑第二种情况，调用者通过其他函数得到了一个index，然后他想取得这个index下的CItem指针，但是他不想多写两行代码去判断这个index的合法性，他想：“如果这个index是合法的就请返回给我这个index下的CItem指针，如果不合法就返回一个NULL好了“。这样做只要一行代码就够了，他省下了一行代码，也许不止一行，因为在很多地方都需要呼叫GetItem()这个函数，所以，他省下了许多行代码。他会这样使用GetItem()：<br/><br/><table align="center" bgcolor="#E3E3E3" border="1" style="padding: 0px; margin: 0px; border: 0px;" width="90%"><tbody><tr><td>void SomeFunc( int nIndex )<br/>
+{<br/>
+　CItem* pItem = im.GetItem( nIndex );<br/>
+　if( pItem ){<br/>
+　　//do something.<br/>
+　}<br/>
+}<br/><br/>
+void SomeFunc( int nIndex )<br/>
+{<br/>
+　CItem* pItem = im.GetItem( nIndex );<br/>
+　if( pItem ){<br/>
+　　//do something.<br/>
+　}<br/>
+}</td></tr></tbody></table><br/>
+　　如果CItemManager的实现者和使用者是同一个程序员，我们经常会写出像上面的代码，毕竟可以省下一行代码，而且上面的代码看去还不错，简洁明了。但是仔细推敲一下， 我们发现，按照以上的要求实现的GetItem()是一个不良的设计。<br/><br/>
+　　首先，它违反了单一职责原则（SRP）。按照以上的要求实现的GetItem()其实完成了两项功能：第一项功能用来判断index是否合法；第二项功能用来取得指定index下的CItem指针。GetItem()只应该负责取得指定index下的CItem指针，检查index的合法性应该交给其他的函数。这里，调用者可以通过GetItemCount()来判断index的合法性。<br/><br/>
+　　其次，函数的返回值具有二义性。如果函数返回NULL，那么这个NULL可以代表index不合法，也可以解释为，指定的index下的值就是NULL，因为从编译器的角度NULL也是一个CItem指针。这里GetItem()混合了两种功能的返回值，而且第一项功能的返回值使用了第二项功能的返回值中的一个特例。这样的设计破坏了程序的完整性。假如CItemManager不是管理CItem指针，而是管理CItem对象，你就不会那样设计GetItem()函数了。<br/><br/>
+　　如果真的想在GetItem()里实现index的合法性检查，那么GetItem()的定义应该改成这样：<br/><br/><table align="center" bgcolor="#E3E3E3" border="1" style="padding: 0px; margin: 0px; border: 0px;" width="90%"><tbody><tr><td>bool GetItem( int index, CItem* &amp; pItem );</td></tr></tbody></table><br/>
+　　如果index不合法，函数返回false；如果index合法，函数返回true，并且pItem返回该index下的CItem指针。经过这么一改，返回值的二义性被消除了，但是你是否觉得，GetItem()的语义已经有点变味了，这更像是在实现FindItem了。然而，按照index去Find一个Item似乎又不合理，我们进入了一个两难的境地。<br/><br/>
+　　退一步海阔天空。在GetItem()里检查index的合法性，并不会让我们的程序更健壮。一个比较好的做法是，由调用者负责index的合法性检查。<br/><br/>
+　　所以 SomeFunc应该改成这样：<br/><br/><table align="center" bgcolor="#E3E3E3" border="1" style="padding: 0px; margin: 0px; border: 0px;" width="90%"><tbody><tr><td>void SomeFunc( int nIndex )<br/>
+{<br/>
+　if( nIndex &gt;= im.GetItemCount( ) )<br/>
+　　return;<br/>
+　CItem* pItem = im.GetItem( nIndex );<br/>
+　pItem-&gt;…;<br/>
+}<br/><br/>
+void SomeFunc( int nIndex )<br/>
+{<br/>
+if( nIndex &gt;= im.GetItemCount( ) )<br/>
+return;<br/>
+CItem* pItem = im.GetItem( nIndex );<br/>
+pItem-&gt;…;<br/>
+}</td></tr></tbody></table><br/>
+　　而GetItem()的实现应该改成这样：<br/><br/><table align="center" bgcolor="#E3E3E3" border="1" style="padding: 0px; margin: 0px; border: 0px;" width="90%"><tbody><tr><td>CItem* CItemManager::GetItem( int nIndex )<br/>
+{<br/>
+　ASSERT( nIndex &gt;= 0 &amp;&amp; nIndex &lt; m_nCount );<br/>
+　…<br/>
+　return pItem;<br/>
+}</td></tr></tbody></table><br/>
+　　以上的实现我们使用了ASSERT()来检查参数的合法性，当参数不合法时，程序会被终止。ASSERT()断言只有在调试版才有效，所以程序不能依赖它来做错误处理。ASSERT()在这里的作用是，一方面在调试程序的时候，能够帮助我们尽早的发现错误。错误越早被发现，越容易被解决；另一方面，按照Robert Martin在Agile Software Development一书中所述，软件具有三项职责，最后一项便是：和阅读它的人沟通1。这些断言代码可以向阅读代码的人传递这样的信息，当程序运行到这里的时候，必须满足这些条件。<br/><br/>
+　　我是否在鼓励不要写防御性代码？<br/><br/>
+　　读到这里，你也许觉得我在鼓励不要在函数里检查参数的合法性，不要写防御性代码。是这样吗？答案显然是否定的。我要强调的是不要盲目的加入防御性代码，这样做并不能增强系统的健壮性。当要加入防御性代码的时候，你需要<br/><br/>
+　　分析一下，这个条件是应该假设的，还是应该防御的。对于应该假设的条件，可以使用ASSERT()断言来检查，对于应该防御的条件，必须用专门的代码来处理。<br/><br/>
+　　那么如何判断一个条件是应该假设的，还是应该防御的呢？这让我想起了荣耀先生(optimizer)的两篇沉思录，《你防御了吗？》2和《别人的棺材》3。<br/><br/>
+　　《你防御了吗？》说的是作者写的一个用于显示SQL语句的程序，作者假设输入的SQL语句不会超过4000个字符，结果有一天的确有人输入了超过4000个字符的SQL语句，然后程序崩溃了。这引起了作者对防御性编程的思考。<br/><br/>
+　　《别人的棺材》说的正好是一个相反的例子。有A,B,C等模块，A负责分析，执行指令，B负责生成指令。这样的设计十分合理， B不用考虑指令是否合法，由A负责指令的检查、分析，然后再执行。但是，也许负责B模块的人觉得A模块不可靠或是效率太低，所以他也加入了对指令的分析模块。作者认为这样的设计会产生冗余，当需要修改指令分析流程时，许多模块需要修改，系统变得难于维护。<br/><br/>
+　　在网上的评论中，有的人认为这两篇文章相互矛盾。我觉得相反，这两篇文章恰巧揭示出需要防御和假设的两种情况。对于前一个例子，应该防御的条件，作者做了假设；对于后一个例子，B模块应该假设，却多做了一份防御。<br/><br/>
+　　当我们做假设的时候，切忌不能凭空假设，我们必须清楚谁对这个假设负责。所谓对假设负责，其实就是在划分系统的职责。当我们假设一个条件时，就是把保证这个条件成立的职责分配到外部系统。在做这种划分的时候，我们应该确信外部系统有这个能力，并且这种划分是合理的。在《你防御了吗？》中，作者把保证SQL语句不会超过4000个字符的职责交给最终用户，这显然不可靠。<br/><br/>
+　　当我们要防御一个条件时，切忌不要过度防御，过度防御虽然不会造成程序崩溃，但是会影响系统的结构。《别人的棺材》中，B模块就属于过度防御。造成过度防御的原因，我以为主要有两点：一点是由于程序员的“悲观”态度和简单分析造成的。在悲观的态度下，程序员认为一切条件都不可靠，然后，不加分析的一概做防御处理；另一点是由于社会原因造成的，我猜想《别人的棺材》中，作者就碰到了这类由于团队内部沟通上造成的。我也碰到过类似的情况，以GetItem()为例，本来我们在GetItem里是不检查index的合法性的。但是突然有一天，另一名使用这个函数的工程师告诉你，程序在GetItem里崩溃了，你调试后，告诉他，他必须负责检查index的合法性。然而，也许他是你的老板，或者你是个“菜鸟”，你争执不过他，最后只好你修改代码，加入index的检查代码，这样程序再崩溃的时候，至少不会在你写的代码里，“万事大吉”了。<br/><br/>
+　　<strong>结束</strong><br/><br/>
+　　当我们追求一个目标时，由于时间很长，过程艰难，到后来真正的目标往往会变得模糊不清。什么才是健壮的程序？能够正确运行的程序才是健壮的程序。在追求写出健壮的程序时，我们往往只考虑程序会不会崩溃，更有甚者，只考虑程序会不会崩溃在自己写的代码里，这离健壮程序的目标已经偏离了许多。这时有必要停下来，想一想，反思一下我们的目标和经历的过程。这篇文章就是我的一次反思。</div><div><br/></div></div></span>
+</div></body></html> 

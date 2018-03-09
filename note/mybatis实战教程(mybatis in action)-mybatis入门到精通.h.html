@@ -1,0 +1,1090 @@
+<html>
+<head>
+  <title>mybatis实战教程(mybatis in action)-mybatis入门到精通.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="673"/>
+<h1>mybatis实战教程(mybatis in action)-mybatis入门到精通.html</h1>
+
+<div>
+<span><div style="background:rgb(238,238,238); padding:4px 10px; border:1px solid rgb(204,204,204); float:left; min-width:200px"><p style="margin:0px; text-align:right"><span style="float:left">目录<a href="http://blog.csdn.net/kutekute/article/details/9164353#" title="系统根据文章中H1到H6标签自动生成文章目录">(?)</a></span><a href="http://blog.csdn.net/kutekute/article/details/9164353#" title="收起">[-]</a></p><ol style="line-height:160%; padding-left:14px; margin-left:14px"><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t0">mybatis实战教程mybatis in action之一开发环境搭建</a></li><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t1">mybatis实战教程mybatis in action之二以接口的方式编程</a></li><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t2">mybatis实战教程mybatis in action之三实现数据的增删改查</a></li><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t3">mybatis实战教程mybatis in action之四实现关联数据的查询</a></li><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t4">mybatis实战教程mybatis in action之五与spring3集成附源码</a></li><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t5">mybatis实战教程mybatis in action之六与Spring MVC 的集成</a></li><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t6">mybatis实战教程mybatis in action之七实现mybatis分页源码下载</a></li><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t7">mybatis实战教程mybatis in action之八mybatis 动态sql语句</a></li><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t8">mybatis实战教程mybatis in action之九mybatis 代码生成工具的使用</a></li><li><a href="http://blog.csdn.net/kutekute/article/details/9164353#t9">mybatis SqlSessionDaoSupport的使用附代码下载</a></li></ol></div><div><p><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">转自：<a href="http://www.yihaomen.com/article/java/302.htm">http://www.yihaomen.com/article/java/302.htm</a></span></p><p>（读者注：其实这个应该叫做很基础的入门一下下，如果你看过Hibernate了那这个就非常的简单）</p><p><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">写在这个系列前面的话:</span></p><span style="background-color:rgb(255,255,255)">以前曾经用过ibatis,这是mybatis的前 身，当时在做项目时，感觉很不错，比hibernate灵活。性能也比hibernate好。而且也比较轻量级，因为当时在项目中，没来的及做很很多笔 记。后来项目结束了，我也没写总结文档。已经过去好久了。但最近突然又对这个ORM 工具感兴趣。因为接下来自己的项目中很有可能采用这个ORM工具。所以在此重新温习了一下 mybatis, 因此就有了这个系列的 mybatis 教程.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">什么是mybatis</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层框架。MyBatis消除了几乎所有的JDBC代码和参数的手工设置以及结果集的检 索。MyBatis使用简单的XML或注解用于配置和原始映射，将接口和Java的POJOs（Plan Old Java Objects，普通的Java对象）映射成数据库中的记录.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">orm工具的基本思想</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+无论是用过的hibernate,mybatis,你都可以法相他们有一个共同点：<br style="margin:0px; padding:0px; border:0px currentColor"/>
+1. 从配置文件(通常是XML配置文件中)得到 sessionfactory.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+2. 由sessionfactory  产生 session<br style="margin:0px; padding:0px; border:0px currentColor"/>
+3. 在session 中完成对数据的增删改查和事务提交等.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+4. 在用完之后关闭session 。<br style="margin:0px; padding:0px; border:0px currentColor"/></span><p><span style="background-color:rgb(255,255,255)">5. 在java 对象和 数据库之间有做mapping 的配置文件，也通常是xml 文件。</span></p><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t0"></a><a name="t0"></a><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">mybatis实战教程(mybatis in action)之一：开发环境搭建</span></h1><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">mybatis 的开发环境搭建，选择: eclipse j2ee 版本，mysql 5.1 ,jdk 1.7,mybatis3.2.0.jar包。这些软件工具均可以到各自的官方网站上下载。<br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">首先建立一个名字为 MyBaits 的 dynamic web project </span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+1. 现阶段，你可以直接建立java 工程，但一般都是开发web项目，这个系列教程最后也是web的，所以一开始就建立web工程。<br style="margin:0px; padding:0px; border:0px currentColor"/>
+2. 将 mybatis-3.2.0-SNAPSHOT.jar，mysql-connector-java-5.1.22-bin.jar 拷贝到 web工程的lib目录.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+3. 创建mysql 测试数据库和用户表,注意，这里采用的是 utf-8 编码<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image.jpg" type="image/jpeg" data-filename="Image.jpg" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+创建用户表,并插入一条测试数据<br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image.gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+Create TABLE `user` (<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `id` int(11) NOT NULL AUTO_INCREMENT,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `userName` varchar(50) DEFAULT NULL,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `userAge` int(11) DEFAULT NULL,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `userAddress` varchar(200) DEFAULT NULL,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  PRIMARY KEY (`id`)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+Insert INTO `user` VALUES ('1', 'summer', '100', 'shanghai,pudong');<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+到此为止，前期准备工作就完成了。下面开始真正配置mybatis项目了。<br style="margin:0px; padding:0px; border:0px currentColor"/>
+1. 在MyBatis 里面创建两个源码目录，分别为 src_user,test_src, 用如下方式建立,鼠标右键点击 JavaResource.<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [1].jpg" type="image/jpeg" data-filename="Image.jpg" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+2. 设置mybatis 配置文件:Configuration.xml, 在src_user目录下建立此文件，内容如下:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [1].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; ?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; !DOCTYPE configuration PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&quot;<a href="http://mybatis.org/dtd/mybatis-3-config.dtd" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://mybatis.org/dtd/mybatis-3-config.dtd</a>&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; configuration&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;typeAliases&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;typeAlias alias=&quot;User&quot; type=&quot;com.yihaomen.mybatis.model.User&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/typeAliases&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;environments default=&quot;development&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;environment id=&quot;development&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;transactionManager type=&quot;JDBC&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;dataSource type=&quot;POOLED&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;property name=&quot;driver&quot; value=&quot;com.mysql.jdbc.Driver&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://127.0.0.1:3306/mybatis&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;property name=&quot;username&quot; value=&quot;root&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;property name=&quot;password&quot; value=&quot;password&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/dataSource&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/environment&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/environments&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;mappers&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;mapper resource=&quot;com/yihaomen/mybatis/model/User.xml&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/mappers&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; /configuration&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+3. 建立与数据库对应的 java class,以及映射文件.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+在src_user下建立package:com.yihaomen.mybatis.model ,并在这个 package 下建立 User 类:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [2].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.mybatis.model;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public class User {<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private int id;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private String userName;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private String userAge;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private String userAddress;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public int getId() {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return id;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void setId(int id) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        this.id = id;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public String getUserName() {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return userName;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void setUserName(String userName) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        this.userName = userName;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public String getUserAge() {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return userAge;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void setUserAge(String userAge) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        this.userAge = userAge;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public String getUserAddress() {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return userAddress;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void setUserAddress(String userAddress) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        this.userAddress = userAddress;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+同时建立这个User 的映射文件 User.xml:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [3].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; ?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; !DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&quot;<a href="http://mybatis.org/dtd/mybatis-3-mapper.dtd" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://mybatis.org/dtd/mybatis-3-mapper.dtd</a>&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; mapper namespace=&quot;com.yihaomen.mybatis.models.UserMapper&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;selectUserByID&quot; parameterType=&quot;int&quot; resultType=&quot;User&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        select * from `user` where id = #{id}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; /mapper&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">下面对这几个配置文件解释下：</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+1.Configuration.xml 是 mybatis 用来建立 sessionFactory 用的，里面主要包含了数据库连接相关东西，还有 java 类所对应的别名，比如 &lt;typeAlias alias=&quot;User&quot; type=&quot;com.yihaomen.mybatis.model.User&quot;/&gt; 这个别名非常重要，你在 具体的类的映射中，比如User.xml 中 resultType 就是对应这里的。要保持一致，当然这里的 resultType 还有另外单独的定义方式，后面再说。<br style="margin:0px; padding:0px; border:0px currentColor"/>
+2.  Configuration.xml 里面 的&lt;mapper resource=&quot;com/yihaomen/mybatis/model/User.xml&quot;/&gt;是包含要映射的类的xml配置文件。<br style="margin:0px; padding:0px; border:0px currentColor"/>
+3. 在User.xml 文件里面 主要是定义各种SQL 语句，以及这些语句的参数，以及要返回的类型等.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">开始测试</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+在test_src 源码目录下建立com.yihaomen.test这个package,并建立测试类Test:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [4].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.test;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.io.Reader;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.io.Resources;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.session.SqlSession;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.session.SqlSessionFactory;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import com.yihaomen.mybatis.model.User;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public class Test {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private static SqlSessionFactory sqlSessionFactory;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private static Reader reader;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    static{<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try{<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            reader    = Resources.getResourceAsReader(&quot;Configuration.xml&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }catch(Exception e){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            e.printStackTrace();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public static SqlSessionFactory getSession(){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return sqlSessionFactory;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public static void main(String[] args) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        SqlSession session = sqlSessionFactory.openSession();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        User user = (User) session.selectOne(&quot;com.yihaomen.mybatis.models.UserMapper.selectUserByID&quot;, 1);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        System.out.println(user.getUserAddress());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        System.out.println(user.getUserName());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } finally {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        session.close();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+现在运行这个程序，是不是得到查询结果了。恭喜你，环境搭建配置成功，接下来第二章，将讲述基于接口的操作方式，增删改查。<br style="margin:0px; padding:0px; border:0px currentColor"/>
+整个工程目录结构如下:<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [2].jpg" type="image/jpeg" data-filename="Image.jpg" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:0px currentColor">除非申明,文章均为<span style="margin:0px; padding:0px; border:0px currentColor"><a href="http://www.yihaomen.com/" style="margin:0px; padding:0px; border:0px currentColor">一号门</a></span>原创,转载请注明本文地址,谢谢!</div><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)"><br/></span></div><div><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t1"></a><a name="t1"></a><span style="margin:0px; padding:0px; border:0px currentColor">mybatis实战教程(mybatis in action)之二：以接口的方式编程</span></h1><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">前面一章，已经搭建好了eclipse,mybatis,mysql的环境，并且实现了一个简单的查询。请注意，这种方式是用SqlSession实例来直接执行已映射的SQL语句：<br style="margin:0px; padding:0px; border:0px currentColor"/>
+session.selectOne(&quot;com.yihaomen.mybatis.models.UserMapper.selectUserByID&quot;, 1)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+其实还有更简单的方法，而且是更好的方法，使用合理描述参数和SQL语句返回值的接口（比如IUserOperation.class），这样现在就可以至此那个更简单，更安全的代码，没有容易发生的字符串文字和转换的错误.下面是详细过程:<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+在src_user源码目录下建立 com.yihaomen.mybatis.inter 这个包，并建立接口类 IUserOperation , 内容如下：<br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [5].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.mybatis.inter;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import com.yihaomen.mybatis.model.User;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public interface IUserOperation {   <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public User selectUserByID(int id);<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">请注意，这里面有一个方法名 selectUserByID 必须与 User.xml 里面配置的 select 的id 对应（&lt;select id=&quot;selectUserByID&quot;）</span><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">重写测试代码</span><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [6].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public static void main(String[] args) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        SqlSession session = sqlSessionFactory.openSession();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            IUserOperation userOperation=session.getMapper(IUserOperation.class);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            User user = userOperation.selectUserByID(1);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            System.out.println(user.getUserAddress());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            System.out.println(user.getUserName());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } finally {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            session.close();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+整个工程结构图现在如下：<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image.png" type="image/png" data-filename="Image.png" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+运行这个测试程序，就可以看到结果了。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:0px currentColor">除非申明,文章均为<span style="margin:0px; padding:0px; border:0px currentColor"><a href="http://www.yihaomen.com/" style="margin:0px; padding:0px; border:0px currentColor">一号门</a></span>原创,转载请注明本文地址,谢谢!</div><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)"><br/></span></div><div><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t2"></a><a name="t2"></a><span style="margin:0px; padding:0px; border:0px currentColor">mybatis实战教程(mybatis in action)之三:实现数据的增删改查</span></h1><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">前 面已经讲到用接口的方式编程。这种方式，要注意的一个地方就是。在User.xml  的配置文件中，mapper namespace=&quot;com.yihaomen.mybatis.inter.IUserOperation&quot; ，命名空间非常重要，不能有错，必须与我们定义的package 和 接口一致。如果不一致就会出错,这一章主要在上一讲基于接口编程的基础上完成如下事情:<br style="margin:0px; padding:0px; border:0px currentColor"/>
+1. 用 mybatis 查询数据，包括列表<br style="margin:0px; padding:0px; border:0px currentColor"/>
+2. 用 mybatis 增加数据<br style="margin:0px; padding:0px; border:0px currentColor"/>
+3. 用 mybatis 更新数据.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+4. 用 mybatis 删除数据.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">查询数据，前面已经讲过简单的，主要看查询出列表的</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+查询出列表，也就是返回list, 在我们这个例子中也就是 List&lt;User&gt; , 这种方式返回数据，需要在User.xml 里面配置返回的类型 resultMap, 注意不是 resultType, 而这个resultMap 所对应的应该是我们自己配置的<br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [7].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; !-- 为了返回list 类型而定义的returnMap --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;resultMap type=&quot;User&quot; id=&quot;resultListUser&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;id column=&quot;id&quot; property=&quot;id&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result column=&quot;userName&quot; property=&quot;userName&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result column=&quot;userAge&quot; property=&quot;userAge&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result column=&quot;userAddress&quot; property=&quot;userAddress&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/resultMap&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+查询列表的语句在 User.xml 中<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [8].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; !-- 返回list 的select 语句，注意 resultMap 的值是指向前面定义好的 --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;selectUsers&quot; parameterType=&quot;string&quot; resultMap=&quot;resultListUser&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        select * from user where userName like #{userName}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+在 IUserOperation 接口中增加方法：public List&lt;User&gt; selectUsers(String userName);   <br style="margin:0px; padding:0px; border:0px currentColor"/>
+现在在 Test 类中做测试<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [9].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public void getUserList(String userName){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        SqlSession session = sqlSessionFactory.openSession();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            IUserOperation userOperation=session.getMapper(IUserOperation.class);          <br style="margin:0px; padding:0px; border:0px currentColor"/>
+            List&lt;User&gt; users = userOperation.selectUsers(userName);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            for(User user:users){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                System.out.println(user.getId()+&quot;:&quot;+user.getUserName()+&quot;:&quot;+user.getUserAddress());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } finally {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            session.close();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+现在在main  方法中可以测试：<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [10].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public static void main(String[] args) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        Test testUser=new Test();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        testUser.getUserList(&quot;%&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+可以看到，结果成功查询出来。如果是查询单个数据的话，用第二讲用过的方法就可以了。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">用mybatis 增加数据</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+在 IUserOperation 接口中增加方法：public void addUser(User user);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+在 User.xml 中配置<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [11].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; !--执行增加操作的SQL语句。id和parameterType <br style="margin:0px; padding:0px; border:0px currentColor"/>
+       分别与IUserOperation接口中的addUser方法的名字和 <br style="margin:0px; padding:0px; border:0px currentColor"/>
+       参数类型一致。以#{name}的形式引用Student参数 <br style="margin:0px; padding:0px; border:0px currentColor"/>
+       的name属性，MyBatis将使用反射读取Student参数 <br style="margin:0px; padding:0px; border:0px currentColor"/>
+       的此属性。#{name}中name大小写敏感。引用其他 <br style="margin:0px; padding:0px; border:0px currentColor"/>
+       的gender等属性与此一致。seGeneratedKeys设置 <br style="margin:0px; padding:0px; border:0px currentColor"/>
+       为&quot;true&quot;表明要MyBatis获取由数据库自动生成的主 <br style="margin:0px; padding:0px; border:0px currentColor"/>
+       键；keyProperty=&quot;id&quot;指定把获取到的主键值注入 <br style="margin:0px; padding:0px; border:0px currentColor"/>
+       到Student的id属性--&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;insert id=&quot;addUser&quot; parameterType=&quot;User&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        useGeneratedKeys=&quot;true&quot; keyProperty=&quot;id&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        insert into user(userName,userAge,userAddress) <br style="margin:0px; padding:0px; border:0px currentColor"/>
+             values(#{userName},#{userAge},#{userAddress}) <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/insert&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+然后在 Test 中写测试方法:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [12].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+/**<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     * 测试增加,增加后，必须提交事务，否则不会写入到数据库.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     */<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void addUser(){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        User user=new User();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        user.setUserAddress(&quot;人民广场&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        user.setUserName(&quot;飞鸟&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        user.setUserAge(80);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        SqlSession session = sqlSessionFactory.openSession();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            IUserOperation userOperation=session.getMapper(IUserOperation.class);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            userOperation.addUser(user);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            session.commit();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            System.out.println(&quot;当前增加的用户 id为:&quot;+user.getId());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } finally {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            session.close();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">用mybatis 更新数据</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+方法类似，先在 IUserOperation 中增加方法：public void addUser(User user);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+然后配置 User.xml<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [13].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt;update id=&quot;updateUser&quot; parameterType=&quot;User&quot; &gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        update user set userName=#{userName},userAge=#{userAge},userAddress=#{userAddress} where id=#{id}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/update&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+Test 类总的测试方法如下：<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [14].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public void updateUser(){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        //先得到用户,然后修改，提交。<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        SqlSession session = sqlSessionFactory.openSession();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            IUserOperation userOperation=session.getMapper(IUserOperation.class);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            User user = userOperation.selectUserByID(4);           <br style="margin:0px; padding:0px; border:0px currentColor"/>
+            user.setUserAddress(&quot;原来是魔都的浦东创新园区&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            userOperation.updateUser(user);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            session.commit();<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } finally {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            session.close();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">用mybatis 删除数据</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+同理，IUserOperation 增加方法：public void deleteUser(int id);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+配置User.xml<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [15].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt;delete id=&quot;deleteUser&quot; parameterType=&quot;int&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        delete from user where id=#{id}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/delete&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+然后在Test类中写测试方法:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [16].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    /**<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     * 删除数据，删除一定要 commit.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     * @param id<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     */<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void deleteUser(int id){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        SqlSession session = sqlSessionFactory.openSession();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            IUserOperation userOperation=session.getMapper(IUserOperation.class);          <br style="margin:0px; padding:0px; border:0px currentColor"/>
+            userOperation.deleteUser(id);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            session.commit();           <br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } finally {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            session.close();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+这样，所有增删改查都完成了，注意在增加，更改，删除的时候要调用session.commit()，这样才会真正对数据库进行操作，否则是没有提交的。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+到此为止，简单的单表操作，应该都会了，接下来的时间了，我会讲多表联合查询，以及结果集的选取。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:0px currentColor">除非申明,文章均为<span style="margin:0px; padding:0px; border:0px currentColor"><a href="http://www.yihaomen.com/" style="margin:0px; padding:0px; border:0px currentColor">一号门</a></span>原创,转载请注明本文地址,谢谢!</div><br/></div><div><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t3"></a><a name="t3"></a><span style="margin:0px; padding:0px; border:0px currentColor">mybatis实战教程(mybatis in action)之四:实现关联数据的查询</span></h1><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">有了前面几章的基础，对一些简单的应用是可以处理的，但在实际项目中，经常是关联表的查询，比如最常见到的多对一，一对多等。这些查询是如何处理的呢，这一讲就讲这个问题。我们首先创建一个Article 这个表，并初始化数据.<br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [17].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+Drop TABLE IF EXISTS `article`;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+Create TABLE `article` (<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `id` int(11) NOT NULL auto_increment,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `userid` int(11) NOT NULL,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `title` varchar(100) NOT NULL,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `content` text NOT NULL,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  PRIMARY KEY  (`id`)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+-- ----------------------------<br style="margin:0px; padding:0px; border:0px currentColor"/>
+-- 添加几条测试数据<br style="margin:0px; padding:0px; border:0px currentColor"/>
+-- ----------------------------<br style="margin:0px; padding:0px; border:0px currentColor"/>
+Insert INTO `article` VALUES ('1', '1', 'test_title', 'test_content');<br style="margin:0px; padding:0px; border:0px currentColor"/>
+Insert INTO `article` VALUES ('2', '1', 'test_title_2', 'test_content_2');<br style="margin:0px; padding:0px; border:0px currentColor"/>
+Insert INTO `article` VALUES ('3', '1', 'test_title_3', 'test_content_3');<br style="margin:0px; padding:0px; border:0px currentColor"/>
+Insert INTO `article` VALUES ('4', '1', 'test_title_4', 'test_content_4');<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+你应该发现了，这几个文章对应的userid都是1，所以需要用户表user里面有id=1的数据。可以修改成满足自己条件的数据.按照orm的规则，表已经创建了，那么肯定需要一个对象与之对应，所以我们增加一个 Article 的class<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [18].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.mybatis.model;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public class Article {<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private int id;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private User user;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private String title;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private String content;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public int getId() {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return id;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void setId(int id) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        this.id = id;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public User getUser() {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return user;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void setUser(User user) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        this.user = user;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public String getTitle() {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return title;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void setTitle(String title) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        this.title = title;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public String getContent() {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return content;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void setContent(String content) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        this.content = content;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+注意一下，文章的用户是怎么定义的，是直接定义的一个User对象。而不是int类型。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">多对一的实现</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+场景:在读取某个用户发表的所有文章。当然还是需要在User.xml 里面配置 select 语句, 但重点是这个 select 的resultMap 对应什么样的数据呢。这是重点，这里要引入 association 看定义如下:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [19].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; !-- User 联合文章进行查询 方法之一的配置 (多对一的方式)  --&gt;   <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;resultMap id=&quot;resultUserArticleList&quot; type=&quot;Article&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;id property=&quot;id&quot; column=&quot;aid&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result property=&quot;title&quot; column=&quot;title&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result property=&quot;content&quot; column=&quot;content&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;association property=&quot;user&quot; javaType=&quot;User&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;id property=&quot;id&quot; column=&quot;id&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;result property=&quot;userName&quot; column=&quot;userName&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;result property=&quot;userAddress&quot; column=&quot;userAddress&quot; /&gt;           <br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/association&gt;       <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/resultMap&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; select id=&quot;getUserArticles&quot; parameterType=&quot;int&quot; resultMap=&quot;resultUserArticleList&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+       select user.id,user.userName,user.userAddress,article.id aid,article.title,article.content from user,article<br style="margin:0px; padding:0px; border:0px currentColor"/>
+              where user.id=article.userid and user.id=#{id}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+这样配置之后，就可以了，将select 语句与resultMap 对应的映射结合起来看，就明白了。用association 来得到关联的用户，这是多对一的情况，因为所有的文章都是同一个用户的。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+还有另外一种处理方式，可以复用我们前面已经定义好的 resultMap ,前面我们定义过一个 resultListUser ,看这第二种方法如何实现:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [20].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt;resultMap type=&quot;User&quot; id=&quot;resultListUser&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;id column=&quot;id&quot; property=&quot;id&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result column=&quot;userName&quot; property=&quot;userName&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result column=&quot;userAge&quot; property=&quot;userAge&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result column=&quot;userAddress&quot; property=&quot;userAddress&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/resultMap&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;!-- User 联合文章进行查询 方法之二的配置 (多对一的方式) --&gt;   <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;resultMap id=&quot;resultUserArticleList-2&quot; type=&quot;Article&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;id property=&quot;id&quot; column=&quot;aid&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result property=&quot;title&quot; column=&quot;title&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;result property=&quot;content&quot; column=&quot;content&quot; /&gt;       <br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;association property=&quot;user&quot; javaType=&quot;User&quot; resultMap=&quot;resultListUser&quot; /&gt;            <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/resultMap&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;getUserArticles&quot; parameterType=&quot;int&quot; resultMap=&quot;resultUserArticleList&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+       select user.id,user.userName,user.userAddress,article.id aid,article.title,article.content from user,article<br style="margin:0px; padding:0px; border:0px currentColor"/>
+              where user.id=article.userid and user.id=#{id}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+将 association  中对应的映射独立抽取出来，可以达到复用的目的。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+好了，现在在Test 类中写测试代码:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [21].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public void getUserArticles(int userid){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        SqlSession session = sqlSessionFactory.openSession();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            IUserOperation userOperation=session.getMapper(IUserOperation.class);          <br style="margin:0px; padding:0px; border:0px currentColor"/>
+            List&lt;Article&gt; articles = userOperation.getUserArticles(userid);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            for(Article article:articles){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                System.out.println(article.getTitle()+&quot;:&quot;+article.getContent()+<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        &quot;:作者是:&quot;+article.getUser().getUserName()+&quot;:地址:&quot;+<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                         article.getUser().getUserAddress());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } finally {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            session.close();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+漏掉了一点，我们一定要在 IUserOperation 接口中，加入 select 对应的id 名称相同的方法：<br style="margin:0px; padding:0px; border:0px currentColor"/>
+public List&lt;Article&gt; getUserArticles(int id);<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+然后运行就可以测试。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+整个程序下载：<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [22].gif" type="image/gif" data-filename="Image.gif" alt="下载文件" style="margin: 0px 2px -4px 0px; padding: 0px; border-color: currentcolor;"/><a href="http://www.yihaomen.com/attachments/month_1211/i20121115164851.rar" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">点击下载此文件</a><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:0px currentColor">除非申明,文章均为<span style="margin:0px; padding:0px; border:0px currentColor"><a href="http://www.yihaomen.com/" style="margin:0px; padding:0px; border:0px currentColor">一号门</a></span>原创,转载请注明本文地址,谢谢!</div><br/></div><div><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t4"></a><a name="t4"></a><span style="margin:0px; padding:0px; border:0px currentColor">mybatis实战教程(mybatis in action)之五:与spring3集成(附源码)</span></h1><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">在 这一系列文章中，前面讲到纯粹用mybatis 连接数据库，然后 进行增删改查，以及多表联合查询的的例子，但实际项目中，通常会用 spring 这个沾合剂来管理 datasource 等。充分利用spring 基于接口的编程，以及aop ,ioc 带来的方便。用spring 来管理 mybatis 与管理hibernate 有很多类似的地方。今天的重点就是数据源管理以及 bean的配置。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+你可以下载源码后，对比着看，源代码没有带jar包，太大了，空间有限. 有截图，你可以看到用到哪些jar包，源码在本文最后.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+1. 首先对前面的工程结构做一点改变，在src_user源代码目录下建立文件夹config ,并将原来的 mybatis 配置文件 Configuration.xml 移动到这个文件夹中, 并在config 文家夹中建立 spring 配置文件：applicationContext.xml ，这个配置文件里最主要的配置：<br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [23].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; !--本示例采用DBCP连接池，应预先把DBCP的jar包复制到工程的lib目录下。 --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;bean id=&quot;dataSource&quot; class=&quot;org.apache.commons.dbcp.BasicDataSource&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;driverClassName&quot; value=&quot;com.mysql.jdbc.Driver&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://127.0.0.1:3306/mybatis?characterEncoding=utf8&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;username&quot; value=&quot;root&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;password&quot; value=&quot;password&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/bean&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;bean id=&quot;sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;!--dataSource属性指定要用到的连接池--&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;!--configLocation属性指定mybatis的核心配置文件--&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;configLocation&quot; value=&quot;config/Configuration.xml&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/bean&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;bean id=&quot;userMapper&quot; class=&quot;org.mybatis.spring.mapper.MapperFactoryBean&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;!--sqlSessionFactory属性指定要用到的SqlSessionFactory实例--&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;sqlSessionFactory&quot; ref=&quot;sqlSessionFactory&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;!--mapperInterface属性指定映射器接口，用于实现此接口并生成映射器对象--&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;mapperInterface&quot; value=&quot;com.yihaomen.mybatis.inter.IUserOperation&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/bean&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+[b]这里面的重点就是 org.mybatis.spring.SqlSessionFactoryBean 与 org.mybatis.spring.mapper.MapperFactoryBean[b] 实现了 spring  的接口，并产生对象。详细可以查看 mybatis-spring 代码。（<a href="http://code.google.com/p/mybatis/" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://code.google.com/p/mybatis/</a>）,如果仅仅使用，固定模式，这样配置就好。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+然后写测试程序<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [24].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.test;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.util.List;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.springframework.context.ApplicationContext;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.springframework.context.support.ClassPathXmlApplicationContext;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import com.yihaomen.mybatis.inter.IUserOperation;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import com.yihaomen.mybatis.model.Article;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import com.yihaomen.mybatis.model.User;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public class MybatisSprintTest {<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private static ApplicationContext ctx; <br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    static<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    { <br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ctx = new ClassPathXmlApplicationContext(&quot;config/applicationContext.xml&quot;); <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }       <br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public static void main(String[] args) <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    { <br style="margin:0px; padding:0px; border:0px currentColor"/>
+        IUserOperation mapper = (IUserOperation)ctx.getBean(&quot;userMapper&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        //测试id=1的用户查询，根据数据库中的情况，可以改成你自己的.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        System.out.println(&quot;得到用户id=1的用户信息&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        User user = mapper.selectUserByID(1);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        System.out.println(user.getUserAddress());<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        //得到文章列表测试<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        System.out.println(&quot;得到用户id为1的所有文章列表&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        List&lt;Article&gt; articles = mapper.getUserArticles(1);<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        for(Article article:articles){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            System.out.println(article.getContent()+&quot;--&quot;+article.getTitle());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    } <br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+运行即可得到相应的结果.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+工程图：<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [1].png" type="image/png" data-filename="Image.png" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+用到的jar包，如下图：<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [2].png" type="image/png" data-filename="Image.png" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+源代码下载，不带 jar  包，<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [25].gif" type="image/gif" data-filename="Image.gif" alt="下载文件" style="margin: 0px 2px -4px 0px; padding: 0px; border-color: currentcolor;"/><a href="http://www.yihaomen.com/attachments/month_1211/a20121119173723.rar" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">点击下载此文件</a><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:0px currentColor">除非申明,文章均为<span style="margin:0px; padding:0px; border:0px currentColor"><a href="http://www.yihaomen.com/" style="margin:0px; padding:0px; border:0px currentColor">一号门</a></span>原创,转载请注明本文地址,谢谢!</div><br/></div><div><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t5"></a><a name="t5"></a><span style="margin:0px; padding:0px; border:0px currentColor">mybatis实战教程(mybatis in action)之六:与Spring MVC 的集成</span></h1><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">前面几篇文章已经讲到了mybatis与spring 的集成。但这个时候，所有的工程还不是web工程，虽然我一直是创建的web 工程。今天将直接用mybatis与Spring mvc 的方式集成起来，源码在本文结尾处下载.主要有以下几个方面的配置<br style="margin:0px; padding:0px; border:0px currentColor"/>
+1. web.xml 配置 spring dispatchservlet ,比如为:mvc-dispatcher<br style="margin:0px; padding:0px; border:0px currentColor"/>
+2. mvc-dispatcher-servlet.xml 文件配置<br style="margin:0px; padding:0px; border:0px currentColor"/>
+3. spring applicationContext.XML文件配置(与数据库相关，与mybatis sqlSessionFaction 整合，扫描所有mybatis mapper 文件等.)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+4. 编写controller 类<br style="margin:0px; padding:0px; border:0px currentColor"/>
+5. 编写页面代码.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+先有个大概映像，整个工程图如下:<br style="margin:0px; padding:0px; border:0px currentColor"/>
+[/code]<img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [3].png" type="image/png" data-filename="Image.png" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+1. web.xml 配置 spring dispatchservlet ,比如为:mvc-dispatcher<br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [26].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt;context-param&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;param-value&gt;classpath*:config/applicationContext.xml&lt;/param-value&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/context-param&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;listener&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/listener&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;listener&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;listener-class&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            org.springframework.web.context.ContextCleanupListener&lt;/listener-class&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/listener&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;servlet&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/servlet&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;servlet-mapping&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;servlet-name&gt;mvc-dispatcher&lt;/servlet-name&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/servlet-mapping&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+2. 在web.xml 同目录下配置 mvc-dispatcher-servlet.xml 文件,这个文件名前面部分必须与你在web.xml里面配置的DispatcherServlet 的servlet名字对应.其内容为:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [27].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt;beans xmlns=&quot;<a href="http://www.springframework.org/schema/beans" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.springframework.org/schema/beans</a>&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    xmlns:context=&quot;<a href="http://www.springframework.org/schema/context" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.springframework.org/schema/context</a>&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    xmlns:mvc=&quot;<a href="http://www.springframework.org/schema/mvc" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.springframework.org/schema/mvc</a>&quot; xmlns:xsi=&quot;<a href="http://www.w3.org/2001/XMLSchema-instance" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.w3.org/2001/XMLSchema-instance</a>&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    xsi:schemaLocation=&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/><a href="http://www.springframework.org/schema/beans" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.springframework.org/schema/beans</a>    <br style="margin:0px; padding:0px; border:0px currentColor"/><a href="http://www.springframework.org/schema/beans" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.springframework.org/schema/beans</a>/spring-beans-3.0.xsd<br style="margin:0px; padding:0px; border:0px currentColor"/><a href="http://www.springframework.org/schema/context" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.springframework.org/schema/context</a><br style="margin:0px; padding:0px; border:0px currentColor"/><a href="http://www.springframework.org/schema/context" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.springframework.org/schema/context</a>/spring-context-3.0.xsd<br style="margin:0px; padding:0px; border:0px currentColor"/><a href="http://www.springframework.org/schema/mvc" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.springframework.org/schema/mvc</a><br style="margin:0px; padding:0px; border:0px currentColor"/><a href="http://www.springframework.org/schema/mvc" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.springframework.org/schema/mvc</a>/spring-mvc-3.0.xsd&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;context:component-scan base-package=&quot;com.yihaomen.controller&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;mvc:annotation-driven /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;mvc:resources mapping=&quot;/static/**&quot; location=&quot;/WEB-INF/static/&quot;/&gt; <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;mvc:default-servlet-handler/&gt; <br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;bean<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;property name=&quot;prefix&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;value&gt;/WEB-INF/pages/&lt;/value&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/property&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;property name=&quot;suffix&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;value&gt;.jsp&lt;/value&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/property&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/bean&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; /beans&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+3. 在源码目录 config 目录下配置 spring 配置文件 applicationContext.xml<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [28].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; !--本示例采用DBCP连接池，应预先把DBCP的jar包复制到工程的lib目录下。 --&gt;  <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;context:property-placeholder    location=&quot;classpath:/config/database.properties&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;bean id=&quot;dataSource&quot; class=&quot;org.apache.commons.dbcp.BasicDataSource&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        destroy-method=&quot;close&quot; p:driverClassName=&quot;com.mysql.jdbc.Driver&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        p:url=&quot;jdbc:mysql://127.0.0.1:3306/mybatis?characterEncoding=utf8&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        p:username=&quot;root&quot; p:password=&quot;password&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        p:maxActive=&quot;10&quot; p:maxIdle=&quot;10&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/bean&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.jdbc.datasource.DataSourceTransactionManager&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+      &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/bean&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;bean id=&quot;sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;!--dataSource属性指定要用到的连接池--&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;!--configLocation属性指定mybatis的核心配置文件--&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;configLocation&quot; value=&quot;classpath:config/Configuration.xml&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;!-- 所有配置的mapper文件 --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;mapperLocations&quot; value=&quot;classpath*:com/yihaomen/mapper/*.xml&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/bean&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+     &lt;property name=&quot;basePackage&quot; value=&quot;com.yihaomen.inter&quot; /&gt;    <br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/bean&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+不知道为什么，一旦我用了 MapperScannerConfigurer 去扫描所有的mapper 接口时，数据库配置datasource 就不能用读取database.properties文件了。报错： Cannot load JDBC driver class '${jdbc.driverClassName}'，网上有人说在spring 3.1.1 下用 sqlSessionFactionBean 注入可以解决，但我用 spring 3.1.3 还是有问题，所以只好把数据库连接信息直接配置在了XML 文件里面。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+4. 编写 controller 层<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [29].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.controller;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.util.List;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import javax.servlet.http.HttpServletRequest;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import javax.servlet.http.HttpServletResponse;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.springframework.beans.factory.annotation.Autowired;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.springframework.stereotype.Controller;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.springframework.web.bind.annotation.RequestMapping;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.springframework.web.servlet.ModelAndView;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import com.yihaomen.inter.IUserOperation;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import com.yihaomen.model.Article;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+@Controller<br style="margin:0px; padding:0px; border:0px currentColor"/>
+@RequestMapping(&quot;/article&quot;)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+public class UserController {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    @Autowired<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    IUserOperation userMapper;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    @RequestMapping(&quot;/list&quot;)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public ModelAndView listall(HttpServletRequest request,HttpServletResponse response){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        List&lt;Article&gt; articles=userMapper.getUserArticles(1);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ModelAndView mav=new ModelAndView(&quot;list&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        mav.addObject(&quot;articles&quot;,articles);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return mav;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+5. 页面文件:<br style="margin:0px; padding:0px; border:0px currentColor"/>
+[code]<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; c:forEach items=&quot;${articles}&quot; var=&quot;item&quot;&gt; <br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ${item.id }--${item.title }--${item.content }&lt;br /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/c:forEach&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+运行结果：<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [4].png" type="image/png" data-filename="Image.png" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+当然还有 mybatis 的Configure.xml  配置文件，与上一讲的差不多，唯一不同的就是不用再配置类似如下的：   &lt;mapper resource=&quot;com/yihaomen/mapper/User.xml&quot;/&gt; ，所有这些都交给 在配置 sqlSessionFactory 的时候，由  &lt;property name=&quot;mapperLocations&quot; value=&quot;classpath*:com/yihaomen/mapper/*.xml&quot; /&gt; 去导入了。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+源码下载：<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [30].gif" type="image/gif" data-filename="Image.gif" alt="下载文件" style="margin: 0px 2px -4px 0px; padding: 0px; border-color: currentcolor;"/><a href="http://www.yihaomen.com/attachments/month_1211/x2012112717434.rar" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">mybatis spring3 MVC 程序下载</a><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+数据库下载：<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [31].gif" type="image/gif" data-filename="Image.gif" alt="下载文件" style="margin: 0px 2px -4px 0px; padding: 0px; border-color: currentcolor;"/><a href="http://www.yihaomen.com/attachments/month_1211/62012112717854.rar" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">spring mvc 数据库测试文件</a><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:0px currentColor">除非申明,文章均为<span style="margin:0px; padding:0px; border:0px currentColor"><a href="http://www.yihaomen.com/" style="margin:0px; padding:0px; border:0px currentColor">一号门</a></span>原创,转载请注明本文地址,谢谢!</div><br/></div><div><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t6"></a><a name="t6"></a><span style="margin:0px; padding:0px; border:0px currentColor">mybatis实战教程(mybatis in action)之七:实现mybatis分页(源码下载)</span></h1><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">上 一篇文章里已经讲到了mybatis与spring MVC的集成，并且做了一个列表展示，显示出所有article 列表，但没有用到分页，在实际的项目中，分页是肯定需要的。而且是物理分页，不是内存分页。对于物理分页方案，不同的数据库，有不同的实现方法,对于 mysql 来说 就是利用 limit offset,pagesize 方式来实现的。oracle 是通过rownum 来实现的，如果你熟悉相关数据库的操作，是一样的很好扩展，本文以mysql 为例子来讲述.先看一下效果图(源代码在文章最后提供下载):<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [3].jpg" type="image/jpeg" data-filename="Image.jpg" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+实现mybatis 物理分页，一个最简单的方式是，是在你的mapper的SQL语句中直接写类似如下方式 :<br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [32].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt;select id=&quot;getUserArticles&quot; parameterType=&quot;Your_params&quot; resultMap=&quot;resultUserArticleList&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+       select user.id,user.userName,user.userAddress,article.id aid,article.title,article.content from user,article<br style="margin:0px; padding:0px; border:0px currentColor"/>
+              where user.id=article.userid and user.id=#{id} limit #{offset},#{pagesize}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+请注意这里的 parameterType 是你传入的参数类，或者map ，里面包含了offset,pagesize ,和其他你需要的参数，用这种方式，肯定可以实现分页。这是简单的一种方式。但更通用的一种方式是用 mybatis 插件的方式. 参考了网上的很多资料 ，mybatis plugin 方面的资料。写自己的插件.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [33].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.util;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.lang.reflect.Field;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.sql.Connection;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.sql.PreparedStatement;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.sql.ResultSet;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.sql.SQLException;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.util.List;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.util.Map;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.util.Properties;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import javax.xml.bind.PropertyException;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.builder.xml.dynamic.ForEachSqlNode;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.executor.ErrorContext;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.executor.Executor;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.executor.ExecutorException;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.executor.statement.BaseStatementHandler;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.executor.statement.RoutingStatementHandler;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.executor.statement.StatementHandler;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.mapping.BoundSql;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.mapping.MappedStatement;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.mapping.ParameterMapping;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.mapping.ParameterMode;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.plugin.Interceptor;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.plugin.Intercepts;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.plugin.Invocation;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.plugin.Plugin;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.plugin.Signature;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.reflection.MetaObject;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.reflection.property.PropertyTokenizer;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.session.Configuration;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.session.ResultHandler;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.session.RowBounds;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.type.TypeHandler;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.apache.ibatis.type.TypeHandlerRegistry;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+@Intercepts({ @Signature(type = StatementHandler.class, method = &quot;prepare&quot;, args = { Connection.class }) })<br style="margin:0px; padding:0px; border:0px currentColor"/>
+public class PagePlugin implements Interceptor {<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private static String dialect = &quot;&quot;;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private static String pageSqlId = &quot;&quot;;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    @SuppressWarnings(&quot;unchecked&quot;)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public Object intercept(Invocation ivk) throws Throwable {<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        if (ivk.getTarget() instanceof RoutingStatementHandler) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            RoutingStatementHandler statementHandler = (RoutingStatementHandler) ivk<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    .getTarget();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            BaseStatementHandler delegate = (BaseStatementHandler) ReflectHelper<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    .getValueByFieldName(statementHandler, &quot;delegate&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            MappedStatement mappedStatement = (MappedStatement) ReflectHelper<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    .getValueByFieldName(delegate, &quot;mappedStatement&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+            if (mappedStatement.getId().matches(pageSqlId)) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                BoundSql boundSql = delegate.getBoundSql();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                Object parameterObject = boundSql.getParameterObject();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                if (parameterObject == null) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    throw new NullPointerException(&quot;parameterObject error&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                } else {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    Connection connection = (Connection) ivk.getArgs()[0];<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    String sql = boundSql.getSql();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    String countSql = &quot;select count(0) from (&quot; + sql + &quot;) myCount&quot;;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    System.out.println(&quot;总数sql 语句:&quot;+countSql);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    PreparedStatement countStmt = connection<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            .prepareStatement(countSql);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    BoundSql countBS = new BoundSql(<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            mappedStatement.getConfiguration(), countSql,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            boundSql.getParameterMappings(), parameterObject);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    setParameters(countStmt, mappedStatement, countBS,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            parameterObject);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    ResultSet rs = countStmt.executeQuery();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    int count = 0;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    if (rs.next()) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        count = rs.getInt(1);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    rs.close();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    countStmt.close();<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    PageInfo page = null;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    if (parameterObject instanceof PageInfo) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        page = (PageInfo) parameterObject;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        page.setTotalResult(count);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    } else if(parameterObject instanceof Map){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        Map&lt;String, Object&gt; map = (Map&lt;String, Object&gt;)parameterObject;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        page = (PageInfo)map.get(&quot;page&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        if(page == null)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            page = new PageInfo();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        page.setTotalResult(count);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    }else {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        Field pageField = ReflectHelper.getFieldByFieldName(<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                parameterObject, &quot;page&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        if (pageField != null) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            page = (PageInfo) ReflectHelper.getValueByFieldName(<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                    parameterObject, &quot;page&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            if (page == null)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                page = new PageInfo();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            page.setTotalResult(count);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            ReflectHelper.setValueByFieldName(parameterObject,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                    &quot;page&quot;, page);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        } else {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            throw new NoSuchFieldException(parameterObject<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                    .getClass().getName());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    String pageSql = generatePageSql(sql, page);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    System.out.println(&quot;page sql:&quot;+pageSql);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    ReflectHelper.setValueByFieldName(boundSql, &quot;sql&quot;, pageSql);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return ivk.proceed();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private void setParameters(PreparedStatement ps,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            MappedStatement mappedStatement, BoundSql boundSql,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            Object parameterObject) throws SQLException {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ErrorContext.instance().activity(&quot;setting parameters&quot;)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                .object(mappedStatement.getParameterMap().getId());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        List&lt;ParameterMapping&gt; parameterMappings = boundSql<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                .getParameterMappings();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        if (parameterMappings != null) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            Configuration configuration = mappedStatement.getConfiguration();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            TypeHandlerRegistry typeHandlerRegistry = configuration<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    .getTypeHandlerRegistry();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            MetaObject metaObject = parameterObject == null ? null<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    : configuration.newMetaObject(parameterObject);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            for (int i = 0; i &lt; parameterMappings.size(); i++) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                ParameterMapping parameterMapping = parameterMappings.get(i);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                if (parameterMapping.getMode() != ParameterMode.OUT) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    Object value;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    String propertyName = parameterMapping.getProperty();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    PropertyTokenizer prop = new PropertyTokenizer(propertyName);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    if (parameterObject == null) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        value = null;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    } else if (typeHandlerRegistry<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            .hasTypeHandler(parameterObject.getClass())) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        value = parameterObject;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    } else if (boundSql.hasAdditionalParameter(propertyName)) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        value = boundSql.getAdditionalParameter(propertyName);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    } else if (propertyName<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            .startsWith(ForEachSqlNode.ITEM_PREFIX)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            &amp;&amp; boundSql.hasAdditionalParameter(prop.getName())) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        value = boundSql.getAdditionalParameter(prop.getName());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        if (value != null) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            value = configuration.newMetaObject(value)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                    .getValue(<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                            propertyName.substring(prop<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                                    .getName().length()));<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    } else {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        value = metaObject == null ? null : metaObject<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                .getValue(propertyName);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    TypeHandler typeHandler = parameterMapping.getTypeHandler();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    if (typeHandler == null) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        throw new ExecutorException(<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                &quot;There was no TypeHandler found for parameter &quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                        + propertyName + &quot; of statement &quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                                        + mappedStatement.getId());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                    typeHandler.setParameter(ps, i + 1, value,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                            parameterMapping.getJdbcType());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    private String generatePageSql(String sql, PageInfo page) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        if (page != null &amp;&amp; (dialect !=null || !dialect.equals(&quot;&quot;))) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            StringBuffer pageSql = new StringBuffer();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            if (&quot;mysql&quot;.equals(dialect)) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                pageSql.append(sql);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                pageSql.append(&quot; limit &quot; + page.getCurrentResult() + &quot;,&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        + page.getShowCount());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            } else if (&quot;oracle&quot;.equals(dialect)) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                pageSql.append(&quot;select * from (select tmp_tb.*,ROWNUM row_id from (&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                pageSql.append(sql);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                pageSql.append(&quot;)  tmp_tb where ROWNUM&lt;=&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                pageSql.append(page.getCurrentResult() + page.getShowCount());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                pageSql.append(&quot;) where row_id&gt;&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                pageSql.append(page.getCurrentResult());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            return pageSql.toString();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } else {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            return sql;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public Object plugin(Object arg0) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        // TODO Auto-generated method stub<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return Plugin.wrap(arg0, this);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void setProperties(Properties p) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        dialect = p.getProperty(&quot;dialect&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        if (dialect ==null || dialect.equals(&quot;&quot;)) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                throw new PropertyException(&quot;dialect property is not found!&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            } catch (PropertyException e) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                // TODO Auto-generated catch block<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                e.printStackTrace();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        pageSqlId = p.getProperty(&quot;pageSqlId&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        if (dialect ==null || dialect.equals(&quot;&quot;)) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                throw new PropertyException(&quot;pageSqlId property is not found!&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            } catch (PropertyException e) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                // TODO Auto-generated catch block<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                e.printStackTrace();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+此插件有两个辅助类:PageInfo,ReflectHelper,你可以下载源代码参考。<br style="margin:0px; padding:0px; border:0px currentColor"/>
+写了插件之后，当然需要在 mybatis 的配置文件Configuration.xml 里配置这个插件<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [34].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;plugins&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;plugin interceptor=&quot;com.yihaomen.util.PagePlugin&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;property name=&quot;dialect&quot; value=&quot;mysql&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;property name=&quot;pageSqlId&quot; value=&quot;.*ListPage.*&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/plugin&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/plugins&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">请注意，这个插件定义了一个规则，也就是在mapper中sql语句的id 必须包含ListPage才能被拦截。否则将不会分页处理.</span><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+插件写好了，现在就可以在 spring mvc 中的controller 层中写一个方法来测试这个分页:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [35].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+@RequestMapping(&quot;/pagelist&quot;)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public ModelAndView pageList(HttpServletRequest request,HttpServletResponse response){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        int currentPage = request.getParameter(&quot;page&quot;)==null?1:Integer.parseInt(request.getParameter(&quot;page&quot;));<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        int pageSize = 3;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        if (currentPage&lt;=0){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            currentPage =1;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        int currentResult = (currentPage-1) * pageSize;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        System.out.println(request.getRequestURI());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        System.out.println(request.getQueryString());<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        PageInfo page = new PageInfo();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        page.setShowCount(pageSize);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        page.setCurrentResult(currentResult);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        List&lt;Article&gt; articles=iUserOperation.selectArticleListPage(page,1);<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        System.out.println(page);<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        int totalCount = page.getTotalResult();<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        int lastPage=0;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        if (totalCount % pageSize==0){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            lastPage = totalCount % pageSize;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        else{<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            lastPage =1+ totalCount / pageSize;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        if (currentPage&gt;=lastPage){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            currentPage =lastPage;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        String pageStr = &quot;&quot;;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        pageStr=String.format(&quot;&lt;a href=\&quot;%s\&quot;&gt;上一页&lt;/a&gt;    &lt;a href=\&quot;%s\&quot;&gt;下一页&lt;/a&gt;&quot;,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                        request.getRequestURI()+&quot;?page=&quot;+(currentPage-1),request.getRequestURI()+&quot;?page=&quot;+(currentPage+1) );<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        //制定视图，也就是list.jsp<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ModelAndView mav=new ModelAndView(&quot;list&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        mav.addObject(&quot;articles&quot;,articles);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        mav.addObject(&quot;pageStr&quot;,pageStr);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return mav;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+然后运行程序，进入分页页面，你就可以看到结果了:<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [4].jpg" type="image/jpeg" data-filename="Image.jpg" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+源代码下载:<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [36].gif" type="image/gif" data-filename="Image.gif" alt="下载文件" style="margin: 0px 2px -4px 0px; padding: 0px; border-color: currentcolor;"/><a href="http://www.yihaomen.com/attachments/month_1212/w201212920237.rar" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">点击下载此文件</a><br style="margin:0px; padding:0px; border:0px currentColor"/>
+相关jar 包下载，请到下载这里例子中的jar<br style="margin:0px; padding:0px; border:0px currentColor"/><a href="http://www.yihaomen.com/article/java/318.htm" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.yihaomen.com/article/java/318.htm</a> (文章最后有源代码下载，里面有jar 包,拷贝到上面源代码里面所需要的lib 目录下.)<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+另外，你还得在前面提到的数据库artilce表里面，多插入一些记录，分页效果就更好。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:0px currentColor">除非申明,文章均为<span style="margin:0px; padding:0px; border:0px currentColor"><a href="http://www.yihaomen.com/" style="margin:0px; padding:0px; border:0px currentColor">一号门</a></span>原创,转载请注明本文地址,谢谢!</div><br/></div><div><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t7"></a><a name="t7"></a><span style="margin:0px; padding:0px; border:0px currentColor">mybatis实战教程(mybatis in action)之八:mybatis 动态sql语句</span></h1><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">mybatis 的动态sql语句是基于OGNL表达式的。可以方便的在 sql 语句中实现某些逻辑. 总体说来mybatis 动态SQL 语句主要有以下几类:<br style="margin:0px; padding:0px; border:0px currentColor"/>
+1. if 语句 (简单的条件判断)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+2. choose (when,otherwize) ,相当于java 语言中的 switch ,与 jstl 中的choose 很类似.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+3. trim (对包含的内容加上 prefix,或者 suffix 等，前缀，后缀)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+4. where (主要是用来简化sql语句中where条件判断的，能智能的处理 and or ,不必担心多余导致语法错误)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+5. set (主要用于更新时)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+6. foreach (在实现 mybatis in 语句查询时特别有用)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+下面分别介绍这几种处理方式<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">1. mybaits if 语句处理</span><br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [37].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;dynamicIfTest&quot; parameterType=&quot;Blog&quot; resultType=&quot;Blog&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        select * from t_blog where 1 = 1<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;if test=&quot;title != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            and title = #{title}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;if test=&quot;content != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            and content = #{content}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;if test=&quot;owner != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            and owner = #{owner}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+这条语句的意思非常简单，如果你提供了title参数，那么就要满足title=#{title}，同样如果你提供了Content和Owner的时候， 它们也需要满足相应的条件，之后就是返回满足这些条件的所有Blog，这是非常有用的一个功能，以往我们使用其他类型框架或者直接使用JDBC的时候， 如果我们要达到同样的选择效果的时候，我们就需要拼SQL语句，这是极其麻烦的，比起来，上述的动态SQL就要简单多了<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">2.2. choose (when,otherwize) ,相当于java 语言中的 switch ,与 jstl 中的choose 很类似</span><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [38].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;dynamicChooseTest&quot; parameterType=&quot;Blog&quot; resultType=&quot;Blog&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        select * from t_blog where 1 = 1<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;choose&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;when test=&quot;title != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                and title = #{title}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/when&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;when test=&quot;content != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                and content = #{content}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/when&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;otherwise&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                and owner = &quot;owner1&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/otherwise&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/choose&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+when元素表示当when中的条件满足的时候就输出其中的内容，跟JAVA中的switch效果差不多的是按照条件的顺序，当when中有条件满足的时 候，就会跳出choose，即所有的when和otherwise条件中，只有一个会输出，当所有的我很条件都不满足的时候就输出otherwise中的 内容。所以上述语句的意思非常简单， 当title!=null的时候就输出and titlte = #{title}，不再往下判断条件，当title为空且content!=null的时候就输出and content = #{content}，当所有条件都不满足的时候就输出otherwise中的内容。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">3.trim (对包含的内容加上 prefix,或者 suffix 等，前缀，后缀)</span><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [39].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;dynamicTrimTest&quot; parameterType=&quot;Blog&quot; resultType=&quot;Blog&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        select * from t_blog<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;trim prefix=&quot;where&quot; prefixOverrides=&quot;and |or&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;if test=&quot;title != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                title = #{title}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;if test=&quot;content != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                and content = #{content}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;if test=&quot;owner != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                or owner = #{owner}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/trim&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+trim元素的主要功能是可以在自己包含的内容前加上某些前缀，也可以在其后加上某些后缀，与之对应的属性是prefix和suffix；可以把包含内容 的首部某些内容覆盖，即忽略，也可以把尾部的某些内容覆盖，对应的属性是prefixOverrides和suffixOverrides；正因为 trim有这样的功能，所以我们也可以非常简单的利用trim来代替where元素的功能<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">4. where (主要是用来简化sql语句中where条件判断的，能智能的处理 and or 条件</span><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [40].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;dynamicWhereTest&quot; parameterType=&quot;Blog&quot; resultType=&quot;Blog&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        select * from t_blog<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;where&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;if test=&quot;title != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                title = #{title}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;if test=&quot;content != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                and content = #{content}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;if test=&quot;owner != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                and owner = #{owner}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/where&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+where元素的作用是会在写入where元素的地方输出一个where，另外一个好处是你不需要考虑where元素里面的条件输出是什么样子 的，MyBatis会智能的帮你处理，如果所有的条件都不满足那么MyBatis就会查出所有的记录，如果输出后是and 开头的，MyBatis会把第一个and忽略，当然如果是or开头的，MyBatis也会把它忽略；此外，在where元素中你不需要考虑空格的问 题，MyBatis会智能的帮你加上。像上述例子中，如果title=null， 而content != null，那么输出的整个语句会是select * from t_blog where content = #{content}，而不是select * from t_blog where and content = #{content}，因为MyBatis会智能的把首个and 或 or 给忽略。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">5.set (主要用于更新时)</span><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [41].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;update id=&quot;dynamicSetTest&quot; parameterType=&quot;Blog&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        update t_blog<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;set&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;if test=&quot;title != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                title = #{title},<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;if test=&quot;content != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                content = #{content},<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;if test=&quot;owner != null&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+                owner = #{owner}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            &lt;/if&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/set&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        where id = #{id}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/update&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+set元素主要是用在更新操作的时候，它的主要功能和where元素其实是差不多的，主要是在包含的语句前输出一个set，然后如果包含的语句是以逗号结束的话将会把该逗号忽略，如果set包含的内容为空的话则会出错。有了set元素我们就可以动态的更新那些修改了的字段<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">6. foreach (在实现 mybatis in 语句查询时特别有用)</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+foreach的主要用在构建in条件中，它可以在SQL语句中进行迭代一个集合。foreach元素的属性主要有 item，index，collection，open，separator，close。item表示集合中每一个元素进行迭代时的别名，index指 定一个名字，用于表示在迭代过程中，每次迭代到的位置，open表示该语句以什么开始，separator表示在每次进行迭代之间以什么符号作为分隔 符，close表示以什么结束，在使用foreach的时候最关键的也是最容易出错的就是collection属性，该属性是必须指定的，但是在不同情况 下，该属性的值是不一样的，主要有一下3种情况：<br style="margin:0px; padding:0px; border:0px currentColor"/>
+如果传入的是单参数且参数类型是一个List的时候，collection属性值为list<br style="margin:0px; padding:0px; border:0px currentColor"/>
+如果传入的是单参数且参数类型是一个array数组的时候，collection的属性值为array<br style="margin:0px; padding:0px; border:0px currentColor"/>
+如果传入的参数是多个的时候，我们就需要把它们封装成一个Map了，当然单参数也可以封装成map，实际上如果你在传入参数的时候，在MyBatis里面 也是会把它封装成一个Map的，map的key就是参数名，所以这个时候collection属性值就是传入的List或array对象在自己封装的 map里面的key<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+1.1.单参数List的类型<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [42].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;dynamicForeachTest&quot; resultType=&quot;Blog&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        select * from t_blog where id in<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;foreach collection=&quot;list&quot; index=&quot;index&quot; item=&quot;item&quot; open=&quot;(&quot; separator=&quot;,&quot; close=&quot;)&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            #{item}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/foreach&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+上述collection的值为list，对应的Mapper是这样的<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [43].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public List&lt;Blog&gt; dynamicForeachTest(List&lt;Integer&gt; ids); <br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+测试代码<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [44].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    @Test<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public void dynamicForeachTest() {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        SqlSession session = Util.getSqlSessionFactory().openSession();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        BlogMapper blogMapper = session.getMapper(BlogMapper.class);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        List&lt;Integer&gt; ids = new ArrayList&lt;Integer&gt;();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ids.add(1);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ids.add(3);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ids.add(6);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        List&lt;Blog&gt; blogs = blogMapper.dynamicForeachTest(ids);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        for (Blog blog : blogs)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            System.out.println(blog);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        session.close();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+2.数组类型的参数<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [45].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;dynamicForeach2Test&quot; resultType=&quot;Blog&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        select * from t_blog where id in<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;foreach collection=&quot;array&quot; index=&quot;index&quot; item=&quot;item&quot; open=&quot;(&quot; separator=&quot;,&quot; close=&quot;)&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            #{item}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/foreach&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+对应mapper<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [46].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public List&lt;Blog&gt; dynamicForeach2Test(int[] ids); <br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+3. Map 类型的参数<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [47].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;select id=&quot;dynamicForeach3Test&quot; resultType=&quot;Blog&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        select * from t_blog where title like &quot;%&quot;#{title}&quot;%&quot; and id in<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;foreach collection=&quot;ids&quot; index=&quot;index&quot; item=&quot;item&quot; open=&quot;(&quot; separator=&quot;,&quot; close=&quot;)&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            #{item}<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        &lt;/foreach&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/select&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+mapper 应该是这样的接口:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [48].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public List&lt;Blog&gt; dynamicForeach3Test(Map&lt;String, Object&gt; params);<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+通过以上方法，就能完成一般的mybatis 的 动态SQL 语句.最常用的就是  if where foreach这几个，一定要重点掌握.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:0px currentColor">除非申明,文章均为<span style="margin:0px; padding:0px; border:0px currentColor"><a href="http://www.yihaomen.com/" style="margin:0px; padding:0px; border:0px currentColor">一号门</a></span>原创,转载请注明本文地址,谢谢!</div><br/></div><div><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t8"></a><a name="t8"></a><span style="margin:0px; padding:0px; border:0px currentColor">mybatis实战教程(mybatis in action)之九:mybatis 代码生成工具的使用</span></h1><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">mybatis 应用程序，需要大量的配置文件，对于一个成百上千的数据库表来说，完全手工配置，这是一个很恐怖的工作量. 所以mybatis 官方也推出了一个mybatis代码生成工具的jar包. 今天花了一点时间，按照 mybatis generator 的doc 文档参考，初步配置出了一个可以使用的版本，我把源代码也提供下载,mybatis 代码生成工具，主要有一下功能:<br style="margin:0px; padding:0px; border:0px currentColor"/>
+1.生成pojo 与 数据库结构对应<br style="margin:0px; padding:0px; border:0px currentColor"/>
+2.如果有主键，能匹配主键<br style="margin:0px; padding:0px; border:0px currentColor"/>
+3.如果没有主键，可以用其他字段去匹配<br style="margin:0px; padding:0px; border:0px currentColor"/>
+4.动态select,update,delete 方法<br style="margin:0px; padding:0px; border:0px currentColor"/>
+5.自动生成接口(也就是以前的dao层)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+6.自动生成sql mapper，增删改查各种语句配置，包括动态where语句配置<br style="margin:0px; padding:0px; border:0px currentColor"/>
+7.生成Example 例子供参考<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+下面介绍下详细过程<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">1. 创建测试工程,并配置mybatis代码生成jar包</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+下载地址:<a href="http://code.google.com/p/mybatis/downloads/list?can=3" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://code.google.com/p/mybatis/downloads/list?can=3</a>&amp;q=Product%3DGenerator<br style="margin:0px; padding:0px; border:0px currentColor"/>
+mysql 驱动下载:<a href="http://dev.mysql.com/downloads/connector/j/" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://dev.mysql.com/downloads/connector/j/</a><br style="margin:0px; padding:0px; border:0px currentColor"/>
+这些jar包，我也会包含在源代码里面，可以在文章末尾处，下载源代码，参考。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+用 eclipse 建立一个dynamic web project。<br style="margin:0px; padding:0px; border:0px currentColor"/>
+解压下载后的 mybatis-generator-core-1.3.2-bundle.zip 文件，其中有两个目录：一个目录是文档目录docs，主要介绍这个代码生成工具如何使用，另一个是lib目录，里面的内容主要是jar 包，这里我们需要 mybatis-generator-core-1.3.2.jar，这个 jar 包. 将它拷贝到我们刚刚创建的 web工程的 WebContent/WEB-INF/lib  目录下.在这个目录下也放入 mysql 驱动jar包.因为用 mysql  做测试的.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">2.在数据库中创建测试表</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+在mybatis数据库中创建 用来测试的category表(如果没有mybatis这个数据库,要创建，这是基于前面这个系列文章而写的，已经有了mybatis 这个数据库)<br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [49].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+Drop TABLE IF EXISTS `category`;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+Create TABLE `category` (<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `id` int(11) NOT NULL AUTO_INCREMENT,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `catname` varchar(50) NOT NULL,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  `catdescription` varchar(200) DEFAULT NULL,<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  PRIMARY KEY (`id`)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">3. 配置mybatis 代码生成工具的配置文件 </span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+在创建的web工程中，创建相应的package 比如 :<br style="margin:0px; padding:0px; border:0px currentColor"/>
+com.yihaomen.inter 用来存放mybatis 接口对象.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+com.yihaomen.mapper用来存放sql mapper对应的映射，sql语句等.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+com.yihaomen.model 用来存放与数据库对应的model 。<br style="margin:0px; padding:0px; border:0px currentColor"/>
+在用mybatis 代码生成工具之前，这些目录必须先创建好，作为一个好的应用程序，这些目录的创建也是有规律的。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+根据mybatis代码生成工具文档，需要一个配置文件，这里命名为:mbgConfiguration.xml 放在src 目录下. 配置文件内容如下:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [50].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; ?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; !DOCTYPE generatorConfiguration<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &quot;<a href="http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd</a>&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; generatorConfiguration&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;!-- 配置mysql 驱动jar包路径.用了绝对路径 --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;classPathEntry location=&quot;D:\Work\Java\eclipse\workspace\myBatisGenerator\WebContent\WEB-INF\lib\mysql-connector-java-5.1.22-bin.jar&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;context id=&quot;yihaomen_mysql_tables&quot; targetRuntime=&quot;MyBatis3&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;!-- 为了防止生成的代码中有很多注释，比较难看，加入下面的配置控制 --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;commentGenerator&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+      &lt;property name=&quot;suppressAllComments&quot; value=&quot;true&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+      &lt;property name=&quot;suppressDate&quot; value=&quot;true&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/commentGenerator&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;!-- 注释控制完毕 --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;!-- 数据库连接 --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;jdbcConnection driverClass=&quot;com.mysql.jdbc.Driver&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        connectionURL=&quot;jdbc:mysql://127.0.0.1:3306/mybatis?characterEncoding=utf8&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        userId=&quot;root&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        password=&quot;password&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/jdbcConnection&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;javaTypeResolver &gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+      &lt;property name=&quot;forceBigDecimals&quot; value=&quot;false&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/javaTypeResolver&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;!-- 数据表对应的model 层  --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;javaModelGenerator targetPackage=&quot;com.yihaomen.model&quot; targetProject=&quot;src&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+      &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+      &lt;property name=&quot;trimStrings&quot; value=&quot;true&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/javaModelGenerator&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;!-- sql mapper 隐射配置文件 --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;sqlMapGenerator targetPackage=&quot;com.yihaomen.mapper&quot;  targetProject=&quot;src&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+      &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/sqlMapGenerator&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;!-- 在ibatis2 中是dao层，但在mybatis3中，其实就是mapper接口 --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;javaClientGenerator type=&quot;XMLMAPPER&quot; targetPackage=&quot;com.yihaomen.inter&quot;  targetProject=&quot;src&quot;&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+      &lt;property name=&quot;enableSubPackages&quot; value=&quot;true&quot; /&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/javaClientGenerator&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;!-- 要对那些数据表进行生成操作，必须要有一个. --&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;table schema=&quot;mybatis&quot; tableName=&quot;category&quot; domainObjectName=&quot;Category&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        enableCountByExample=&quot;false&quot; enableUpdateByExample=&quot;false&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        enableDeleteByExample=&quot;false&quot; enableSelectByExample=&quot;false&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        selectByExampleQueryId=&quot;false&quot;&gt;    <br style="margin:0px; padding:0px; border:0px currentColor"/>
+    &lt;/table&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+  &lt;/context&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+&lt; /generatorConfiguration&gt;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+用一个main 方法来测试能否用mybatis 成生成刚刚创建的`category`表对应的model,sql mapper等内容.<br style="margin:0px; padding:0px; border:0px currentColor"/>
+创建一个com.yihaomen.test 的package ,并在此package 下面建立一个测试的类GenMain：<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [51].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.test;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.io.File;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.io.IOException;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.sql.SQLException;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.util.ArrayList;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.util.List;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.mybatis.generator.api.MyBatisGenerator;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.mybatis.generator.config.Configuration;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.mybatis.generator.config.xml.ConfigurationParser;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.mybatis.generator.exception.InvalidConfigurationException;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.mybatis.generator.exception.XMLParserException;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.mybatis.generator.internal.DefaultShellCallback;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+public class GenMain {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public static void main(String[] args) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        List&lt;String&gt; warnings = new ArrayList&lt;String&gt;();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        boolean overwrite = true;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        String genCfg = &quot;/mbgConfiguration.xml&quot;;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        File configFile = new File(GenMain.class.getResource(genCfg).getFile());<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ConfigurationParser cp = new ConfigurationParser(warnings);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        Configuration config = null;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            config = cp.parseConfiguration(configFile);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } catch (IOException e) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            e.printStackTrace();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } catch (XMLParserException e) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            e.printStackTrace();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        DefaultShellCallback callback = new DefaultShellCallback(overwrite);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        MyBatisGenerator myBatisGenerator = null;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            myBatisGenerator = new MyBatisGenerator(config, callback, warnings);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } catch (InvalidConfigurationException e) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            e.printStackTrace();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        try {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            myBatisGenerator.generate(null);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } catch (SQLException e) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            e.printStackTrace();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } catch (IOException e) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            e.printStackTrace();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        } catch (InterruptedException e) {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+            e.printStackTrace();<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+到此为止,eclipse项目工程图应该如下:<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [5].jpg" type="image/jpeg" data-filename="Image.jpg" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">4.运行测试的main 方法,生成mybatis 相关代码</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+运行GenMain类里的main方法，并刷新 工程,你会发现 各自package 目录下已经响应生成了对应的文件，完全符合mybatis 规则，效果图如下:<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [6].jpg" type="image/jpeg" data-filename="Image.jpg" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">5.注意事项</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+如果你想生成example 之类的东西，需要在&lt;table&gt;&lt;/table&gt;里面去掉<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [52].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+enableCountByExample=&quot;false&quot; enableUpdateByExample=&quot;false&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+enableDeleteByExample=&quot;false&quot; enableSelectByExample=&quot;false&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+selectByExampleQueryId=&quot;false&quot;<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+这部分配置，这是生成Example而用的，一般来说对项目没有用.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+另外生成的sql mapper 等，只是对单表的增删改查，如果你有多表join操作，你就可以手动配置，如果调用存储过程，你也需要手工配置. 这时工作量已经少很多了。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+如果你想用命令行方式处理，也是可以的.<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [53].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+比如:<br style="margin:0px; padding:0px; border:0px currentColor"/>
+java -jar mybatis-generator-core-1.3.2.jar -mbgConfiguration.xm -overwrite<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+这时，要用绝对路径才行. 另外mbgConfiguration.xml  配置文件中targetProject 的配置也必须是绝对路径了。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+代码下载：<img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [54].gif" type="image/gif" data-filename="Image.gif" alt="下载文件" style="margin: 0px 2px -4px 0px; padding: 0px; border-color: currentcolor;"/><a href="http://www.yihaomen.com/attachments/month_1212/b20121216131924.rar" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">mybatis 代码生成工具</a><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:0px currentColor">除非申明,文章均为<span style="margin:0px; padding:0px; border:0px currentColor"><a href="http://www.yihaomen.com/" style="margin:0px; padding:0px; border:0px currentColor">一号门</a></span>原创,转载请注明本文地址,谢谢!</div><br/></div><div><h1 style="margin:0px; padding:4px 0px 4px 10px; border:0px currentColor"><a name="t9"></a><a name="t9"></a><span style="margin:0px; padding:0px; border:0px currentColor">mybatis SqlSessionDaoSupport的使用(附代码下载)</span></h1><br/></div><div><span style="margin:0px; padding:0px; border:0px currentColor; background-color:rgb(255,255,255)">前 面的系列mybatis 文章，已经基本讲到了mybatis的操作，但都是基于mapper隐射操作的，在mybatis 3中这个mapper 接口貌似充当了以前在ibatis 2中的 DAO 层的作用。但事实上，如果有这个mapper接口不能完成的工作，或者需要更复杂的扩展的时候，你就需要自己的DAO 层. 事实上 mybatis 3 也是支持DAO 层设计的，类似于ibatis 2 .下面介绍下.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+在此之前，请下载 上一篇文章提供的代码:<a href="http://www.yihaomen.com/article/java/326.htm" rel="external" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">http://www.yihaomen.com/article/java/326.htm</a><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">首先创建一个com.yihaomen.dao的package.然后在里面分别创建接口UserDAO,以及实现该接口的UserDAOImpl</span><br style="margin:0px; padding:0px; border:0px currentColor"/></span><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [55].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.dao;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.util.List;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import com.yihaomen.model.Article;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+public interface UserDAO {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public List&lt;Article&gt; getUserArticles(int userid);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [56].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/>
+package com.yihaomen.dao;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import java.util.List;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.mybatis.spring.support.SqlSessionDaoSupport;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import org.springframework.stereotype.Repository;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+import com.yihaomen.model.Article;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+@Repository<br style="margin:0px; padding:0px; border:0px currentColor"/>
+public class UserDAOImpl extends SqlSessionDaoSupport implements UserDAO {<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    @Override<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public List&lt;Article&gt; getUserArticles(int userid) {       <br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return this.getSqlSession().selectList(&quot;com.yihaomen.inter.IUserOperation.getUserArticles&quot;,userid);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/>
+}<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+执行的SQL 语句采用了命名空间+sql 语句id的方式，后面是参数.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+注意继承了 &quot;SqlSessionDaoSupport&quot; ，利用方法 getSqlSession() 可以得到 SqlSessionTemplate ,从而可以执行各种sql语句，类似于hibernatetemplate一样，至少思路一样.<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+如果与spring 3 mvc 集成要用  autowire的话，在daoimpl 类上 加上注解 “@Repository” ，另外还需要在spring 配置文件中加入&lt;context:component-scan base-package=&quot;com.yihaomen.dao&quot; /&gt; 这样在需要调用的地方，就可以使用autowire自动注入了。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+当然，你也可以按一般程序的思路，创建一个service 的package, 用service 去调用 dao层，我这里就没有做了，因为比较简单，用类似的方法，也机注意自动注入时，也要配置 &lt;context:component-scan base-package=&quot;com.yihaomen.service&quot; /&gt; 等这样的。<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/><span style="margin:0px; padding:0px; border:0px currentColor">在controller层中测试,直接调用dao层方法</span><br style="margin:0px; padding:0px; border:0px currentColor"/>
+在controller中加入方法:<br style="margin:0px; padding:0px; border:0px currentColor"/><div style="margin:0px; padding:0px; border:1px solid rgb(204,207,210)"><div style="margin:0px; padding:10px 0px 0px 10px; border:0px currentColor; height:20px"><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [57].gif" type="image/gif" data-filename="Image.gif" alt="程序代码" style="margin: 0px 2px -3px 0px; padding: 0px; border-color: currentcolor;"/> 程序代码</div><div style="border-width:1px 0px 0px; margin:0px 10px 10px 20px; padding:10px 0px; width:500px; border-top-color:rgb(204,207,210); border-top-style:solid"><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    @Autowired<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    UserDAO userDAO;<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+        .......<br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+    @RequestMapping(&quot;/daolist&quot;)<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    public ModelAndView listalldao(HttpServletRequest request,HttpServletResponse response){<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        List&lt;Article&gt; articles=userDAO.getUserArticles(1);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        //制定视图，也就是list.jsp<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        ModelAndView mav=new ModelAndView(&quot;list&quot;);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        mav.addObject(&quot;articles&quot;,articles);<br style="margin:0px; padding:0px; border:0px currentColor"/>
+        return mav;<br style="margin:0px; padding:0px; border:0px currentColor"/>
+    }<br style="margin:0px; padding:0px; border:0px currentColor"/></div></div><br style="margin:0px; padding:0px; border:0px currentColor"/>
+这样可以得到同样的结果，而且满足了一般程序的设计方法.代码结构如下:<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [7].jpg" type="image/jpeg" data-filename="Image.jpg" border="0" style="margin: 0px; padding: 0px; border-color: currentcolor;" title="在新窗口打开图片"/><br style="margin:0px; padding:0px; border:0px currentColor"/><br style="margin:0px; padding:0px; border:0px currentColor"/>
+完成后，程序代码下载.<br style="margin:0px; padding:0px; border:0px currentColor"/><img src="mybatis实战教程(mybatis in action)-mybatis入门到精通.h_files/Image [58].gif" type="image/gif" data-filename="Image.gif" alt="下载文件" style="margin: 0px 2px -4px 0px; padding: 0px; border-color: currentcolor;"/><a href="http://www.yihaomen.com/attachments/month_1212/9201212231130.rar" style="margin:0px; padding:0px; border:0px currentColor" target="_blank">点击下载此文件</a></div><br/><div style="color:gray"><small>来源： &lt;<a href="http://blog.csdn.net/techbirds_bao/article/details/9233599/">http://blog.csdn.net/techbirds_bao/article/details/9233599/</a><small>&gt;</small></small></div><small><small> </small></small></div></span>
+</div></body></html> 

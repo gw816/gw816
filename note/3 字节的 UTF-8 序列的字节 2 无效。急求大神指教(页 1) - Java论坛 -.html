@@ -1,0 +1,94 @@
+<html>
+<head>
+  <title>3 字节的 UTF-8 序列的字节 2 无效。急求大神指教(页 1) - Java论坛 - 51CT.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="624"/>
+<h1>3 字节的 UTF-8 序列的字节 2 无效。急求大神指教(页 1) - Java论坛 - 51CT.html</h1>
+
+<div>
+<span><div style="border: 1px solid rgb(238, 238, 238); clear: both; display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Verdana; height: 1331.06px; margin: 10px 38.5781px 0px; padding: 8px; text-decoration: none; width: 1807.84px;"><p style="display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Verdana; height: 15px; margin: 12px 0px; padding: 6px; text-decoration: none; width: 1795.84px; background: none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 255);"><strong style="display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Verdana; margin: 0px; padding: 0px; text-decoration: none;">sielncedfw</strong> 发表于 2015-10-26 23:23</p><h3 style="display: block; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 14.04px; line-height: normal; font-family: Verdana; height: 17px; margin: 14.04px 0px; padding: 0px; text-decoration: none; width: 1807.84px;">3 字节的 UTF-8 序列的字节 2 无效。急求大神指教</h3>
+springmvc启动报错：<br/>
+[code=&quot;xhtml&quot;]org.springframework.beans.factory.parsing.BeanDefinitionParsingException: Configuration problem: Failed to import bean definitions from relative location [spring-db.xml]<br/>
+Offending resource: class path resource [spring-context.xml]; nested exception is org.springframework.beans.factory.BeanDefinitionStoreException: IOException parsing XML document from class path resource [spring-db.xml]; nested exception is com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException: 3 字节的 UTF-8 序列的字节 2 无效。<br/>
+        at org.springframework.beans.factory.parsing.FailFastProblemReporter.error(FailFastProblemReporter.java:70)<br/>
+        at org.springframework.beans.factory.parsing.ReaderContext.error(ReaderContext.java:85)<br/>
+        at org.springframework.beans.factory.parsing.ReaderContext.error(ReaderContext.java:76)<br/>
+        at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.importBeanDefinitionResource(DefaultBeanDefinitionDocumentReader.java:255)<br/>
+        at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.parseDefaultElement(DefaultBeanDefinitionDocumentReader.java:180)<br/>
+        at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.parseBeanDefinitions(DefaultBeanDefinitionDocumentReader.java:165)<br/>
+        at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.doRegisterBeanDefinitions(DefaultBeanDefinitionDocumentReader.java:138)<br/>
+        at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.registerBeanDefinitions(DefaultBeanDefinitionDocumentReader.java:94)<br/>
+        at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.registerBeanDefinitions(XmlBeanDefinitionReader.java:508)<br/>
+        at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:392)<br/>
+        at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:336)<br/>
+        at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:304)<br/>
+        at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:181)<br/>
+        at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:217)<br/>
+        at org.springframework.beans.factory.support.AbstractBeanDefinitionReader.loadBeanDefinitions(AbstractBeanDefinitionReader.java:188)<br/>
+        at org.springframework.web.context.support.XmlWebApplicationContext.loadBeanDefinitions(XmlWebApplicationContext.java:125)<br/>
+        at org.springframework.web.context.support.XmlWebApplicationContext.loadBeanDefinitions(XmlWebApplicationContext.java:94)<br/>
+        at org.springframework.context.support.AbstractRefreshableApplicationContext.refreshBeanFactory(AbstractRefreshableApplicationContext.java:129)<br/>
+        at org.springframework.context.support.AbstractApplicationContext.obtainFreshBeanFactory(AbstractApplicationContext.java:604)<br/>
+        at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:509)<br/>
+        at org.springframework.web.context.ContextLoader.configureAndRefreshWebApplicationContext(ContextLoader.java:446)<br/>
+        at org.springframework.web.context.ContextLoader.initWebApplicationContext(ContextLoader.java:328)<br/>
+        at com.itopener.framework.config.CustomContextLoaderListener.contextInitialized(CustomContextLoaderListener.java:19)<br/>
+        at org.apache.catalina.core.StandardContext.listenerStart(StandardContext.java:4729)<br/>
+        at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5167)<br/>
+        at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)<br/>
+        at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1409)<br/>
+        at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1399)<br/>
+        at java.util.concurrent.FutureTask.run(Unknown Source)<br/>
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)<br/>
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)<br/>
+        at java.lang.Thread.run(Unknown Source)<br/>
+Caused by: org.springframework.beans.factory.BeanDefinitionStoreException: IOException parsing XML document from class path resource [spring-db.xml]; nested exception is com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException: 3 字节的 UTF-8 序列的字节 2 无效。<br/>
+        at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:410)<br/>
+        at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:336)<br/>
+        at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:304)<br/>
+        at org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader.importBeanDefinitionResource(DefaultBeanDefinitionDocumentReader.java:239)<br/>
+        ... 28 more<br/>
+Caused by: com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException: 3 字节的 UTF-8 序列的字节 2 无效。<br/>
+        at com.sun.org.apache.xerces.internal.impl.io.UTF8Reader.invalidByte(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.impl.io.UTF8Reader.read(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.load(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.impl.XMLEntityScanner.scanData(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.impl.XMLScanner.scanComment(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanComment(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.next(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.parsers.DOMParser.parse(Unknown Source)<br/>
+        at com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderImpl.parse(Unknown Source)<br/>
+        at org.springframework.beans.factory.xml.DefaultDocumentLoader.loadDocument(DefaultDocumentLoader.java:76)<br/>
+        at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadDocument(XmlBeanDefinitionReader.java:429)<br/>
+        at org.springframework.beans.factory.xml.XmlBeanDefinitionReader.doLoadBeanDefinitions(XmlBeanDefinitionReader.java:391)<br/>
+        ... 31 more[/code]<br/><br/><br/><br/>
+网上查都说是xml文件的开头编码和文件本身编码不一致，但是我看过了，都是UTF-8<br/>
+我做过一些尝试，总结如下：<br/>
+1. spring的几个xml配置文件中，有一部分的中文可以输入，但有些中文会报以上异常<br/>
+2. 我用的maven管理，打成war包放到tomcat下运行正常<br/>
+3. 有其他类似的工程，同样的操作，运行正常<br/>
+4. 之前是运行正常的，没有改动引入的jar包，今天突然就出现这个异常不能运行的<br/>
+5. 配置文件里的中文和标点符号我都试过了，全是半角，不存在误输入全角的问题<br/>
+[size=10pt]我已经实在是没办法了，完全不知道问题是出在我的工程里面？tomcat？eclipse？请大神帮忙看看问题有可能出现在什么地方？不甚感激！[/size]
+<p style="display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Verdana; height: 15px; margin: 12px 0px; padding: 6px; text-decoration: none; width: 1795.84px; background: none 0% 0% / auto repeat scroll padding-box border-box rgb(238, 238, 255);"><strong style="display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Verdana; margin: 0px; padding: 0px; text-decoration: none;">lxbccsu</strong> 发表于 2015-10-30 12:06</p>
+你可以这样处理：<br/>
+1.先备份文件，移除所有中文，测试；<br/>
+2.用文本编辑器打开文件，确保是encoding=&quot;UTF-8&quot;，然后输入中文，然后选择另存为，在弹出的对话框中选择UTF-8编码保存文件，测试；<br/>
+如果以上能解决问题，说明还是编码问题引起的；<br/><br/><div style="display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Verdana; height: 15px; margin: 0px; padding: 4px; text-decoration: none; width: 1799.84px;">页: <strong style="display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 12px; line-height: normal; font-family: Verdana; margin: 0px; padding: 0px; text-decoration: none;">[1]</strong></div></div></span>
+</div></body></html> 

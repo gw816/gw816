@@ -1,0 +1,318 @@
+<html>
+<head>
+  <title>android源码使用proguard混淆编译及错误总结_wolfboy_快乐的小二货_新浪博客</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="5479"/>
+<h1>android源码使用proguard混淆编译及错误总结_wolfboy_快乐的小二货_新浪博客</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div><div><div><div><h1>android源码使用proguard混淆编译及错误总结</h1><div><div></div></div></div>
+			
+							
+		
+						
+		
+			<div>
+关于混淆编译也主要是从网上学习的，决定对网上的进行总结，供大家一起学习，研究，东西主要都是网友们写的，我这里借鉴了，文章最后是网友的原文地址；</div>
+
+<div>1，什么是混淆编译</div>
+
+<div>
+ProGuard是一个免费的java类文件压缩,优化,混淆器.它探测并删除没有使用的类,字段,方法和属性.它删除没有用的说明并使用字节码得到最大优化.它使用无意义的名字来重命名类,字段和方法.</div>
+<div>ProGuard的使用是为了:</div>
+<div>1.创建紧凑的代码文档是为了更快的网络传输,快速装载和更小的内存占用.</div>
+<div>2.创建的程序和程序库很难使用反向工程.</div>
+<div>3.所以它能删除来自源文件中的没有调用的代码</div>
+<div>4.充分利用java6的快速加载的优点来提前检测和返回java6中存在的类文件.</div>
+
+<div>ProGuard支持那些种类的优化：</div>
+<div>除了在压缩操作删除的无用类，字段和方法外，ProGuard也能在字节码级提供性能优化，内部方法有：</div>
+<div>1 常量表达式求值</div>
+<div>2 删除不必要的字段存取</div>
+<div>3 删除不必要的方法调用</div>
+<div>4 删除不必要的分支</div>
+<div>5 删除不必要的比较和instanceof验证</div>
+<div>6 删除未使用的代码</div>
+<div>7 删除只写字段</div>
+<div>8 删除未使用的方法参数</div>
+<div>9 像push/pop简化一样的各种各样的peephole优化</div>
+<div>10 在可能的情况下为类添加static和final修饰符</div>
+<div>11 在可能的情况下为方法添加private, static和final修饰符</div>
+<div>12 在可能的情况下使get/set方法成为内联的</div>
+<div>13 当接口只有一个实现类的时候，就取代它</div>
+<div>14 选择性的删除日志代码</div>
+<div>
+实际的优化效果是依赖于你的代码和执行代码的虚拟机的。简单的虚拟机比有复杂JIT编译器的高级虚拟机更有效。无论如何，你的字节码会变得更小。</div>
+
+<div>需要优化的不被支持技术： </div>
+<div>1 使非final的常量字段成为内联</div>
+<div>2 像get/set方法一样使其他方法成为内联</div>
+<div>3 将常量表达式移到循环之外</div>
+<div>4 Optimizations that require escape
+analysis </div>
+
+<div>2，启动android中的混淆功能（关于eclipse中混淆，网上一大堆，这里不做解释）</div>
+
+
+<div>
+在需要混淆的工程目录下(package/apps/下的工程)添加proguard.flags文件，该文件即为网络传说中的proguard.cfg，只是命名不一样而已，然后再Android.mk中添加如下两句：</div>
+<div>LOCAL_PROGUARD_ENABLED := full</div>
+<div>LOCAL_PROGUARD_FLAG_FILES := proguard.flags</div>
+<div>上面的full 也可以是custom，如果不写这句，那还得添加如下一句：</div>
+<div>TARGET_BUILD_VARIANT := user或者TARGET_BUILD_VARIANT :=
+userdebug</div>
+<div>
+这样后在工程目录下执行mm便可以看到在out目录下生成了形如proguard.classes.jar的东东，这就说明已在编译中启动了proguard</div>
+<div>但反编译一看，并未出现网络云说的abcd替代符号，其实代码并未真正混淆：</div>
+<div>
+android在编译时默认关闭了混淆选项，有去研究build/core目录的同志会发现这里也有个proguard.flags文件，其实在proguard的过程中，编译器会调用包括本地目录下和系统定义了的多个proguard.flags文件，而在这个文件中混淆的选项被禁止了，故而编译出来的apk仍未混淆。因此将如下句子注释掉便可实现真正的混淆编译：</div>
+<div># Don't obfuscate. We only need dead code striping.</div>
+<div>-dontobfuscate（将该句加个#号注释掉）</div>
+
+<div>好奇的同志还可以继续看看，为什么TARGET_BUILD_VARIANT :=
+user和LOCAL_PROGUARD_ENABLED :=
+full二选一即可，详见build/core/package.mk:</div>
+
+<div>LOCAL_PROGUARD_ENABLED:=$(strip
+$(LOCAL_PROGUARD_ENABLED))</div>
+<div>ifndef LOCAL_PROGUARD_ENABLED</div>
+<div>ifneq ($(filter user userdebug,
+$(TARGET_BUILD_VARIANT)),)</div>
+<div># turn on Proguard by default for user &amp;
+userdebug build</div>
+<div>LOCAL_PROGUARD_ENABLED :=full</div>
+<div>endif</div>
+<div>endif</div>
+<div>ifeq ($(LOCAL_PROGUARD_ENABLED),disabled)</div>
+<div># the package explicitly request to disable proguard.</div>
+<div>LOCAL_PROGUARD_ENABLED :=</div>
+<div>endif</div>
+<div>proguard_options_file :=</div>
+<div>ifneq ($(LOCAL_PROGUARD_ENABLED),custom)</div>
+<div>ifneq ($(all_resources),)</div>
+<div>proguard_options_file :=
+$(package_expected_intermediates_COMMON)/proguard_options</div>
+<div>endif # all_resources</div>
+<div>endif # !custom</div>
+<div>LOCAL_PROGUARD_FLAGS := $(addprefix -include
+,$(proguard_options_file)) $(LOCAL_PROGUARD_FLAGS)</div>
+
+<div>3，如何书写proguard.flags文件</div>
+
+<div>参数解释：</div>
+<div>-include {filename}  
+ 从给定的文件中读取配置参数</div>
+<div>-basedirectory {directoryname}  
+ 指定基础目录为以后相对的档案名称</div>
+<div>-injars {class_path}  
+ 指定要处理的应用程序jar,war,ear和目录</div>
+<div>-outjars {class_path}  
+ 指定处理完后要输出的jar,war,ear和目录的名称</div>
+<div>-libraryjars {classpath}  
+ 指定要处理的应用程序jar,war,ear和目录所需要的程序库文件</div>
+<div>-dontskipnonpubliclibraryclasses  
+ 指定不去忽略非公共的库类。</div>
+<div>-dontskipnonpubliclibraryclassmembers  
+ 指定不去忽略包可见的库类的成员。</div>
+<div>保留选项</div>
+<div>-keep {Modifier} {class_specification}  
+ 保护指定的类文件和类的成员</div>
+<div>-keepclassmembers {modifier} {class_specification}
+ 
+ 保护指定类的成员，如果此类受到保护他们会保护的更好</div>
+<div>-keepclasseswithmembers {class_specification}
+ 
+ 保护指定的类和类的成员，但条件是所有指定的类和类成员是要存在。</div>
+<div>-keepnames {class_specification}  
+ 保护指定的类和类的成员的名称（如果他们不会压缩步骤中删除）</div>
+<div>-keepclassmembernames {class_specification}  
+ 保护指定的类的成员的名称（如果他们不会压缩步骤中删除）</div>
+<div>-keepclasseswithmembernames {class_specification}
+ 
+ 保护指定的类和类的成员的名称，如果所有指定的类成员出席（在压缩步骤之后）</div>
+<div>-printseeds {filename}  
+ 列出类和类的成员-keep选项的清单，标准输出到给定的文件</div>
+<div>压缩</div>
+<div>-dontshrink  
+ 不压缩输入的类文件</div>
+<div>-printusage {filename}</div>
+<div>-whyareyoukeeping {class_specification}  
+ </div>
+<div>优化</div>
+<div>-dontoptimize  
+ 不优化输入的类文件</div>
+<div>-assumenosideeffects {class_specification}  
+ 优化时假设指定的方法，没有任何副作用</div>
+<div>-allowaccessmodification  
+ 优化时允许访问并修改有修饰符的类和类的成员</div>
+<div>混淆</div>
+<div>-dontobfuscate  
+ 不混淆输入的类文件</div>
+<div>-printmapping {filename}</div>
+<div>-applymapping {filename}  
+ 重用映射增加混淆</div>
+<div>-obfuscationdictionary {filename}  
+ 使用给定文件中的关键字作为要混淆方法的名称</div>
+<div>-overloadaggressively  
+ 混淆时应用侵入式重载</div>
+<div>-useuniqueclassmembernames  
+ 确定统一的混淆类的成员名称来增加混淆</div>
+<div>-flattenpackagehierarchy {package_name}  
+ 重新包装所有重命名的包并放在给定的单一包中</div>
+<div>-repackageclass {package_name}  
+ 重新包装所有重命名的类文件中放在给定的单一包中</div>
+<div>-dontusemixedcaseclassnames  
+ 混淆时不会产生形形色色的类名</div>
+<div>-keepattributes {attribute_name,...}  
+ 保护给定的可选属性，例如LineNumberTable, LocalVariableTable,
+SourceFile, Deprecated, Synthetic, Signature, and
+InnerClasses.</div>
+<div>-renamesourcefileattribute {string}  
+ 设置源文件中给定的字符串常量</div>
+
+<div>4，实例（SkyvideoPlayer）</div>
+<div>-optimizationpasses 3</div>
+<div>-dontusemixedcaseclassnames</div>
+<div>-dontskipnonpubliclibraryclasses</div>
+<div>-verbose</div>
+<div>-dontpreverify</div>
+<div>-verbose</div>
+<div># The support library contains references to newer platform
+versions.</div>
+<div># Don't warn about those in case this app is linking against
+an older</div>
+<div># platform version.  We know about them, and
+they are safe.</div>
+<div>-dontwarn</div>
+<div>-optimizations
+!code/simplification/arithmetic,!field/*,!class/merging/*</div>
+<div>#by jiang</div>
+<div># -dontoptimize  #是否对类内部代码进行优化，默认优化</div>
+<div># Don't obfuscate. We only need dead code striping.</div>
+<div># -dontobfuscate  #不进行优化</div>
+<div>#项目使用到的第三方jar包</div>
+<div>-libraryjars ../libs/fastjson-1.1.23.jar</div>
+
+<div># removes such information by default, so configure it to keep
+all of it.</div>
+<div>-keepattributes Signature   #不优化泛型和反射</div>
+
+<div>#android默认项</div>
+<div>-keep public class * extends android.app.Activity</div>
+<div>-keep public class * extends android.app.Application</div>
+<div>-keep public class * extends android.app.Service</div>
+<div>-keep public class * extends
+android.content.BroadcastReceiver</div>
+<div>-keep public class * extends
+android.content.ContentProvider</div>
+<div>-keep public class * extends
+android.app.backup.BackupAgentHelper</div>
+<div>-keep public class * extends
+android.preference.Preference</div>
+<div>-keep public class
+com.android.vending.licensing.ILicensingService</div>
+
+<div># for skyworth fastjson</div>
+<div>-keep class com.alibaba.fastjson.** { *; }</div>
+
+<div>#以下为android默认项</div>
+<div>-keepclasseswithmembernames class * {</div>
+<div>    native ;</div>
+<div>}</div>
+
+<div>-keepclasseswithmembernames class * {</div>
+<div>    public
+(android.content.Context, android.util.AttributeSet);</div>
+<div>}</div>
+
+<div>-keepclasseswithmembernames class * {</div>
+<div>    public
+(android.content.Context, android.util.AttributeSet, int);</div>
+<div>}</div>
+
+<div>-keepclassmembers enum * {</div>
+<div>    public static **[]
+values();</div>
+<div>    public static **
+valueOf(java.lang.String);</div>
+<div>}</div>
+
+<div>-keep class * implements android.os.Parcelable {</div>
+<div>  public static final
+android.os.Parcelable$Creator *;</div>
+<div>}</div>
+
+<div>5，错误总结</div>
+
+<div>问题一：使用gson包解析数据时，出现missing type parameter异常</div>
+<div>程序中用到了gson的new
+typeToken，结果打包成apk发布时，发现抛出异常，但不通过打包apk时发现一切正常，百思不得其解，最初怀疑没有将gson-1.7.1.JAR打包进去，后来经过测试发现gson的其他方法经过打包也能正常运行，最后上网找了2天，终于在google
+gson论坛中找到了解决方法。</div>
+<div>第一种：在 proguard.cfg中添加</div>
+<div>-dontobfuscate</div>
+<div>-dontoptimize</div>
+
+<div>第二种：在 proguard.cfg中添加</div>
+<div># removes such information by default, so configure it to keep
+all of it.</div>
+<div>-keepattributes Signature</div>
+
+<div># Gson specific classes</div>
+<div>-keep class sun.misc.Unsafe { *; }</div>
+<div>#-keep class com.google.gson.stream.** { *; }</div>
+
+<div># Application classes that will be serialized/deserialized
+over Gson</div>
+<div>-keep class com.google.gson.examples.android.model.** { *;
+}</div>
+<div>这两种方法都测试可行，第一个方法没有混淆编译，第二个方法能够混淆编译</div>
+<div>问题二：</div>
+<div>反射类不能进行混淆编译，需加入</div>
+<div>-keep class com.test.model.response.** {*;}</div>
+<div>问题三：</div>
+<div>android辅助jar包异常，在proguard.cfg中加入</div>
+<div>-dontwarn android.support.v4.**</div>
+<div>-keep class android.support.v4.** {*;}</div>
+<div>问题四：（同1）</div>
+<div>
+类型转换错误，因为我用的泛型，所以在调用某些方法的时候，会出现这种错误，后面在混淆配置文件加了一个过滤泛型的语句，如下。</div>
+
+<div>-keepattributes Signature</div>
+<div>过后，就没有出现类似的类型转换错误。</div>
+
+<div>
+问题五：空指针异常，这个错误是我对比前面的错误来说，所用的时间比较短，开始是找不到方法到底是哪个（原因是上面提到的混淆后方法名相同），所以就把这个类里面的所有方法都过滤掉，这样我没用多少时间，也就找到了具体的方法，可还是不明白原因，后面发现了其中的一个if判断，我利用反射筛选方法，关键字是“get”，突然我就震精了，大叫一声——soga，原来我
+model的
+set/get方法名全部都被混淆了，所以筛选不到方法，返回的也就是null值，自然下面用到这个方法的返回值就会抛出空指针异常。</div>
+
+<div>解决方法：把 model包下面的所有类，全部过滤掉。</div>
+
+<div>
+总结：如要用到反射，反射一般就会利用到泛型，所以必须要把泛型的全部过滤掉，如果有根据变量名或者方法名判断的，记得所在的类需过滤掉，之中还有用到
+annotation的地方，要加入一行代码，如下：</div>
+
+<div>-keepattributes *Annotation*</div>
+<div>这样就能过滤掉所有的annotation，否则也会抛出空指针异常。</div>
+
+<div>推荐文章,内容都是他们写的，我只是整理了一下，呵呵</div>
+<div>http://blog.csdn.net/hehe9737/article/details/8152330</div>
+
+<div>
+http://charles-tanchao.diandian.com/post/2012-05-24/20118715</div>
+
+<div>
+http://www.cnitblog.com/zouzheng/archive/2011/01/12/72639.html</div>
+
+<div>http://www.eoeandroid.com/thread-173733-1-1.html</div>
+							
+		</div></div></div><br/></div></span>
+</div></body></html> 

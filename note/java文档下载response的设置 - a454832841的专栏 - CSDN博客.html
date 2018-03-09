@@ -1,0 +1,526 @@
+<html>
+<head>
+  <title>java文档下载response的设置 - a454832841的专栏 - CSDN博客</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="4253"/>
+<h1>java文档下载response的设置 - a454832841的专栏 - CSDN博客</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div><div><div><div><h1> java文档下载response的设置 </h1><div><div></div></div></div>
+
+   
+
+        <div>
+        <div>
+            
+            <span>2361人阅读</span>
+            
+            <span> <a href="#" target="_blank" title="收藏">收藏</a></span>
+             
+
+        </div>
+    </div>    
+    
+      
+
+  
+
+  
+  
+     
+
+
+
+
+用java下载文档的时候设置response的几种方式<div>
+<div>
+<div>Java代码  </div>
+</div>
+<ol>
+<li>//response信息的设置</li><li> response.reset();  </li><li>response.setContentType(&quot;application/pdf&quot;);  </li><li>//导出PDF名称</li><li> String fileName = &quot;客户数据分析结果报表&quot;;  </li><li>//inline为在线打开</li><li>response.setHeader(&quot;Content-Disposition&quot;, &quot;inline; filename=\&quot;&quot;</li><li>         + new String(fileName.getBytes(&quot;gb18030&quot;), &quot;ISO8859-1&quot;) + &quot;.pdf&quot; + &quot;\&quot;&quot;);  </li><li>response.setContentLength(ba.size());  </li></ol>
+</div>
+点击会提供对话框选择另存为：<div>
+<div>
+<div>Java代码  </div>
+</div>
+<ol>
+<li>response.setHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=\&quot;+filename);  </li></ol>
+</div>
+下载前询问（是打开文件还是保存到计算机）<div>
+<div>
+<div>Java代码  </div>
+</div>
+<ol>
+<li>response.setHeader(&quot;Content-Disposition&quot;, &quot;inline; filename=\&quot;+filename); 
+</li></ol>
+<p>Response.setContentType()参数说明</p>
+<p>&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=GBK&quot;&gt;<br/><br/>response.setContentType() ;<br/><br/>* = application/octet-stream <br/>
+.001 = application/x-001 <br/>
+.301 = application/x-301 <br/>
+.323 = text/h323 <br/>
+.906 = application/x-906 <br/>
+.907 = drawing/907 <br/>
+.a11 = application/x-a11 <br/>
+.acp = audio/x-mei-aac <br/>
+.ai = application/postscript <br/>
+.aif = audio/aiff <br/>
+.aifc = audio/aiff <br/>
+.aiff = audio/aiff <br/>
+.anv = application/x-anv <br/>
+.asa = text/asa <br/>
+.asf = video/x-ms-asf <br/>
+.asp = text/asp <br/>
+.asx = video/x-ms-asf <br/>
+.au = audio/basic <br/>
+.avi = video/avi <br/>
+.awf = application/vnd.adobe.workflow <br/>
+.biz = text/xml <br/>
+.bmp = application/x-bmp <br/>
+.bot = application/x-bot <br/>
+.c4t = application/x-c4t <br/>
+.c90 = application/x-c90 <br/>
+.cal = application/x-cals <br/>
+.cat = application/vnd.ms-pki.seccat <br/>
+.cdf = application/x-netcdf <br/>
+.cdr = application/x-cdr <br/>
+.cel = application/x-cel <br/>
+.cer = application/x-x509-ca-cert <br/>
+.cg4 = application/x-g4 <br/>
+.cgm = application/x-cgm <br/>
+.cit = application/x-cit <br/>
+.class = java/* <br/>
+.cml = text/xml :客户端浏览器按XML格式进行解析文档 <br/>
+.cmp = application/x-cmp <br/>
+.cmx = application/x-cmx <br/>
+.cot = application/x-cot <br/>
+.crl = application/pkix-crl <br/>
+.crt = application/x-x509-ca-cert <br/>
+.csi = application/x-csi <br/>
+.css = text/css :客户端浏览器按CSS格式进行解析文档 <br/>
+.cut = application/x-cut <br/>
+.dbf = application/x-dbf <br/>
+.dbm = application/x-dbm <br/>
+.dbx = application/x-dbx <br/>
+.dcd = text/xml :客户端浏览器按XML格式进行解析文档 <br/>
+.dcx = application/x-dcx <br/>
+.der = application/x-x509-ca-cert <br/>
+.dgn = application/x-dgn <br/>
+.dib = application/x-dib <br/>
+.dll = application/x-msdownload <br/>
+.doc = application/msword <br/>
+.dot = application/msword <br/>
+.drw = application/x-drw <br/>
+.dtd = text/xml :客户端浏览器按XML格式进行解析文档 <br/>
+.dwf = Model/vnd.dwf <br/>
+.dwf = application/x-dwf <br/>
+.dwg = application/x-dwg <br/>
+.dxb = application/x-dxb <br/>
+.dxf = application/x-dxf <br/>
+.edn = application/vnd.adobe.edn <br/>
+.emf = application/x-emf <br/>
+.eml = message/rfc822 <br/>
+.ent = text/xml :客户端浏览器按XML格式进行解析文档 <br/>
+.epi = application/x-epi <br/>
+.eps = application/x-ps <br/>
+.eps = application/postscript <br/>
+.etd = application/x-ebx <br/>
+.exe = application/x-msdownload <br/>
+.fax = image/fax <br/>
+.fdf = application/vnd.fdf <br/>
+.fif = application/fractals <br/>
+.fo = text/xml :客户端浏览器按XML格式进行解析文档 <br/>
+.frm = application/x-frm <br/>
+.g4 = application/x-g4 <br/>
+.gbr = application/x-gbr <br/>
+.gcd = application/x-gcd <br/>
+.gif = image/gif <br/>
+.gl2 = application/x-gl2 <br/>
+.gp4 = application/x-gp4 <br/>
+.hgl = application/x-hgl <br/>
+.hmr = application/x-hmr <br/>
+.hpg = application/x-hpgl <br/>
+.hpl = application/x-hpl <br/>
+.hqx = application/mac-binhex40 <br/>
+.hrf = application/x-hrf <br/>
+.hta = application/hta <br/>
+.htc = text/x-component <br/>
+.htm = text/html :客户端浏览器按超文本格式进行解析文档 <br/>
+.html = text/html :客户端浏览器按超文本格式进行解析文档 <br/>
+.htt = text/webviewhtml <br/>
+.htx = text/html :客户端浏览器按超文本格式进行解析文档 <br/>
+.icb = application/x-icb <br/>
+.ico = image/x-icon <br/>
+.ico = application/x-ico <br/>
+.iff = application/x-iff <br/>
+.ig4 = application/x-g4 <br/>
+.igs = application/x-igs <br/>
+.iii = application/x-iphone <br/>
+.img = application/x-img <br/>
+.ins = application/x-internet-signup <br/>
+.isp = application/x-internet-signup <br/>
+.IVF = video/x-ivf <br/>
+.java = java/* <br/>
+.jfif = image/jpeg <br/>
+.jpe = image/jpeg <br/>
+.jpe = application/x-jpe <br/>
+.jpeg = image/jpeg <br/>
+.jpg = image/jpeg <br/>
+.jpg = application/x-jpg <br/>
+.js = application/x-javascript <br/>
+.jsp = text/html :客户端浏览器按超文本格式进行解析文档 <br/>
+.la1 = audio/x-liquid-file <br/>
+.lar = application/x-laplayer-reg <br/>
+.latex = application/x-latex <br/>
+.lavs = audio/x-liquid-secure <br/>
+.lbm = application/x-lbm <br/>
+.lmsff = audio/x-la-lms <br/>
+.ls = application/x-javascript <br/>
+.ltr = application/x-ltr <br/>
+.m1v = video/x-mpeg <br/>
+.m2v = video/x-mpeg <br/>
+.m3u = audio/mpegurl <br/>
+.m4e = video/mpeg4 <br/>
+.mac = application/x-mac <br/>
+.man = application/x-troff-man <br/>
+.math = text/xml <br/>
+.mdb = application/msaccess <br/>
+.mdb = application/x-mdb <br/>
+.mfp = application/x-shockwave-flash <br/>
+.mht = message/rfc822 <br/>
+.mhtml = message/rfc822 <br/>
+.mi = application/x-mi <br/>
+.mid = audio/mid <br/>
+.midi = audio/mid <br/>
+.mil = application/x-mil <br/>
+.mml = text/xml <br/>
+.mnd = audio/x-musicnet-download <br/>
+.mns = audio/x-musicnet-stream <br/>
+.mocha = application/x-javascript <br/>
+.movie = video/x-sgi-movie <br/>
+.mp1 = audio/mp1 <br/>
+.mp2 = audio/mp2 <br/>
+.mp2v = video/mpeg <br/>
+.mp3 = audio/mp3 <br/>
+.mp4 = video/mpeg4 <br/>
+.mpa = video/x-mpg <br/>
+.mpd = application/vnd.ms-project <br/>
+.mpe = video/x-mpeg <br/>
+.mpeg = video/mpg <br/>
+.mpg = video/mpg <br/>
+.mpga = audio/rn-mpeg <br/>
+.mpp = application/vnd.ms-project <br/>
+.mps = video/x-mpeg <br/>
+.mpt = application/vnd.ms-project <br/>
+.mpv = video/mpg <br/>
+.mpv2 = video/mpeg <br/>
+.mpw = application/vnd.ms-project <br/>
+.mpx = application/vnd.ms-project <br/>
+.mtx = text/xml <br/>
+.mxp = application/x-mmxp <br/>
+.net = image/pnetvue <br/>
+.nrf = application/x-nrf <br/>
+.nws = message/rfc822 <br/>
+.odc = text/x-ms-odc <br/>
+.out = application/x-out <br/>
+.p10 = application/pkcs10 <br/>
+.p12 = application/x-pkcs12 <br/>
+.p7b = application/x-pkcs7-certificates <br/>
+.p7c = application/pkcs7-mime <br/>
+.p7m = application/pkcs7-mime <br/>
+.p7r = application/x-pkcs7-certreqresp <br/>
+.p7s = application/pkcs7-signature <br/>
+.pc5 = application/x-pc5 <br/>
+.pci = application/x-pci <br/>
+.pcl = application/x-pcl <br/>
+.pcx = application/x-pcx <br/>
+.pdf = application/pdf :客户端浏览器按PDF格式进行解析文档 <br/>
+.pdf = application/pdf <br/>
+.pdx = application/vnd.adobe.pdx <br/>
+.pfx = application/x-pkcs12 <br/>
+.pgl = application/x-pgl <br/>
+.pic = application/x-pic <br/>
+.pko = application/vnd.ms-pki.pko <br/>
+.pl = application/x-perl <br/>
+.plg = text/html <br/>
+.pls = audio/scpls <br/>
+.plt = application/x-plt <br/>
+.png = image/png <br/>
+.png = application/x-png <br/>
+.pot = application/vnd.ms-powerpoint <br/>
+.ppa = application/vnd.ms-powerpoint <br/>
+.ppm = application/x-ppm <br/>
+.pps = application/vnd.ms-powerpoint <br/>
+.ppt = application/vnd.ms-powerpoint <br/>
+.ppt = application/x-ppt <br/>
+.pr = application/x-pr <br/>
+.prf = application/pics-rules <br/>
+.prn = application/x-prn <br/>
+.prt = application/x-prt <br/>
+.ps = application/x-ps <br/>
+.ps = application/postscript <br/>
+.ptn = application/x-ptn <br/>
+.pwz = application/vnd.ms-powerpoint <br/>
+.r3t = text/vnd.rn-realtext3d <br/>
+.ra = audio/vnd.rn-realaudio <br/>
+.ram = audio/x-pn-realaudio <br/>
+.ras = application/x-ras <br/>
+.rat = application/rat-file <br/>
+.rdf = text/xml <br/>
+.rec = application/vnd.rn-recording <br/>
+.red = application/x-red <br/>
+.rgb = application/x-rgb <br/>
+.rjs = application/vnd.rn-realsystem-rjs <br/>
+.rjt = application/vnd.rn-realsystem-rjt <br/>
+.rlc = application/x-rlc <br/>
+.rle = application/x-rle <br/>
+.rm = application/vnd.rn-realmedia <br/>
+.rmf = application/vnd.adobe.rmf <br/>
+.rmi = audio/mid <br/>
+.rmj = application/vnd.rn-realsystem-rmj <br/>
+.rmm = audio/x-pn-realaudio <br/>
+.rmp = application/vnd.rn-rn_music_package <br/>
+.rms = application/vnd.rn-realmedia-secure <br/>
+.rmvb = application/vnd.rn-realmedia-vbr <br/>
+.rmx = application/vnd.rn-realsystem-rmx <br/>
+.rnx = application/vnd.rn-realplayer <br/>
+.rp = image/vnd.rn-realpix <br/>
+.rpm = audio/x-pn-realaudio-plugin <br/>
+.rsml = application/vnd.rn-rsml <br/>
+.rt = text/vnd.rn-realtext <br/>
+.rtf = application/msword <br/>
+.rtf = application/x-rtf <br/>
+.rv = video/vnd.rn-realvideo <br/>
+.sam = application/x-sam <br/>
+.sat = application/x-sat <br/>
+.sdp = application/sdp <br/>
+.sdw = application/x-sdw <br/>
+.sit = application/x-stuffit <br/>
+.slb = application/x-slb <br/>
+.sld = application/x-sld <br/>
+.slk = drawing/x-slk <br/>
+.smi = application/smil <br/>
+.smil = application/smil <br/>
+.smk = application/x-smk <br/>
+.snd = audio/basic <br/>
+.sol = text/plain <br/>
+.sor = text/plain <br/>
+.spc = application/x-pkcs7-certificates <br/>
+.spl = application/futuresplash <br/>
+.spp = text/xml <br/>
+.ssm = application/streamingmedia <br/>
+.sst = application/vnd.ms-pki.certstore <br/>
+.stl = application/vnd.ms-pki.stl <br/>
+.stm = text/html <br/>
+.sty = application/x-sty <br/>
+.svg = text/xml <br/>
+.swf = application/x-shockwave-flash :客户端浏览器按 Flash 格式进行解析文档 <br/>
+.tdf = application/x-tdf <br/>
+.tg4 = application/x-tg4 <br/>
+.tga = application/x-tga <br/>
+.tif = image/tiff <br/>
+.tif = application/x-tif <br/>
+.tiff = image/tiff <br/>
+.tld = text/xml <br/>
+.top = drawing/x-top <br/>
+.torrent = application/x-bittorrent <br/>
+.tsd = text/xml <br/>
+.txt = text/plain :客户端浏览器按 纯文本 格式进行解析文档 <br/>
+.uin = application/x-icq <br/>
+.uls = text/iuls <br/>
+.vcf = text/x-vcard <br/>
+.vda = application/x-vda <br/>
+.vdx = application/vnd.visio <br/>
+.vml = text/xml <br/>
+.vpg = application/x-vpeg005 <br/>
+.vsd = application/vnd.visio <br/>
+.vsd = application/x-vsd <br/>
+.vss = application/vnd.visio <br/>
+.vst = application/vnd.visio <br/>
+.vst = application/x-vst <br/>
+.vsw = application/vnd.visio <br/>
+.vsx = application/vnd.visio <br/>
+.vtx = application/vnd.visio <br/>
+.vxml = text/xml <br/>
+.wav = audio/wav <br/>
+.wax = audio/x-ms-wax <br/>
+.wb1 = application/x-wb1 <br/>
+.wb2 = application/x-wb2 <br/>
+.wb3 = application/x-wb3 <br/>
+.wbmp = image/vnd.wap.wbmp <br/>
+.wiz = application/msword <br/>
+.wk3 = application/x-wk3 <br/>
+.wk4 = application/x-wk4 <br/>
+.wkq = application/x-wkq <br/>
+.wks = application/x-wks <br/>
+.wm = video/x-ms-wm <br/>
+.wma = audio/x-ms-wma <br/>
+.wmd = application/x-ms-wmd <br/>
+.wmf = application/x-wmf <br/>
+.wml = text/vnd.wap.wml <br/>
+.wmv = video/x-ms-wmv <br/>
+.wmx = video/x-ms-wmx <br/>
+.wmz = application/x-ms-wmz <br/>
+.wp6 = application/x-wp6 <br/>
+.wpd = application/x-wpd <br/>
+.wpg = application/x-wpg <br/>
+.wpl = application/vnd.ms-wpl <br/>
+.wq1 = application/x-wq1 <br/>
+.wr1 = application/x-wr1 <br/>
+.wri = application/x-wri <br/>
+.wrk = application/x-wrk <br/>
+.ws = application/x-ws <br/>
+.ws2 = application/x-ws <br/>
+.wsc = text/scriptlet <br/>
+.wsdl = text/xml <br/>
+.wvx = video/x-ms-wvx <br/>
+.xdp = application/vnd.adobe.xdp <br/>
+.xdr = text/xml <br/>
+.xfd = application/vnd.adobe.xfd <br/>
+.xfdf = application/vnd.adobe.xfdf <br/>
+.xhtml = text/html <br/>
+.xls = application/vnd.ms-excel <br/>
+.xls = application/x-xls <br/>
+.xlw = application/x-xlw <br/>
+.xml = text/xml <br/>
+.xpl = audio/scpls <br/>
+.xq = text/xml <br/>
+.xql = text/xml <br/>
+.xquery = text/xml <br/>
+.xsd = text/xml <br/>
+.xsl = text/xml <br/>
+.xslt = text/xml <br/>
+.xwd = application/x-xwd <br/>
+.x_b = application/x-x_b <br/>
+.x_t = application/x-x_t</p>
+<p>response.setHeader()下载中文文件名乱码问题 收藏 <br/>
+1. HTTP消息头</p>
+<p>（1）通用信息头</p>
+<p>即能用于请求消息中,也能用于响应信息中,但与被传输的实体内容没有关系的信息头,如Data,Pragma</p>
+<p>主要: Cache-Control , Connection , Data , Pragma , Trailer , Transfer-Encoding , Upgrade</p>
+<p>（2）请求头</p>
+<p>用于在请求消息中向服务器传递附加信息,主要包括客户机可以接受的数据类型,压缩方法,语言,以及客户计算机上保留的信息和发出该请求的超链接源地址等.</p>
+<p>主要: Accept , Accept-Encoding , Accept-Language , Host ,</p>
+<p>（3）响应头</p>
+<p>用于在响应消息中向客户端传递附加信息,包括服务程序的名称,要求客户端进行认证的方式,请求的资源已移动到新地址等.</p>
+<p>主要: Location , Server , WWW-Authenticate(认证头)</p>
+<p>（4）实体头</p>
+<p>用做实体内容的元信息,描述了实体内容的属性,包括实体信息的类型,长度,压缩方法,最后一次修改的时间和数据的有效期等.</p>
+<p>主要: Content-Encoding , Content-Language , Content-Length , Content-Location , Content-Type</p>
+<p>（4）扩展头</p>
+<p>主要：Refresh, Content-Disposition</p>
+<p>2. 几个主要头的作用</p>
+<p>（1）Content-Type的作用</p>
+<p>该实体头的作用是让服务器告诉浏览器它发送的数据属于什么文件类型。</p>
+<p>例如：当Content-Type 的值设置为text/html和text/plain时,前者会让浏览器把接收到的实体内容以HTML格式解析,后者会让浏览器以普通文本解析.</p>
+<p>（2）Content-Disposition 的作用</p>
+<p>当Content-Type 的类型为要下载的类型时 , 这个信息头会告诉浏览器这个文件的名字和类型。</p>
+<p>在讲解这个内容时,张老师同时讲出了解决中文文件名乱码的解决方法,平常想的是使用getBytes() , 实际上应使用email的附件名编码方法对文件名进行编码,但IE不支持这种作法(其它浏览器支持) , 使用javax.mail.internet.*包的MimeUtility.encodeWord(&quot;中文.txt&quot;)的方法进行编码。</p>
+<p>Content-Disposition扩展头的例子：</p>
+<p>&lt;%@ page pageEncoding=&quot;GBK&quot; contentType=&quot;text/html;charset=utf-8&quot; import=&quot;java.util.*,java.text.*&quot; %&gt;</p>
+<p>&lt;%=DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.CHINA).format(new Date())</p>
+<p>%&gt;</p>
+<p>&lt;%</p>
+<p>               response.setHeader(&quot;Content-Type&quot;,&quot;video/x-msvideo&quot;);</p>
+<p>               response.setHeader(&quot;Content-Disposition&quot;, &quot;attachment;filename=aaa.doc&quot;);</p>
+<p>%&gt;</p>
+<p>Content-Disposition中指定的类型是文件的扩展名，并且弹出的下载对话框中的文件类型图片是按照文件的扩展名显示的，点保存后，文件以filename的值命名，保存类型以Content中设置的为准。</p>
+<p>注意：在设置Content-Disposition头字段之前，一定要设置Content-Type头字段。</p>
+<p>（3）Authorization头的作用</p>
+<p>Authorization的作用是当客户端访问受口令保护时，服务器端会发送401状态码和WWW-Authenticate响应头，要求客户机使用Authorization来应答。</p>
+<p>例如：</p>
+<p>&lt;%@ page pageEncoding=&quot;GBK&quot; contentType=&quot;text/html;charset=utf-8&quot; import=&quot;java.util.*,java.text.*&quot; %&gt;</p>
+<p>&lt;%=DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.CHINA).format(new Date())</p>
+<p>%&gt;</p>
+<p>&lt;%</p>
+<p>response.setStatus(401);</p>
+<p>response.setHeader(&quot;WWW-Authenticate&quot;, &quot;Basic realm=/&quot;Tomcat Manager Application/&quot;&quot;);</p>
+<p>%&gt;</p>
+<p>3．如何实现文件下载</p>
+<p>要实现文件下载，我们只需要设置两个特殊的相应头，它们是什么头？如果文件名带中文，该如何解决？</p>
+<p>两个特殊的相应头：</p>
+<p>----Content-Type:       application/octet-stream</p>
+<p>----Content-Disposition: attachment;filename=aaa.zip</p>
+<p>例如：</p>
+<p>response.setContentType(&quot;image/jpeg&quot;);response.setHeader(&quot;Content- Disposition&quot;,&quot;attachment;filename=Bluehills.jpg&quot;);</p>
+<p>如果文件中filename参数中有中文，则就会出现乱码。</p>
+<p>解决办法：</p>
+<p>（1）MimeUtility.encodeWord(&quot;中文.txt&quot;);//现在版本的IE还不行</p>
+<p>（2）new String(&quot;中文&quot;.getBytes(&quot;GB2312&quot;),&quot;ISO8859- 1&quot;);//实际上这个是错误的</p>
+<p>4. 测试并分析文件名乱码问题</p>
+<p>response.setHeader()下载中文文件名乱码问题</p>
+<p>response.setHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=&quot; + java.net.URLEncoder.encode(fileName, &quot;UTF-8&quot;));</p>
+<p>下载的程序里有了上面一句，一般在IE6的下载提示框上将正确显示文件的名字，无论是简体中文，还是日文。不过当时确实没有仔细测试文件名为很长的中文文件名的情况。现如今经过仔细测试，发现文字只要超过17个字，就不能下载了。分析如下：</p>
+<p>一. 通过原来的方式，也就是先用URLEncoder编码，当中文文字超过17个时，IE6 无法下载文件。这是IE的bug，参见微软的知识库文章 KB816868 。原因可能是IE在处理 Response Header 的时候，对header的长度限制在150字节左右。而一个汉字编码成UTF-8是9个字节，那么17个字便是153个字节，所以会报错。而且不跟后缀也不对.</p>
+<p>二. 解决方案：将文件名编码成ISO8859-1是有效的解决方案，代码如下：</p>
+<p>response.setHeader( &quot;Content-Disposition&quot;, &quot;attachment;filename=&quot; + new String( fileName.getBytes(&quot;gb2312&quot;), &quot;ISO8859-1&quot; ) );</p>
+<p>在确保附件文件名都是简体中文字的情况下，那么这个办法确实是最有效的，不用让客户逐个的升级IE。如果台湾同胞用，把gb2312改成big5就行。但现在的系统通常都加入了 国际化的支持，普遍使用UTF-8。如果文件名中又有简体中文字，又有繁体中文，还有日文。那么乱码便产生了。另外，在上Firefox (v1.0-en)下载也是乱码。</p>
+<p>三. 参看邮件中的中文附件名的形式，用outlook新建一个带有中文附件的邮件，然后看这个邮件的源代码，找到：</p>
+<p>Content-Disposition: attachment;</p>
+<p>filename=&quot;=?gb2312?B?0MK9qCDOxLG+zsS1tS50eHQ=?=&quot;</p>
+<p>用这个filename原理上就可以显示中文名附件，但是现在IE并不支持，Firefox是支持的。尝试使用 javamail 的MimeUtility.encode()方法来编码文件名，也就是编码成 =?gb2312?B?xxxxxxxx?= 这样的形式，并从 RFC1522 中找到对应的标准支持。</p>
+<p>折中考虑，结合了一、二的方式，代码片断如下：</p>
+<p>String fileName = URLEncoder.encode(atta.getFileName(), &quot;UTF-8&quot;);</p>
+<p>/*</p>
+<p>* see <a href="http://support.microsoft.com/default.aspx?kbid=816868" target="_blank">http://support.microsoft.com/default.aspx?kbid=816868</a></p>
+<p>*/</p>
+<p>if (fileName.length() &gt; 150) {</p>
+<p>String guessCharset = xxxx</p>
+<p>//根据request的locale 得出可能的编码，中文操作系统通常是gb2312</p>
+<p>fileName = new String(atta.getFileName().getBytes(guessCharset), &quot;ISO8859-1&quot;);</p>
+<p>}</p>
+<p>response.setHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=&quot; + fileName);</p>
+<p>编码转换的原理：</p>
+<p>首先在源程序中将编码设置成GB2312字符编码,然后将源程序按Unicode编码转换成字节码加载到内存中（java加载到内存中的字节码都是Unicode编码），然后按GB2312编码获得中文字符串的字节数组，然后生成按ISO8859-1编码形式的Unicode字符串（这时的4个字节就变成了8个字节，高位字节补零）,</p>
+<p>java培训   北京java培训 java培训班   java就业培训 java培训机构 软件培训 最好的java培训</p>
+<p>当在网络中传输时，因为setHeader方法中的字符只能按ISO8859-1传输，所以这时候就又把Unicode字符转换成了ISO8859-1的编码传到浏览器（就是把刚才高位补的零全去掉），这时浏览器接收到的ISO8859-1码的字符因为符合GB2312编码，所以就可以显示中文了。</p>
+<p>5. jsp翻译成class时的编码问题</p>
+<p>记事本中代码块1：</p>
+<p>&lt;%=</p>
+<p>       &quot;a中文&quot;.length()</p>
+<p>%&gt;</p>
+<p>代码块2：</p>
+<p>&lt;%@ page pageEncoding=&quot;gbk&quot;%&gt;</p>
+<p>&lt;%=</p>
+<p>       &quot;a中文&quot;.length()</p>
+<p>%&gt;</p>
+<p>为什么上面的输出值为5，改成下面的则输出3？</p>
+<p>因为上面的代码没有添加该文件的编码说明 , WEB应用程序在将jsp翻译成class文件时 , 把该字符串的内容按默认的保存方式指定的编码ASCII码来算的，在UTF-8中，原ASCII字符占一个字节，汉字占两个字节，对应两个字符，长度就变成了5 , 而下面的是GBK编码, 一个汉字和一个英文都对应一个字符,得到结果就为3.</p>
+<p>
+]</p>
+<p>
+response.setHeader(...)文件名中有空格的时候</p>
+<p>String fileName = StringUtils.trim(file.getName());</p>
+<p>String formatFileName = encodingFileName(name);//在后面定义方法encodingFileName(String fileName);<br/>
+response.setHeader(&quot;Content-Disposition&quot;, &quot;attachment; filename=&quot; + formatFileName );</p>
+<p>//处理文件名中出现的空格  </p>
+<p>//其中%20是空格在UTF-8下的编码</p>
+<p>public static String encodingFileName(String fileName) {<br/>
+        String returnFileName = &quot;&quot;;<br/>
+        try {<br/>
+            returnFileName = URLEncoder.encode(fileName, &quot;UTF-8&quot;);<br/>
+            returnFileName = StringUtils.replace(returnFileName, &quot;+&quot;, &quot;%20&quot;);<br/>
+            if (returnFileName.length() &gt; 150) {<br/>
+                returnFileName = new String(fileName.getBytes(&quot;GB2312&quot;), &quot;ISO8859-1&quot;);<br/>
+                returnFileName = StringUtils.replace(returnFileName, &quot; &quot;, &quot;%20&quot;);<br/>
+            }<br/>
+        } catch (UnsupportedEncodingException e) {<br/>
+            e.printStackTrace();<br/>
+            if (log.isWarnEnabled()) {<br/>
+                log.info(&quot;Don't support this encoding ...&quot;);<br/>
+            }<br/>
+        }<br/>
+        return returnFileName;<br/>
+    }</p>
+</div>
+   
+</div></div></div><br/></div></span>
+</div></body></html> 

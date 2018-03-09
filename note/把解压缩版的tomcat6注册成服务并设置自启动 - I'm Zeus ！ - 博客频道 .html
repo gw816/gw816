@@ -1,0 +1,199 @@
+<html>
+<head>
+  <title>把解压缩版的tomcat6注册成服务并设置自启动 - I'm Zeus ！ - 博客频道 - CSDN.NET</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="3630"/>
+<h1>把解压缩版的tomcat6注册成服务并设置自启动 - I'm Zeus ！ - 博客频道 - CSDN.NET</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div style="font-size: 16px; display: inline-block;"><div><div style="font-family:&quot;microsoft yahei&quot;;background:url(&quot;http://static.blog.csdn.net/skin/skin-blue/css/../images/bg-blue.png&quot;) repeat;"><div><div style="font-size:12px;"><div><div><div style="background:rgb(255, 255, 255);">
+    <div style="margin-bottom:21px;">   
+         <span style="display:inline-block;vertical-align:middle;width:19px;height:19px;margin-right:10px;background-image:url(&quot;http://static.blog.csdn.net/skin/skin-blue/css/../images/skin-type-icon.png&quot;);background-repeat:no-repeat;background-position:0px 0px;"></span>
+
+
+    <h1 style="margin:0px;padding:0px;display:inline-block;vertical-align:middle;font-size:18px;">
+        <span><a href="http://blog.csdn.net/lpy3654321/article/details/9168911" style="text-decoration:none;color:rgb(0, 0, 0);">
+        把解压缩版的tomcat6注册成服务并设置自启动            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div style="font-size:12px;overflow:hidden;padding:0px 20px 5px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;margin:0px -20px;line-height:22px;font-family:Arial;border-bottom:1px solid rgb(237, 237, 237);text-align:right;color:rgb(153, 153, 153);margin-bottom:10px;">
+        <div style="width:100%;float:left;">
+            <span style="margin:0px 5px;margin-right:0px;float:left;">
+            标签：
+              <a href="http://www.csdn.net/tag/tomcat" style="text-decoration:none;display:inline-block;margin-right:10px;color:rgb(51, 165, 186);" target="_blank">tomcat</a><a href="http://www.csdn.net/tag/service" style="text-decoration:none;display:inline-block;margin-right:10px;color:rgb(51, 165, 186);" target="_blank">service</a><a href="http://www.csdn.net/tag/%e6%9c%8d%e5%8a%a1" style="text-decoration:none;display:inline-block;margin-right:10px;color:rgb(51, 165, 186);" target="_blank">服务</a><a href="http://www.csdn.net/tag/%e8%87%aa%e5%90%af%e5%8a%a8" style="text-decoration:none;display:inline-block;margin-right:10px;color:rgb(51, 165, 186);" target="_blank">自启动</a><a href="http://www.csdn.net/tag/Windows%e6%9c%8d%e5%8a%a1" style="text-decoration:none;display:inline-block;margin-right:10px;color:rgb(51, 165, 186);" target="_blank">Windows服务</a>
+            </span>
+        </div>
+        <div>
+            <span style="margin:0px 5px 0px 0px;margin-right:16px;">2013-06-25 12:16</span>
+            <span style="margin:0px 5px;padding:0px 0px 0px 14px;background:url(&quot;http://static.blog.csdn.net/css/../../../images/ico_view.png&quot;) left center no-repeat;margin-right:16px;display:inline-block;background-image:url(&quot;http://static.blog.csdn.net/skin/skin-blue/css/../images/skin-type-icon.png&quot;);background-repeat:no-repeat;background-position:0px -25px;padding-left:24px;" title="阅读次数">1227人阅读</span>
+            <span style="margin:0px 5px;padding:0px 0px 0px 14px;background:url(&quot;http://static.blog.csdn.net/css/../../../images/ico_comm.png&quot;) left center no-repeat;margin-right:16px;display:inline-block;background-image:url(&quot;http://static.blog.csdn.net/skin/skin-blue/css/../images/skin-type-icon.png&quot;);background-repeat:no-repeat;background-position:0px -43px;padding-left:17px;" title="评论次数"> <a href="http://blog.csdn.net/lpy3654321/article/details/9168911#comments" style="text-decoration:none;color:rgb(51, 165, 186);">评论</a>(0)</span>
+            <span style="margin:0px 5px;margin-right:16px;display:inline-block;background-image:url(&quot;http://static.blog.csdn.net/skin/skin-blue/css/../images/skin-type-icon.png&quot;);background-repeat:no-repeat;background-position:0px -62px;padding-left:17px;"> <a href="#" style="text-decoration:none;color:rgb(51, 165, 186);" target="_blank" title="收藏">收藏</a></span>
+             <span style="margin:0px 5px;margin-right:16px;display:inline-block;background-image:url(&quot;http://static.blog.csdn.net/skin/skin-blue/css/../images/skin-type-icon.png&quot;);background-repeat:no-repeat;background-position:0px -81px;padding-left:17px;"> <a href="http://blog.csdn.net/lpy3654321/article/details/9168911#report" style="text-decoration:none;color:rgb(51, 165, 186);" title="举报">举报</a></span>
+
+        </div>
+    <span style="text-align:right;color:rgb(153, 153, 153);font-style:normal;font-variant:normal;font-weight:normal;font-size:12px;line-height:22px;font-family:Arial;height:0px;visibility:hidden;display:block;clear:both;">.</span></div>
+    
+    
+    
+      <div style="margin:0px -20px;border-bottom:1px solid rgb(237, 237, 237);padding:5px 20px;">
+        <div style="display:inline-block;font-size:14px;color:rgb(51, 51, 51);width:70px;float:left;line-height:28px;">
+           <img src="把解压缩版的tomcat6注册成服务并设置自启动 - I'm Zeus ！ - 博客频道 _files/category_icon.jpg" type="image/jpeg" data-filename="category_icon.jpg" height="13" style="border:none;vertical-align:middle;" width="15"/>
+            <span style="display:inline-block;vertical-align:middle;">分类：</span>
+        </div>
+        <div style="display:inline-block;font-size:14px;color:rgb(223, 52, 52);float:left;width:90%;">
+                    <span style="display:inline-block;margin-left:15px;cursor:pointer;line-height:28px;position:relative;">
+                        <span>tomcat<em style="font-style:normal;">（2）</em></span>
+                      <img src="把解压缩版的tomcat6注册成服务并设置自启动 - I'm Zeus ！ - 博客频道 _files/arrow_triangle _down.jpg" type="image/jpeg" data-filename="arrow_triangle _down.jpg" height="5" style="border:none;display:inline;" width="10"/>
+                      
+                        
+                    </span>                    
+        </div>
+    <span style="height:0px;visibility:hidden;display:block;clear:both;">.</span></div>
+      
+        <div style="padding:20px 0px;">         
+            <p style="margin:0px;padding:0px;height:14px;line-height:14px;border-left:3px solid rgb(228, 28, 30);padding-left:10px;color:rgb(102, 102, 102);font-size:14px;">版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div style="margin:35px 0px;font-size:15px;color:rgb(85, 85, 85);line-height:35px;">
+
+<p style="margin:0px;padding:0px;"> </p>
+<p style="margin:0px;padding:0px;">转自:<a href="http://blog.csdn.net/bigbird2012/article/details/6407825" style="text-decoration:none;color:rgb(12, 137, 207);">http://blog.csdn.net/bigbird2012/article/details/6407825</a></p>
+<p style="margin:0px;padding:0px;"> </p>
+<p style="margin:0px;padding:0px;"><strong>操作步骤：</strong> <br/>
+1、在“<strong>开始</strong> ”→“<strong>运行</strong> ”中输入cmd 命令，进入MS-DOS界面 <br/>
+2、cd 到tomcat的bin目录下 <br/>
+C:/&gt; <span style="color:blue;"><strong>cd tomcat/bin</strong> </span><br/>
+3、运行命令service install, 就可以把tomcat注册成系统服务了 <br/>
+c:/tomcat/bin&gt; <span style="color:blue;"><strong>service install</strong> </span><br/>
+运行命令service uninstall，就可以删除服务。 <br/>
+c:/tomcat/bin&gt; <strong><span style="color:blue;">service uninstall</span> </strong>
+<br/>
+<br/>
+当然，这样注册出来的服务启动类型是手动的；若想设置为开机自动启动，则需要修改bin目录下的service.bat文件。 <br/>
+打开此文件,在倒数第三行左右的那句输出 <br/>
+<span style="color:blue;">echo The service '%SERVICE_NAME%' has been installed.</span>
+<br/>
+这句是输出服务安装成功,在这之前加一句 <br/>
+<span style="color:blue;">sc config %SERVICE_NAME% start= auto</span> <br/>
+就OK了,以后开机后tomcat服务就自动启动了 <br/>
+<br/>
+<br/>
+<strong>备注：</strong> <br/>
+启动/停止tomcat服务的命令，如下： <br/>
+启动tomcat服务： c:/tomcat&gt; <span style="color:blue;"><strong>net start tomcat6</strong>
+</span><br/>
+停止tomcat服务： c:/tomcat&gt; <span style="color:blue;"><strong>net stop tomcat6</strong>
+</span><br/>
+或者 <br/>
+打开“服务”对话框下进行手动点击“启动”|“停止”按钮来操作。</p>
+<p style="margin:0px;padding:0px;"> </p>
+<p style="margin:0px;padding:0px;"><span style="background-color:#ff6666;">转之前是本人<a href="http://lib.csdn.net/base/softwaretest" style="text-decoration:none;color:#df3434;font-weight:bold;" target="_blank" title="软件测试知识库">测试</a>过.版本Apache Tomcat 6.0.35   谢谢作者.</span></p>
+<p style="margin:0px;padding:0px;"><span style="background-color:#ff6666;">删除服务后windows注册表项也会删除</span></p>
+<p style="margin:0px;padding:0px;"> </p>
+<p style="margin:0px;padding:0px;">转自:<a href="http://blog.csdn.net/bigbird2012/article/details/6407825" style="text-decoration:none;color:rgb(12, 137, 207);">http://blog.csdn.net/bigbird2012/article/details/6407825</a></p>
+<p style="margin:0px;padding:0px;"> </p>
+   
+</div>
+
+
+
+
+
+
+
+
+
+<div style="zoom:1;float:right;">
+<a href="http://blog.csdn.net/lpy3654321/article/details/9168911#" style="line-height:16px;text-decoration:none;background-position:0 0 !important;background-image:url('http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png') !important;font-size:12px;padding-left:17px;float:left;height:16px;background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;color:rgb(51, 51, 51);" target="_blank"></a>
+<a href="http://blog.csdn.net/lpy3654321/article/details/9168911#" style="line-height:16px;text-decoration:none;background-position:0 -52px !important;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到QQ空间"></a>
+<a href="http://blog.csdn.net/lpy3654321/article/details/9168911#" style="line-height:16px;text-decoration:none;background-position:0 -104px !important;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到新浪微博"></a>
+<a href="http://blog.csdn.net/lpy3654321/article/details/9168911#" style="line-height:16px;text-decoration:none;background-position:0 -260px !important;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到腾讯微博"></a>
+<a href="http://blog.csdn.net/lpy3654321/article/details/9168911#" style="line-height:16px;text-decoration:none;background-position:0 -208px !important;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到人人网"></a>
+<a href="http://blog.csdn.net/lpy3654321/article/details/9168911#" style="line-height:16px;text-decoration:none;background-position:0 -1612px !important;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到微信"></a>
+<span style="visibility:hidden;display:block;height:0px;clear:both;">.</span></div>
+
+
+
+   
+
+    
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+        <div style="text-align:center;margin-top:44px;">
+            <dl style="display:inline-block;width:72px;font-size:27px;color:rgb(255, 255, 255);cursor:pointer;margin:0px;vertical-align:middle;padding:7px 0px;background:rgb(255, 153, 0);">
+               
+                 <dt style="margin-bottom:4px;">顶</dt>
+                <dd style="font-size:15px;overflow:hidden;margin:0px;">1</dd>
+            </dl>
+           
+              
+            <dl style="display:inline-block;width:72px;font-size:27px;color:rgb(255, 255, 255);cursor:pointer;margin:0px;vertical-align:middle;padding:7px 0px;background:rgb(255, 121, 0);">
+              
+                  <dt style="margin-bottom:4px;">踩</dt>
+                <dd style="font-size:15px;overflow:hidden;margin:0px;">0</dd>               
+            </dl>
+            
+        </div>
+     <div><a href="#" style="text-decoration:none;" target="_blank"> </a>   </div>
+    <div> <a href="#" style="text-decoration:none;" target="_blank"> </a></div>
+    
+
+   <ul style="margin-top:30px;">
+                <li style="margin-bottom:3px;"><span style="padding-left:27px;width:51px;line-height:26px;display:inline-block;color:rgb(255, 255, 255);height:26px;margin-right:7px;background:rgb(153, 153, 153);background-image:url(&quot;http://static.blog.csdn.net/skin/skin-blue/css/../images/skin-type-icon.png&quot;);background-repeat:no-repeat;background-position:8px -111px;">上一篇</span><a href="http://blog.csdn.net/lpy3654321/article/details/9012255" style="text-decoration:none;color:rgb(51, 51, 51);">Java web 文件下载</a></li>
+                <li><span style="padding-left:27px;width:51px;line-height:26px;display:inline-block;color:rgb(255, 255, 255);height:26px;background:rgb(153, 153, 153);margin-right:7px;background-image:url(&quot;http://static.blog.csdn.net/skin/skin-blue/css/../images/skin-type-icon.png&quot;);background-repeat:no-repeat;background-position:8px -140px;">下一篇</span><a href="http://blog.csdn.net/lpy3654321/article/details/9199411" style="text-decoration:none;color:rgb(51, 51, 51);">Java复制文件及复制文件夹</a></li>
+    </ul>
+
+    <div style="clear:both;height:10px;"></div>
+
+
+        <div style="overflow:hidden;">
+                <h4 style="margin:0px;padding:0px;font-size:16px;color:rgb(51, 51, 51);">我的同类文章</h4>
+                <div style="border:1px solid rgb(187, 187, 187);margin:20px 0px 0px 0px;">
+                    <div style="line-height:45px;border-bottom:1px solid rgb(220, 220, 220);">
+                                <span style="display:inline-block;margin-left:25px;font-size:16px;color:rgb(102, 102, 102);font-weight:bold;">
+                                    <span style="cursor:pointer;">tomcat<em style="font-style:normal;">（2）</em></span>
+                                </span>
+                    </div>
+                   
+                    <div style="background:rgb(252, 252, 252);max-height:195px;overflow-y:auto;padding:10px 20px;">
+                        
+                        <ul style="float:left;width:49%;list-style:none;margin:0px;padding:0px;"><li style="list-style:none;line-height:30px;"><em style="font-style:normal;display:inline-block;vertical-align:middle;margin-right:10px;">•</em><a href="http://blog.csdn.net/lpy3654321/article/details/42920997" style="text-decoration:none;display:inline-block;width:50%;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;vertical-align:middle;color:rgb(51, 51, 51);" target="_blank" title="Spring在web应用中获得Bean的方法 实现getBean方法">Spring在web应用中获得Bean的方法 实现getBean方法</a><span style="font-size:12px;color:rgb(187, 187, 187);display:inline-block;margin-left:9px;">2015-01-20</span><span style="font-size:12px;color:rgb(187, 187, 187);display:inline-block;margin-left:9px;"><i style="font-weight:normal;font-style:normal;">阅读</i><b style="font-weight:normal;font-style:normal;margin-left:5px;">3675</b></span></li> </ul>
+
+                        <ul style="float:right;width:49%;list-style:none;margin:0px;padding:0px;"><li style="list-style:none;line-height:30px;"><em style="font-style:normal;display:inline-block;vertical-align:middle;margin-right:10px;">•</em><a href="http://blog.csdn.net/lpy3654321/article/details/35987781" style="text-decoration:none;display:inline-block;width:50%;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;vertical-align:middle;color:rgb(51, 51, 51);" target="_blank" title="Document base E:\apache-tomcat-6.0.37(32)\webapps\xxx does not exist or is not a readable directory">Document base E:\apache-tomcat-6.0.37(32)\webapps\xxx does not exist or is not a readable directory</a><span style="font-size:12px;color:rgb(187, 187, 187);display:inline-block;margin-left:9px;">2014-06-30</span><span style="font-size:12px;color:rgb(187, 187, 187);display:inline-block;margin-left:9px;"><i style="font-weight:normal;font-style:normal;">阅读</i><b style="font-weight:normal;font-style:normal;margin-left:5px;">10349</b></span></li> </ul>
+                    </div>
+                </div>
+            </div>    
+    
+      
+</div></div></div></div></div></div></div></div><br/></div></span>
+</div></body></html> 

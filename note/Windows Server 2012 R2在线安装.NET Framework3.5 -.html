@@ -1,0 +1,98 @@
+<html>
+<head>
+  <title>Windows Server 2012 R2在线安装.NET Framework3.5 - Cosmic_Spy - 博客园</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="4186"/>
+<h1>Windows Server 2012 R2在线安装.NET Framework3.5 - Cosmic_Spy - 博客园</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div style="font-size: 16px; display: inline-block;"><div><div style="font-family:&quot;PingFang SC&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;color:rgb(51, 51, 51);font-size:14px;background:url(&quot;images/o_kubrickbg.jpg&quot;) center center repeat-y rgb(214, 211, 214);"><div><div style="text-align:left;background-color:transparent;overflow:hidden;"><div><div style="font-size:10pt;">
+		<h2 style="margin-top:10px;font-size:1.1em;">
+			<a href="http://www.cnblogs.com/Interkey/p/InstallDotNetFramework35.html" style="color:rgb(0, 102, 255);text-decoration:none;">Windows Server 2012 R2在线安装.NET Framework3.5</a>
+		</h2>
+		<div style="font-size:10pt;padding-left:5px;line-height:1.5;"><div style="margin-bottom:20px;word-break:break-word;line-height:1.8;"><p style="margin:10px auto;text-indent:0px;">Windows Server 2012 (R2) 默认没有安装 .NET Framework 3.5，但可以通过在线安装或指定备用源路径方式。</p>
+<p style="margin:10px auto;text-indent:0px;">之前在这个 <a href="http://www.cnblogs.com/Interkey/p/3801698.html" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank">在Win Server 2012中安装.NET Framework 3.5的问题</a> 中写的方法是需要Windows Server的ISO镜像介质的，而且需要同类型的镜像介质，如 Windows Server 2012 Standard 的系统必须使用 Windows Server 2012 Standard 的ISO镜像介质。但如果是云系统上需要安装 .NET Framework 3.5 呢？或者身边暂时无法提供相应的ISO镜像介质呢？</p>
+<p style="margin:10px auto;text-indent:0px;">那就通过默认的在线方式安装，但通过 添加角色或功能向导 方式安装时，总是提示安装失败：找不到源文件。</p>
+<p style="margin:10px auto;text-indent:0px;">解决方法就是修改组策略中的 指定 Intranet Microsoft 更新服务位置 为未配置。<strong>（必须是要更改本地计算机上的组策略设置管理员组成员，如果是在域控中，同样需要相应权限）</strong></p>
+<p style="margin:10px auto;text-indent:0px;">操作步骤：右键“开始菜单” —— “运行”  —— 输入“gpedit.msc&quot; ——打开组策略，打开“计算机配置” —— “管理模板” —— “Windows组件” —— “Windows更新”，在右侧双击打开 &quot;指定 Intranet Microsoft 更新服务位置&quot;，将选项修改为&quot;未配置&quot;，如下图（英文截图，对应位置）：</p>
+<p style="margin:10px auto;text-indent:0px;"><img src="Windows Server 2012 R2在线安装.NET Framework3.5 -_files/o_InstallDotNetFramework35.png" type="image/png" data-filename="o_InstallDotNetFramework35.png" alt="InstallDotNetFramework35" height="436" style="border:0px;height:auto;max-width:300px;width:655px;" title="InstallDotNetFramework35" width="800"/></p>
+<p style="margin:10px auto;text-indent:0px;">然后通过运行 <strong>gpupdate</strong> 命令更新组策略即可继续操作：</p>
+<p style="margin:10px auto;text-indent:0px;"><img src="Windows Server 2012 R2在线安装.NET Framework3.5 -_files/o_InstallDotNetFramework35.jpg" type="image/jpeg" data-filename="o_InstallDotNetFramework35.jpg" alt="InstallDotNetFramework35" height="453" style="border:0px;height:auto;max-width:300px;width:655px;" title="InstallDotNetFramework35" width="700"/></p>
+<p style="margin:10px auto;text-indent:0px;">执行上述操作后，再次通过 添加角色和功能向导 进行安装即可。（连接互联网下载 .Net Framework 3.5 安装文件）</p>
+<p style="margin:10px auto;text-indent:0px;">如果安装中途失败，请多次尝试安装！</p>
+<p style="margin:10px auto;text-indent:0px;"> </p>
+<p style="margin:10px auto;text-indent:0px;">安装 .NET Framework 3.5 是安装 Microsoft SQL Server 2012(r2) 、Microsoft SQL Server 2014 的前置条件(Prerequisite).</p>
+<p style="margin:10px auto;text-indent:0px;"> </p>
+<p style="margin:10px auto;text-indent:0px;">参考：</p>
+<ol style="padding-left:40px;">
+<li style="font-size:10pt;font-style:normal;list-style-type:decimal;"><a href="http://www.airz.cc/a/xinwenzhongxin/2015/0320/8.html" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank">server2012 r2 的指定源路径解决方法</a></li>
+<li style="font-size:10pt;font-style:normal;list-style-type:decimal;"><a href="https://help.aliyun.com/knowledge_detail/6524359.html" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank">Windows server 2012 R2无法安装.net 3.5.1的解决方法</a></li>
+</ol></div><div style="display:block;"><div>
+        <p style="padding-right:10px;margin:10px 0px;border-right:#e0e0e0 1px dashed;border-bottom:#e0e0e0 1px dashed;border-left:#e0e0e0 1px dashed;padding-top:10px;border-top:#e0e0e0 1px dashed;padding-bottom:10px;padding-left:60px;background:url('http://pic.cnitblog.com/face/215865/20130122132934.png') #e5f1f4 no-repeat 1% 50%;font-family:微软雅黑;font-size:15px;">
+            <br/>
+            <strong>作者：</strong><a href="http://www.cnblogs.com/Interkey/" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank">Cosmic_Spy</a>
+            <br/>
+            <strong>出处：</strong><a href="http://www.cnblogs.com/Interkey/" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank">http://www.cnblogs.com/Interkey/</a>
+            <br/>
+            <strong>有兴趣可以加群</strong><a href="http://jq.qq.com/?_wv=1027&amp;k=ZRz6GF" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank">【.NET破解|反编译】</a><strong>请注明：博客园，谢谢~</strong>
+            <br/>
+            <strong>本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则肯定是你抄我的。</strong>
+        </p>
+    </div></div>
+<div style="clear:both;"></div>
+<div style="margin-top:20px;">
+<div style="margin-bottom:10px;">分类: <a href="http://www.cnblogs.com/Interkey/category/420680.html" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank">.net</a>,<a href="http://www.cnblogs.com/Interkey/category/440591.html" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank">Server</a>,<a href="http://www.cnblogs.com/Interkey/category/420679.html" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank">随笔</a></div>
+<div style="margin-top:0px;"></div>
+<div><div style="padding:10px 0px;margin-bottom:10px;margin-top:10px;border:1px dashed silver;font-size:12px;width:320px;text-align:center;">
+        <a href="#" style="margin-right:10px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAYAAABIdFAMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHhJREFUeNo8zjsOxCAMBFB/KEAUFFR0Cbng3nQPw68ArZdAlOZppPFIBhH5EAB8b+Tlt9MYQ6i1BuqFaq1CKSVcxZ2Acs6406KUgpt5/LCKuVgz5BDCSb13ZO99ZOdcZGvt4mJjzMVKqcha68iIePB86GAiOv8CDADlIUQBs7MD3wAAAABJRU5ErkJggg%3D%3D&quot;) repeat-x;padding:3px 8px;vertical-align:middle;text-decoration:none;font-weight:bold;cursor:pointer;display:inline-block;border-radius:10px;box-shadow:rgba(0, 0, 0, 0.5) 0px 1px 3px;text-shadow:rgba(0, 0, 0, 0.25) 0px -1px 1px;background-color:rgb(45, 174, 191);color:rgb(255, 255, 255);border:none;">好文要顶</a>
+            <a href="#" style="margin-right:10px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAYAAABIdFAMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHhJREFUeNo8zjsOxCAMBFB/KEAUFFR0Cbng3nQPw68ArZdAlOZppPFIBhH5EAB8b+Tlt9MYQ6i1BuqFaq1CKSVcxZ2Acs6406KUgpt5/LCKuVgz5BDCSb13ZO99ZOdcZGvt4mJjzMVKqcha68iIePB86GAiOv8CDADlIUQBs7MD3wAAAABJRU5ErkJggg%3D%3D&quot;) repeat-x;padding:3px 8px;vertical-align:middle;text-decoration:none;font-weight:bold;cursor:pointer;display:inline-block;border-radius:10px;box-shadow:rgba(0, 0, 0, 0.5) 0px 1px 3px;text-shadow:rgba(0, 0, 0, 0.25) 0px -1px 1px;background-color:rgb(227, 49, 0);color:rgb(255, 255, 255);border:none;">关注我</a>
+    <a href="#" style="margin-right:10px;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAYAAABIdFAMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHhJREFUeNo8zjsOxCAMBFB/KEAUFFR0Cbng3nQPw68ArZdAlOZppPFIBhH5EAB8b+Tlt9MYQ6i1BuqFaq1CKSVcxZ2Acs6406KUgpt5/LCKuVgz5BDCSb13ZO99ZOdcZGvt4mJjzMVKqcha68iIePB86GAiOv8CDADlIUQBs7MD3wAAAABJRU5ErkJggg%3D%3D&quot;) repeat-x;padding:3px 8px;vertical-align:middle;text-decoration:none;font-weight:bold;cursor:pointer;display:inline-block;border-radius:10px;box-shadow:rgba(0, 0, 0, 0.5) 0px 1px 3px;text-shadow:rgba(0, 0, 0, 0.25) 0px -1px 1px;background-color:rgb(255, 181, 21);color:rgb(255, 255, 255);border:none;">收藏该文</a>
+    <a href="#" style="cursor:pointer;background:none;padding:3px 2px;vertical-align:middle;text-decoration:none;font-weight:bold;display:inline-block;margin-right:10px;border-radius:10px;box-shadow:none;text-shadow:none;color:rgb(255, 255, 255);border:none;" title="分享至新浪微博"><img src="Windows Server 2012 R2在线安装.NET Framework3.5 -_files/icon_weibo_24.png" type="image/png" data-filename="icon_weibo_24.png" alt="" height="24" style="height:auto;border:none;vertical-align:middle;margin-left:5px;box-shadow:none;max-width:300px;" width="24"/></a>
+    <a href="#" style="cursor:pointer;background:none;padding:3px 2px;vertical-align:middle;text-decoration:none;font-weight:bold;display:inline-block;margin-right:10px;border-radius:10px;box-shadow:none;text-shadow:none;color:rgb(255, 255, 255);border:none;" title="分享至微信"><img src="Windows Server 2012 R2在线安装.NET Framework3.5 -_files/wechat.png" type="image/png" data-filename="wechat.png" alt="" height="24" style="border:medium none;width:24px;height:24px;box-shadow:none;margin-left:5px;vertical-align:middle;max-width:300px;" width="24"/></a>
+</div>
+<div style="float:left;width:280px;margin-top:0px;margin-bottom:10px;color:rgb(0, 0, 0);margin-left:0px;font-size:12px;">
+    <div style="float:left;line-height:18px;">
+            <a href="http://home.cnblogs.com/u/Interkey/" style="color:rgb(0, 102, 255);text-decoration:none;" target="_blank"><img src="Windows Server 2012 R2在线安装.NET Framework3.5 -_files/20130122132934.png.jpg" type="image/jpeg" data-filename="20130122132934.png.jpg" alt="" height="48" style="height:auto;border:0px;vertical-align:top;float:left;margin-right:5px;padding-top:5px;padding-left:2px;max-width:300px;" width="48"/></a>
+        <div style="float:left;line-height:18px;">
+            <a href="http://home.cnblogs.com/u/Interkey/" style="color:rgb(0, 102, 255);text-decoration:none;">Cosmic_Spy</a><br/>
+            <a href="http://home.cnblogs.com/u/Interkey/followees" style="color:rgb(0, 102, 255);text-decoration:none;">关注 - 280</a><br/>
+            <a href="http://home.cnblogs.com/u/Interkey/followers" style="color:rgb(0, 102, 255);text-decoration:none;">粉丝 - 38</a>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+    <div></div>
+    <div>
+                <a href="#" style="color:rgb(0, 102, 255);text-decoration:none;">+加关注</a>
+    </div>
+</div>
+<div style="float:right;margin-bottom:10px;margin-right:30px;font-size:12px;width:125px;text-align:center;margin-top:10px;">
+    <div style="float:left;width:46px;height:52px;background:url(&quot;http://static.cnblogs.com/images/upup.gif&quot;) no-repeat;text-align:center;cursor:pointer;margin-top:2px;padding-top:5px;">
+        <span style="font-size:14px;color:rgb(7, 93, 179);font-family:Verdana;line-height:1.5em;">0</span>
+    </div>
+    <div style="float:right;margin-left:20px;width:46px;height:52px;background:url(&quot;http://static.cnblogs.com/images/downdown.gif&quot;) no-repeat;text-align:center;cursor:pointer;margin-top:2px;padding-top:5px;">
+        <span style="font-size:14px;color:rgb(7, 93, 179);font-family:Verdana;line-height:1.5em;">0</span>
+    </div>
+    <div style="clear:both;"></div>
+    <div style="margin-top:5px;margin-left:0px;font-size:12px;color:gray;">
+    </div>
+</div>
+</div>
+<div style="clear:both;"></div>
+<div style="line-height:1.8;font-size:12px;"><a href="http://www.cnblogs.com/Interkey/p/5140435.html" style="color:rgb(0, 102, 255);text-decoration:none;">« </a> 上一篇：<a href="http://www.cnblogs.com/Interkey/p/5140435.html" style="color:rgb(0, 102, 255);text-decoration:none;" title="发布于2016-01-18 20:44">MSSQL 2012安装报错之0x858C001B</a><br/><a href="http://www.cnblogs.com/Interkey/p/SQL_JOINS.html" style="color:rgb(0, 102, 255);text-decoration:none;">» </a> 下一篇：<a href="http://www.cnblogs.com/Interkey/p/SQL_JOINS.html" style="color:rgb(0, 102, 255);text-decoration:none;" title="发布于2016-03-12 20:30">图解SQL的Join(转)</a><br/></div>
+</div>
+
+</div>
+		<p style="margin:10px 0px;font-size:0.9em;color:rgb(85, 85, 85);">
+			posted on <span>2016-01-28 23:40</span> <a href="http://www.cnblogs.com/Interkey/" style="color:rgb(0, 102, 255);text-decoration:none;">Cosmic_Spy</a> 阅读(<span>1569</span>) 评论(<span>0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5167739" rel="nofollow" style="color:rgb(0, 102, 255);text-decoration:none;">编辑</a> <a href="http://www.cnblogs.com/Interkey/p/InstallDotNetFramework35.html#" style="color:rgb(0, 102, 255);text-decoration:none;">收藏</a>
+		</p>
+	</div></div></div></div></div></div></div><br/></div></span>
+</div></body></html> 

@@ -1,0 +1,148 @@
+<html>
+<head>
+  <title>JAVA缓存技术 - lcuzhanglei - 博客园.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="1485"/>
+<h1>JAVA缓存技术 - lcuzhanglei - 博客园.html</h1>
+
+<div>
+<span><h3>最近再ITEYE上看到关于讨论JAVA缓存技术的帖子比较多，自己不懂，所以上网大概搜了下，找到一篇，暂作保存，后面如果有用到可以参考。此为转贴，帖子来处:http://cogipard.info/articles/cache-static-files-with-jnotify-and-ehcache<br/><br/>
+介绍<br/>
+JNotify：http://jnotify.sourceforge.net/，通过JNI技术，让Java代码可以实时的监控制定文件夹内文件的变动信息，支持Linux/Windows/MacOS;<br/>
+EHCache：http://ehcache.org/，一个广泛使用的Java缓存模块，可以做使用内存和文件完成缓存工作。<br/>
+在Java Web项目中，为了提高WEB应用的响应速度，可以把常用的静态文件（包括css，js和其他各种图片）提前读入到内存缓存中，这样可以减少很多文件系统的IO操作（这往往也是项目性能的瓶颈之一）。但是这么做往往有一个弊端，那就是当实际的静态文件发生改变的时候，缓存并不能得到及时的刷新，造成了一定的滞后现象。有些项目可能没什么问题，但是对于某些项目而言，必须解决这个问题。办法基本有两种，一种是另外开启一个线程，不断的扫描文件，和缓存的文件做比较，确定该文件时候修改，另外就是使用系统的API，来监控文件的改变。前面一种解决办法缺点很明显，费时费力，后面的办法需要用到JNI，并且编写一些系统的本地库函数，幸运的是，JNoify为我们做好了准备工作，直接拿来用就可以了。<br/><br/>
+本文会简单给出一个利用JNotify和EHCache实现静态文件缓存的一个小例子。<br/><br/><br/>
+JNotify的准备<br/>
+在使用JNotify之前，你需要“安装”一下JNotify。JNotify使用了JNI技术来调用系统的本地库（Win下的是dll文件，Linux下是so文件），这些库文件都已近包含在下载包中了。但是如果你直接使用JNotify的话，往往会报错：<br/><br/></h3><div><div>Java代码 <a href="http://codermouse.iteye.com/blog/1061592" title="复制代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image.gif" type="image/gif" data-filename="Image.gif" alt="复制代码" style="height: auto;"/></a> <a title="收藏这段代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image.png" type="image/png" data-filename="Image.png" alt="收藏代码" style="height: auto;"/><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [1].gif" type="image/gif" data-filename="Image.gif" style="display: none; height: auto;"/></a></div><ol><li>BASH   </li><li>java.lang.UnsatisfiedLinkError: no jnotify in java.library.path   </li><li>    at java.lang.ClassLoader.loadLibrary(Unknown Source)   </li><li>    at java.lang.Runtime.loadLibrary0(Unknown Source)   </li><li>    at java.lang.System.loadLibrary(Unknown Source)   </li><li>    at net.contentobjects.jnotify.win32.JNotify_win32.&lt;clinit&gt;(Unknown Source)   </li><li>    at net.contentobjects.jnotify.win32.JNotifyAdapterWin32.&lt;init&gt;(Unknown Source)  </li></ol></div><pre>
+BASH
+java.lang.UnsatisfiedLinkError: no jnotify in java.library.path
+        at java.lang.ClassLoader.loadLibrary(Unknown Source)
+        at java.lang.Runtime.loadLibrary0(Unknown Source)
+        at java.lang.System.loadLibrary(Unknown Source)
+        at net.contentobjects.jnotify.win32.JNotify_win32.&lt;clinit&gt;(Unknown Source)
+        at net.contentobjects.jnotify.win32.JNotifyAdapterWin32.&lt;init&gt;(Unknown Source)
+</pre><h3><br/>
+这是由于jnotify找不到需要的dll或者其他库文件导致的，解决办法是把jnotify压缩包里的库文件放到java.library.path所指向的文件夹中，一般在windows下可以放在[jre安装目录]/bin下即可。<br/><br/>
+java.library.path的值可以通过System.getProperty(&quot;java.library.path&quot;)查看，但是你即使在程序中通过System.setProperty(&quot;java.library.path&quot;, &quot;some/folder/path/contain/dll&quot;)来改变java.library.path的值，还是无法加载到对应的dll库文件，原因是JVM只在程序加载之初读取java.library.path，以后再使用java.library.path的时候，用的都是最一开始加载到得那个值。有人认为只是一个bug，并且报告给了SUN（http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4280189）但是好像SUN不认为这是一个BUG。<br/>
+除了把dll文件放到[jre安装目录]/bin下，也可以手动指定程序的启动参数:<br/>
+java -Djava.library.path=some/folder/path/contain/dll的方法来达到目的。<br/><br/>
+EHCache的基本使用方法<br/>
+EHCache非常容易使用，首先我们要获得一个CacheManager的实例。CacheManager有两种获得方法，一种是实例模式，一种是单例模式。这里我们用后面一种：<br/><br/></h3><div><div>Java代码 <a href="http://codermouse.iteye.com/blog/1061592" title="复制代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [2].gif" type="image/gif" data-filename="Image.gif" alt="复制代码" style="height: auto;"/></a> <a title="收藏这段代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [1].png" type="image/png" data-filename="Image.png" alt="收藏代码" style="height: auto;"/><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [3].gif" type="image/gif" data-filename="Image.gif" style="display: none; height: auto;"/></a></div><ol><li>//CacheManager manager = new CacheManager(&quot;src/ehcache.xml&quot;);实例模式   </li><li>CacheManager.create();//单例模式，默认读取类路径下的ehcache.xml作为配置文件   </li><li>Cache cache = CacheManager.getInstance().getCache(&quot;staticResourceCache&quot;);   </li><li>//staticResourceCache在ehcache.xml中提前定义了  </li></ol></div><pre>
+//CacheManager manager = new CacheManager(&quot;src/ehcache.xml&quot;);实例模式
+CacheManager.create();//单例模式，默认读取类路径下的ehcache.xml作为配置文件
+Cache cache = CacheManager.getInstance().getCache(&quot;staticResourceCache&quot;);
+//staticResourceCache在ehcache.xml中提前定义了
+</pre><h3><br/>
+ehcache.xml的简单例子：</h3><div><div>Java代码 <a href="http://codermouse.iteye.com/blog/1061592" title="复制代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [4].gif" type="image/gif" data-filename="Image.gif" alt="复制代码" style="height: auto;"/></a> <a title="收藏这段代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [2].png" type="image/png" data-filename="Image.png" alt="收藏代码" style="height: auto;"/><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [5].gif" type="image/gif" data-filename="Image.gif" style="display: none; height: auto;"/></a></div><ol><li>ehcache.xml :   </li><li>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;   </li><li>&lt;ehcache updateCheck=&quot;false&quot; dynamicConfig=&quot;false&quot;&gt;   </li><li>    &lt;diskStore path=&quot;java.io.tmpdir&quot;/&gt;   </li><li>    &lt;cache name=&quot;staticResourceCache&quot;  </li><li>        maxElementsInMemory=&quot;1000&quot;  </li><li>        timeToIdleSeconds=&quot;7200&quot;  </li><li>        timeToLiveSeconds=&quot;7200&quot; &gt;   </li><li>    &lt;/cache&gt;   </li><li>&lt;/ehcache&gt;  </li></ol></div><pre>
+ehcache.xml :
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;ehcache updateCheck=&quot;false&quot; dynamicConfig=&quot;false&quot;&gt;
+        &lt;diskStore path=&quot;java.io.tmpdir&quot;/&gt;
+    &lt;cache name=&quot;staticResourceCache&quot;
+                maxElementsInMemory=&quot;1000&quot;
+                timeToIdleSeconds=&quot;7200&quot;
+                timeToLiveSeconds=&quot;7200&quot; &gt;
+    &lt;/cache&gt;
+&lt;/ehcache&gt;
+</pre><h3><br/>
+然后就可以使用Cache实例来操纵缓存了，主要的方法是</h3><div><div>Java代码 <a href="http://codermouse.iteye.com/blog/1061592" title="复制代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [6].gif" type="image/gif" data-filename="Image.gif" alt="复制代码" style="height: auto;"/></a> <a title="收藏这段代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [3].png" type="image/png" data-filename="Image.png" alt="收藏代码" style="height: auto;"/><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [7].gif" type="image/gif" data-filename="Image.gif" style="display: none; height: auto;"/></a></div><ol><li>Cache.get(Object key)，Cache.put(new Element(Object key, Object value))，Cache.remove(Object key)。  </li></ol></div><pre>
+Cache.get(Object key)，Cache.put(new Element(Object key, Object value))，Cache.remove(Object key)。
+</pre><h3><br/><br/>
+缓存静态文件<br/>
+首先需要扫描包含静态文件的文件夹，为了方便我们采用Jodd工具包：<br/><br/></h3><div><div>Java代码 <a href="http://codermouse.iteye.com/blog/1061592" title="复制代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [8].gif" type="image/gif" data-filename="Image.gif" alt="复制代码" style="height: auto;"/></a> <a title="收藏这段代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [4].png" type="image/png" data-filename="Image.png" alt="收藏代码" style="height: auto;"/><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [9].gif" type="image/gif" data-filename="Image.gif" style="display: none; height: auto;"/></a></div><ol><li>import jodd.io.findfile.FilepathScanner;   </li><li>...   </li><li>FilepathScanner fs = new FilepathScanner(){   </li><li>    @Override  </li><li>    protected void onFile(File file) {   </li><li>        cacheStatic(file);//缓存文件的函数，实现见后面   </li><li>    }   </li><li>};   </li><li>fs.includeDirs(true).recursive(true).includeFiles(true);   </li><li>fs.scan(Configurations.THEMES_PATH);//扫描包含静态文件的文件夹  </li></ol></div><pre>
+import jodd.io.findfile.FilepathScanner;
+...
+FilepathScanner fs = new FilepathScanner(){
+        @Override
+        protected void onFile(File file) {
+                cacheStatic(file);//缓存文件的函数，实现见后面
+        }
+};
+fs.includeDirs(true).recursive(true).includeFiles(true);
+fs.scan(Configurations.THEMES_PATH);//扫描包含静态文件的文件夹
+</pre><h3><br/>
+一般来说，如果客户端浏览器接受GZip格式的文件的话，GZip压缩可以让传输的数据大幅度减少，所以考虑对某些缓存的静态文件提前进行GZip压缩。把读取到的静态文件内容缓存到Cache里，如果静态文件时可以用GZip来传输的话，需要把文件内容首先进行压缩。<br/><br/></h3><div><div>Java代码 <a href="http://codermouse.iteye.com/blog/1061592" title="复制代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [10].gif" type="image/gif" data-filename="Image.gif" alt="复制代码" style="height: auto;"/></a> <a title="收藏这段代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [5].png" type="image/png" data-filename="Image.png" alt="收藏代码" style="height: auto;"/><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [11].gif" type="image/gif" data-filename="Image.gif" style="display: none; height: auto;"/></a></div><ol><li>import java.util.zip.GZIPOutputStream;//JDK自带的GZip压缩工具   </li><li>import jodd.io.FastByteArrayOutputStream;//GZip输出的是字节流   </li><li>import jodd.io.StreamUtil;//JODD的工具类   </li><li>    </li><li>private static void cacheStatic(File file){   </li><li>    if(!isStaticResource(file.getAbsolutePath()))   </li><li>        return;   </li><li>    String uri = toURI(file.getAbsolutePath());//生成一个文件标识   </li><li>    FileInputStream in = null;   </li><li>    StringBuilder builder = new StringBuilder();   </li><li>    try {   </li><li>        in = new FileInputStream(file);   </li><li>        BufferedReader br = new BufferedReader(   </li><li>                new InputStreamReader(in, StringPool.UTF_8));   </li><li>        String strLine;   </li><li>        while ((strLine = br.readLine()) != null)   {   </li><li>            builder.append(strLine);   </li><li>            builder.append(&quot;\n&quot;);//!important   </li><li>        }   </li><li>    </li><li>        FastByteArrayOutputStream bao = new FastByteArrayOutputStream();   </li><li>        GZIPOutputStream go = new GZIPOutputStream(bao);   </li><li>        go.write(builder.toString().getBytes());   </li><li>        go.flush();   </li><li>        go.close();   </li><li>        cache.put(new Element(uri, bao.toByteArray()));//缓存文件的字节流   </li><li>    } catch (FileNotFoundException e) {   </li><li>        e.printStackTrace();   </li><li>    } catch (UnsupportedEncodingException e) {   </li><li>        e.printStackTrace();   </li><li>    } catch (IOException e) {   </li><li>        e.printStackTrace();   </li><li>    } finally {   </li><li>        StreamUtil.close(in);   </li><li>    }   </li><li>}  </li></ol></div><pre>
+import java.util.zip.GZIPOutputStream;//JDK自带的GZip压缩工具
+import jodd.io.FastByteArrayOutputStream;//GZip输出的是字节流
+import jodd.io.StreamUtil;//JODD的工具类
+ 
+private static void cacheStatic(File file){
+        if(!isStaticResource(file.getAbsolutePath()))
+                return;
+        String uri = toURI(file.getAbsolutePath());//生成一个文件标识
+        FileInputStream in = null;
+        StringBuilder builder = new StringBuilder();
+        try {
+                in = new FileInputStream(file);
+                BufferedReader br = new BufferedReader(
+                                new InputStreamReader(in, StringPool.UTF_8));
+                String strLine;
+                while ((strLine = br.readLine()) != null)   {
+                        builder.append(strLine);
+                        builder.append(&quot;\n&quot;);//!important
+                }
+ 
+                FastByteArrayOutputStream bao = new FastByteArrayOutputStream();
+                GZIPOutputStream go = new GZIPOutputStream(bao);
+                go.write(builder.toString().getBytes());
+                go.flush();
+                go.close();
+                cache.put(new Element(uri, bao.toByteArray()));//缓存文件的字节流
+        } catch (FileNotFoundException e) {
+                e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+        } catch (IOException e) {
+                e.printStackTrace();
+        } finally {
+                StreamUtil.close(in);
+        }
+}
+</pre><h3><br/>
+当文件改变的时候，使用JNotify来改变缓存内容<br/><br/></h3><div><div>Java代码 <a href="http://codermouse.iteye.com/blog/1061592" title="复制代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [12].gif" type="image/gif" data-filename="Image.gif" alt="复制代码" style="height: auto;"/></a> <a title="收藏这段代码"><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [6].png" type="image/png" data-filename="Image.png" alt="收藏代码" style="height: auto;"/><img src="JAVA缓存技术 - lcuzhanglei - 博客园.html_files/Image [13].gif" type="image/gif" data-filename="Image.gif" style="display: none; height: auto;"/></a></div><ol><li>//监控Configurations.THEMES_PATH指向的文件夹   </li><li>JNotify.addWatch(Configurations.THEMES_PATH,    </li><li>        JNotify.FILE_CREATED  |    </li><li>        JNotify.FILE_DELETED  |    </li><li>        JNotify.FILE_MODIFIED |    </li><li>        JNotify.FILE_RENAMED,    </li><li>        true,  new JNotifyListener(){   </li><li>    </li><li>    @Override  </li><li>    public void fileCreated(int wd,   </li><li>            String rootPath, String name) {   </li><li>        cacheStatic(new File(rootPath+name));//更新缓存   </li><li>    }   </li><li>    </li><li>    @Override  </li><li>    public void fileDeleted(int wd,   </li><li>            String rootPath, String name) {   </li><li>        cache.remove(toURI(rootPath)+name);//删除缓存条目   </li><li>    }   </li><li>    </li><li>    @Override  </li><li>    public void fileModified(int wd,   </li><li>            String rootPath, String name) {   </li><li>        cacheStatic(new File(rootPath+name));   </li><li>    }   </li><li>    </li><li>    @Override  </li><li>    public void fileRenamed(int wd,   </li><li>            String rootPath, String oldName,   </li><li>            String newName) {   </li><li>        cache.remove(toURI(rootPath)+oldName);   </li><li>        cacheStatic(new File(rootPath+newName));   </li><li>    }   </li><li>});  </li></ol></div><pre>
+//监控Configurations.THEMES_PATH指向的文件夹
+JNotify.addWatch(Configurations.THEMES_PATH, 
+                JNotify.FILE_CREATED  | 
+                JNotify.FILE_DELETED  | 
+                JNotify.FILE_MODIFIED | 
+                JNotify.FILE_RENAMED, 
+                true,  new JNotifyListener(){
+ 
+        @Override
+        public void fileCreated(int wd,
+                        String rootPath, String name) {
+                cacheStatic(new File(rootPath+name));//更新缓存
+        }
+ 
+        @Override
+        public void fileDeleted(int wd,
+                        String rootPath, String name) {
+                cache.remove(toURI(rootPath)+name);//删除缓存条目
+        }
+ 
+        @Override
+        public void fileModified(int wd,
+                        String rootPath, String name) {
+                cacheStatic(new File(rootPath+name));
+        }
+ 
+        @Override
+        public void fileRenamed(int wd,
+                        String rootPath, String oldName,
+                        String newName) {
+                cache.remove(toURI(rootPath)+oldName);
+                cacheStatic(new File(rootPath+newName));
+        }
+});
+</pre></span>
+</div></body></html> 

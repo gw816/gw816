@@ -1,0 +1,438 @@
+<html>
+<head>
+  <title>Spring—Quartz定时调度CronTrigger时间配置格式说明与实例 - 每天=生命的最后一天 - 博客频道 - CSDN.NET</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="3758"/>
+<h1>Spring—Quartz定时调度CronTrigger时间配置格式说明与实例 - 每天=生命的最后一天 - 博客频道 - CSDN.NET</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div style="font-size: 16px; display: inline-block;"><div><div style="background:url(&quot;http://static.blog.csdn.net/skin/default/css/../images/body_bg.gif&quot;) 0px 20px repeat-x;color:rgb(51, 51, 51);text-align:center;font-size:12px;font-family:Arial, Console, Verdana, &quot;Courier New&quot;;"><div style="background:url(&quot;http://static.blog.csdn.net/skin/default/css/../images/head_bg.jpg&quot;) center top no-repeat;"><div style="overflow:hidden;background:rgb(255, 255, 255);border-radius:8px;text-align:left;"><div style="overflow:hidden;border-radius:4px;"><div><div>
+    <div style="display:block;margin:5px 0px;color:rgb(0, 0, 0);font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:30px;font-family:&quot;Microsoft YaHei&quot;;">   
+         <span style="display:inline-block;width:19px;height:19px;margin:0px 2px 0px 0px;background:url(&quot;http://static.blog.csdn.net/skin/default/css/../../../images/ico_Original.gif&quot;) 0px 0px no-repeat;vertical-align:middle;"></span>
+
+
+    <h1 style="font-size:20px;padding:0px;margin:0px;font-weight:normal;font-stretch:normal;font-style:normal;line-height:30px;font-family:&quot;Microsoft YaHei&quot;;vertical-align:middle;font-variant:normal;display:inline;">
+        <span><a href="http://blog.csdn.net/foamflower/article/details/4260645" style="text-decoration:none;color:rgb(0, 0, 0);">
+        Spring—Quartz定时调度CronTrigger时间配置格式说明与实例            
+        </a></span>
+    </h1>
+<span style="color:rgb(0, 0, 0);font-style:normal;font-variant:normal;font-weight:normal;font-size:20px;line-height:30px;font-family:&quot;Microsoft YaHei&quot;;display:block;height:0px;clear:both;visibility:hidden;">.</span></div>
+
+   
+
+        <div style="font-size:12px;padding:0px 20px 5px;font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;color:rgb(153, 153, 153);line-height:22px;font-family:Arial;text-align:right;border-bottom:1px solid rgb(237, 237, 237);margin:0px -20px;overflow:hidden;">
+        <div style="width:100%;float:left;">
+            <span style="margin:0px 5px;float:left;">
+            标签：
+              <a href="http://www.csdn.net/tag/quartz" style="color:rgb(51, 102, 153);text-decoration:none;display:inline-block;margin-right:10px;" target="_blank">quartz</a><a href="http://www.csdn.net/tag/%e5%b7%a5%e4%bd%9c" style="color:rgb(51, 102, 153);text-decoration:none;display:inline-block;margin-right:10px;" target="_blank">工作</a>
+            </span>
+        </div>
+        <div>
+            <span style="margin:0px 5px 0px 0px;">2009-06-11 15:13</span>
+            <span style="margin:0px 5px;padding:0px 0px 0px 14px;background:url(&quot;http://static.blog.csdn.net/css/../../../images/ico_view.png&quot;) left center no-repeat;" title="阅读次数">112815人阅读</span>
+            <span style="margin:0px 5px;padding:0px 0px 0px 14px;background:url(&quot;http://static.blog.csdn.net/css/../../../images/ico_comm.png&quot;) left center no-repeat;" title="评论次数"> <a href="http://blog.csdn.net/foamflower/article/details/4260645#comments" style="color:rgb(51, 102, 153);text-decoration:none;">评论</a>(16)</span>
+            <span style="margin:0px 5px;"> <a href="#" style="color:rgb(51, 102, 153);text-decoration:none;" target="_blank" title="收藏">收藏</a></span>
+             <span style="margin:0px 5px;"> <a href="http://blog.csdn.net/foamflower/article/details/4260645#report" style="color:rgb(51, 102, 153);text-decoration:none;" title="举报">举报</a></span>
+
+        </div>
+    <span style="color:rgb(153, 153, 153);font-style:normal;font-variant:normal;font-weight:400;font-size:12px;line-height:22px;font-family:Arial;text-align:right;height:0px;visibility:hidden;display:block;clear:both;">.</span></div>
+    
+    
+    
+      <div style="border-bottom:1px solid rgb(237, 237, 237);margin:0px -20px;padding:5px 20px;">
+        <div style="font-size:14px;float:left;display:inline-block;color:rgb(51, 51, 51);width:70px;line-height:28px;">
+           <img src="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例 - 每天=_files/category_icon.jpg" type="image/jpeg" data-filename="category_icon.jpg" height="13" style="border:none;vertical-align:middle;" width="15"/>
+            <span style="vertical-align:middle;display:inline-block;">分类：</span>
+        </div>
+        <div style="font-size:14px;float:left;display:inline-block;color:rgb(223, 52, 52);width:90%;">
+                    <span style="display:inline-block;margin-left:15px;cursor:pointer;line-height:28px;position:relative;">
+                        <span>Spring<em style="font-style:normal;">（5）</em></span>
+                      <img src="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例 - 每天=_files/arrow_triangle _down.jpg" type="image/jpeg" data-filename="arrow_triangle _down.jpg" height="5" style="border:none;display:inline;" width="10"/>
+                      
+                        
+                    </span>                    
+        </div>
+    <span style="height:0px;visibility:hidden;display:block;clear:both;">.</span></div>
+        <div style="padding:20px 0px;">         
+            <p style="height:14px;line-height:14px;border-left:3px solid rgb(228, 28, 30);padding-left:10px;color:rgb(102, 102, 102);font-size:14px;">版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+
+<div style="margin:20px 0px 0px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14px;line-height:26px;font-family:Arial;">
+
+<p><span lang="EN-US" style="font-family:宋体;"><span><span style="font-size:12px;">1、</span><span style="font:7pt/normal 'Times New Roman';"> 
+</span></span></span><span style="font-size:12px;"><span lang="EN-US" style="font-family:宋体;"><span> </span>CronTrigger</span><span style="font-family:宋体;">时间格式配置说明
+</span></span></p>
+<p style="margin:0cm 0cm 0pt;text-indent:21.1pt;"><span style="font-family:宋体;"><strong><span lang="EN-US" style="font-size:10.5pt;">CronTrigger</span><span style="font-size:10.5pt;">配置格式</span></strong><span lang="EN-US" style="font-size:10.5pt;">:</span></span></p>
+<p style="margin:0cm 0cm 0pt;text-indent:21pt;"><span style="font-size:10.5pt;"><span style="font-family:宋体;">格式<span lang="EN-US">: [</span>秒<span lang="EN-US">] [</span>分<span lang="EN-US">] [</span>小时<span lang="EN-US">] [</span>日<span lang="EN-US">] [</span>月<span lang="EN-US">]
+ [</span>周<span lang="EN-US">] [</span>年<span lang="EN-US">]</span></span></span></p>
+<p style="margin:0cm 0cm 0pt;text-indent:21pt;"><span style="font-size:10.5pt;"><span style="font-family:宋体;"><span lang="EN-US"></span></span></span>
+</p><table border="0" cellpadding="0" style="font-size:inherit;font-weight:inherit;font-style:inherit;font-variant:inherit;margin:auto auto auto 1.5pt;width:506px;">
+<tbody>
+<tr>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:35.25pt;background-color:transparent;" width="47">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">序号<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:43.5pt;background-color:transparent;" width="58">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">说明<span lang="EN-US">
+</span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:70.5pt;background-color:transparent;" width="94">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">是否必填<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:124.5pt;background-color:transparent;" width="166">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">允许填写的值<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:96.75pt;background-color:transparent;" width="129">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">允许的通配符<span lang="EN-US">
+</span></span></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:35.25pt;background-color:transparent;" width="47">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">1</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:43.5pt;background-color:transparent;" width="58">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">秒<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:70.5pt;background-color:transparent;" width="94">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">是<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:124.5pt;background-color:transparent;" width="166">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">0-59 
+</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:96.75pt;background-color:transparent;" width="129">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">, - * /</span></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:35.25pt;background-color:transparent;" width="47">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">2</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:43.5pt;background-color:transparent;" width="58">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">分<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:70.5pt;background-color:transparent;" width="94">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">是<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:124.5pt;background-color:transparent;" width="166">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">0-59
+</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:96.75pt;background-color:transparent;" width="129">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">, - * /</span></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:35.25pt;background-color:transparent;" width="47">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">3</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:43.5pt;background-color:transparent;" width="58">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">小时<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:70.5pt;background-color:transparent;" width="94">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">是<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:124.5pt;background-color:transparent;" width="166">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">0-23</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:96.75pt;background-color:transparent;" width="129">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">, - * /</span></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:35.25pt;background-color:transparent;" width="47">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">4</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:43.5pt;background-color:transparent;" width="58">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">日<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:70.5pt;background-color:transparent;" width="94">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">是<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:124.5pt;background-color:transparent;" width="166">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">1-31</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:96.75pt;background-color:transparent;" width="129">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">, - * ? / L W</span></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:35.25pt;background-color:transparent;" width="47">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">5</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:43.5pt;background-color:transparent;" width="58">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">月<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:70.5pt;background-color:transparent;" width="94">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">是<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:124.5pt;background-color:transparent;" width="166">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">1-12 or JAN-DEC</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:96.75pt;background-color:transparent;" width="129">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">, - * /</span></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:35.25pt;background-color:transparent;" width="47">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">6</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:43.5pt;background-color:transparent;" width="58">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">周<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:70.5pt;background-color:transparent;" width="94">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">是<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:124.5pt;background-color:transparent;" width="166">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">1-7 or SUN-SAT</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:96.75pt;background-color:transparent;" width="129">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">, - * ? / L #
+</span></span></p>
+</td>
+</tr>
+<tr>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:35.25pt;background-color:transparent;" width="47">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">7</span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:43.5pt;background-color:transparent;" width="58">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">年<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:70.5pt;background-color:transparent;" width="94">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-family:宋体;"><span style="font-size:12px;">否<span lang="EN-US"></span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:124.5pt;background-color:transparent;" width="166">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span style="font-size:12px;"><span lang="EN-US" style="font-family:宋体;">empty
+</span><span style="font-family:宋体;">或<span lang="EN-US"> 1970-2099</span></span></span></p>
+</td>
+<td style="padding:1.5pt;border:rgb(226,226,226);width:96.75pt;background-color:transparent;" width="129">
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;"><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">, - * /
+</span></span></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p style="margin:0cm 0cm 0pt;text-indent:21pt;"><span style="font-size:10.5pt;"><span style="font-family:宋体;"></span></span></p>
+<p align="left" style="margin:0cm 0cm 0pt;text-align:left;text-indent:21.1pt;">
+<span style="font-size:12px;"><strong><span style="font-family:宋体;">通配符说明</span></strong><span lang="EN-US" style="font-family:宋体;">:</span></span></p>
+<p align="left" style="margin:0cm 0cm 0pt 31.5pt;text-align:left;">
+<strong><span lang="EN-US" style="font-family:宋体;color:red;"><span style="font-size:12px;">*
+</span></span></strong><span style="font-family:宋体;"><span style="font-size:12px;">：表示所有值<span lang="EN-US">.
+</span>例如<span lang="EN-US">:</span>在分的字段上设置<span lang="EN-US"> &quot;*&quot;,</span>表示每一分钟都会触发。</span><span lang="EN-US"><br/>
+<span style="font-size:12px;"><strong><span style="color:red;">?</span></strong> </span>
+</span><span style="font-size:12px;">：表示不指定值。使用的场景为不需要关心当前设置这个字段的值。例如<span lang="EN-US">:</span>要在每月的<span lang="EN-US">10</span>号触发一个操作，但不关心是周几，所以需要周位置的那个字段设置为<span lang="EN-US">&quot;?&quot;
+</span>具体设置为</span><span style="font-size:12px;"><span lang="EN-US"> 0 0 0 10 <span style="color:red;">
+*</span> ?<br/>
+<strong><span style="color:red;">-</span></strong> </span>：表示区间。例如 在小时上设置<span lang="EN-US"> &quot;10-12&quot;,</span>表示<span lang="EN-US"> 10,11,12</span>点都会触发。</span><span lang="EN-US"><br/>
+<span style="font-size:12px;"><strong><span style="color:red;">,</span></strong> </span>
+</span><span style="font-size:12px;">：表示指定多个值，例如在周字段上设置<span lang="EN-US"> &quot;MON,WED,FRI&quot;
+</span>表示周一，周三和周五触发</span><span lang="EN-US"><br/>
+<strong><span style="color:red;"><span style="font-size:12px;">/ </span></span></strong></span><span style="font-size:12px;">：用于递增触发。如在秒上面设置<span lang="EN-US">&quot;5/15&quot;
+</span>表示从<span lang="EN-US">5</span>秒开始，每增<span lang="EN-US">15</span>秒触发<span lang="EN-US">(5,20,35,50)</span>。 在月字段上设置<span lang="EN-US">'1/3'</span>所示每月<span lang="EN-US">1</span>号开始，每隔三天触发一次。</span><span lang="EN-US"><br/>
+<span style="font-size:12px;"><strong><span style="color:red;">L</span></strong> </span>
+</span><span style="font-size:12px;">：表示最后的意思。在日字段设置上，表示当月的最后一天<span lang="EN-US">(</span>依据当前月份，如果是二月还会依据是否是润年<span lang="EN-US">[leap]),
+</span>在周字段上表示星期六，相当于<span lang="EN-US">&quot;7&quot;</span>或<span lang="EN-US">&quot;SAT&quot;</span>。如果在<span lang="EN-US">&quot;L&quot;</span>前加上数字，则表示该数据的最后一个。</span></span></p>
+<p align="left" style="margin:0cm 0cm 0pt 31.5pt;text-align:left;text-indent:25.7pt;">
+<span style="font-family:宋体;"><span style="font-size:12px;">例如在周字段上设置<span lang="EN-US">&quot;6L&quot;</span>这样的格式<span lang="EN-US">,</span>则表示<span lang="EN-US">“</span>本月最后一个星期五<span lang="EN-US">&quot;
+</span></span></span></p>
+<p align="left" style="margin:0cm 0cm 0pt 31.5pt;text-align:left;">
+<span style="font-size:12px;"><strong><span lang="EN-US" style="font-family:宋体;color:red;">W</span></strong><span lang="EN-US" style="font-family:宋体;">
+</span><span style="font-family:宋体;">：表示离指定日期的最近那个工作日<span lang="EN-US">(</span>周一至周五<span lang="EN-US">).
+</span>例如在日字段上设置<span lang="EN-US">&quot;15W&quot;</span>，表示离每月<span lang="EN-US">15</span>号最近的那个工作日触发。如果<span lang="EN-US">15</span>号正好是周六，则找最近的周五<span lang="EN-US">(14</span>号<span lang="EN-US">)</span>触发<span lang="EN-US">,
+</span>如果<span lang="EN-US">15</span>号是周未，则找最近的下周一<span lang="EN-US">(16</span>号<span lang="EN-US">)</span>触发<span lang="EN-US">.</span>如果<span lang="EN-US">15</span>号正好在工作日<span lang="EN-US">(</span>周一至周五<span lang="EN-US">)</span>，则就在该天触发。如果指定格式为<span lang="EN-US">
+ &quot;1W&quot;,</span>它则表示每月<span lang="EN-US">1</span>号往后最近的工作日触发。如果<span lang="EN-US">1</span>号正是周六，则将在<span lang="EN-US">3</span>号下周一触发。<span lang="EN-US">(</span>注，<span lang="EN-US">&quot;W&quot;</span>前只能设置具体的数字<span lang="EN-US">,</span>不允许区间<span lang="EN-US">&quot;-&quot;).</span></span></span></p>
+<p align="left" style="margin:0cm 0cm 0pt 31.5pt;text-align:left;text-indent:21pt;">
+<span style="font-size:12px;"><span lang="EN-US" style="font-family:宋体;">'L'</span><span style="font-family:宋体;">和<span lang="EN-US"> 'W'</span>可以一组合使用。如果在日字段上设置<span lang="EN-US">&quot;LW&quot;,</span>则表示在本月的最后一个工作日触发<span lang="EN-US">
+</span></span></span></p>
+<p align="left" style="margin:0cm 0cm 0pt 31.5pt;text-align:left;text-indent:21pt;">
+<span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;"> </span></span></p>
+<p align="left" style="margin:0cm 0cm 0pt 31.5pt;text-align:left;">
+<span style="font-size:12px;"><strong><span lang="EN-US" style="font-family:宋体;color:red;">#</span></strong><span lang="EN-US" style="font-family:宋体;">
+</span><span style="font-family:宋体;">：序号<span lang="EN-US">(</span>表示每月的第几周星期几<span lang="EN-US">)</span>，例如在周字段上设置<span lang="EN-US">&quot;6#3&quot;</span>表示在每月的第三个周星期六<span lang="EN-US">.</span>注意如果指定<span lang="EN-US">&quot;6#5&quot;,</span>正好第五周没有星期六，则不会触发该配置<span lang="EN-US">(</span>用在母亲节和父亲节再合适不过了<span lang="EN-US">)
+</span></span></span></p>
+<p align="left" style="margin:0cm 0cm 0pt 31.5pt;text-align:left;text-indent:21pt;">
+<span style="font-family:宋体;"><span style="font-size:12px;">周字段的设置，若使用英文字母是不区分大小写的<span lang="EN-US"> MON
+</span>与<span lang="EN-US">mon</span>相同<span lang="EN-US">.</span></span></span></p>
+<p><strong><span style="font-family:宋体;"><span style="font-size:12px;">常用示例<span lang="EN-US">:
+</span></span></span></strong></p>
+<p style="margin:0cm 0cm 0pt;text-indent:21pt;"><span style="font-size:10.5pt;"><span style="font-family:宋体;">格式<span lang="EN-US">: [</span>秒<span lang="EN-US">] [</span>分<span lang="EN-US">] [</span>小时<span lang="EN-US">] [</span>日<span lang="EN-US">] [</span>月<span lang="EN-US">]
+ [</span>周<span lang="EN-US">] [</span>年<span lang="EN-US">]</span></span></span></p>
+<p><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">0 0 12 * * ? <span>   
+</span><span> </span><span>     </span></span></span><span style="font-family:宋体;"><span style="font-size:12px;">每天<span lang="EN-US">12</span>点触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 15 10 ? * *  <span>        </span></span>每天<span lang="EN-US">10</span>点<span lang="EN-US">15</span>分触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 15 10 * * ?  <span>        </span></span>每天<span lang="EN-US">10</span>点<span lang="EN-US">15</span>分触发</span><span style="font-size:12px;"><span lang="EN-US"> 
+<br/>
+0 15 10 * * ? * <span>       </span></span>每天<span lang="EN-US">10</span>点<span lang="EN-US">15</span>分触发</span><span style="font-size:12px;"><span lang="EN-US"> 
+<br/>
+0 15 10 * * ? 2005  <span>   </span>2005</span>年每天<span lang="EN-US">10</span>点<span lang="EN-US">15</span>分触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 * 14 * * ?  <span>         </span></span>每天下午的<span lang="EN-US"> 2</span>点到<span lang="EN-US">2</span>点<span lang="EN-US">59</span>分每分触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 0/5 14 * * ?  <span>       </span></span>每天下午的<span lang="EN-US"> 2</span>点到<span lang="EN-US">2</span>点<span lang="EN-US">59</span>分<span lang="EN-US">(</span>整点开始，每隔<span lang="EN-US">5</span>分触发</span><span style="font-size:12px;"><span lang="EN-US">) 
+<br/>
+0 0/5 14,18 * * ? <span>       </span></span>每天下午的<span lang="EN-US"> 18</span>点到<span lang="EN-US">18</span>点<span lang="EN-US">59</span>分<span lang="EN-US">(</span>整点开始，每隔<span lang="EN-US">5</span>分触发<span lang="EN-US">)
+</span></span></span></p>
+<p><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">0 0-5 14 * * ? 
+<span>          </span></span></span><span style="font-family:宋体;"><span style="font-size:12px;">每天下午的<span lang="EN-US"> 2</span>点到<span lang="EN-US">2</span>点<span lang="EN-US">05</span>分每分触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 10,44 14 ? 3 WED <span>      </span><span> </span>3</span>月分每周三下午的<span lang="EN-US"> 2</span>点<span lang="EN-US">10</span>分和<span lang="EN-US">2</span>点<span lang="EN-US">44</span>分触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 15 10 ? * MON-FRI <span>     </span><span> </span></span>从周一到周五每天上午的<span lang="EN-US">10</span>点<span lang="EN-US">15</span>分触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 15 10 15 * ? <span>          </span><span> </span></span>每月<span lang="EN-US">15</span>号上午<span lang="EN-US">10</span>点<span lang="EN-US">15</span>分触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 15 10 L * ?  <span>           </span></span>每月最后一天的<span lang="EN-US">10</span>点<span lang="EN-US">15</span>分触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 15 10 ? * 6L  <span>          </span></span>每月最后一周的星期五的<span lang="EN-US">10</span>点<span lang="EN-US">15</span>分触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 15 10 ? * 6L 2002-2005  </span>从<span lang="EN-US">2002</span>年到<span lang="EN-US">2005</span>年每月最后一周的星期五的<span lang="EN-US">10</span>点<span lang="EN-US">15</span>分触发
+</span></span></p>
+<p><span lang="EN-US" style="font-family:宋体;"><span style="font-size:12px;">0 15 10 ? * 6#3 
+<span>         </span></span></span><span style="font-family:宋体;"><span style="font-size:12px;">每月的第三周的星期五开始触发</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 0 12 1/5 * ?  <span>          </span></span>每月的第一个中午开始每隔<span lang="EN-US">5</span>天触发一次</span><span style="font-size:12px;"><span lang="EN-US">
+<br/>
+0 11 11 11 11 ? <span>         </span><span> </span></span>每年的<span lang="EN-US">11</span>月<span lang="EN-US">11</span>号<span lang="EN-US"> 11</span>点<span lang="EN-US">11</span>分触发<span lang="EN-US">(</span>光棍节<span lang="EN-US">)</span></span></span></p>
+   
+</div>
+
+
+
+
+
+
+
+
+
+<div style="zoom:1;float:right;">
+<a href="http://blog.csdn.net/foamflower/article/details/4260645#" style="padding-left:17px;color:rgb(51, 51, 51);background-image:url('http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png') !important;background-position:0 0 !important;float:left;font-size:12px;text-decoration:none;line-height:16px;height:16px;background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank"></a>
+<a href="http://blog.csdn.net/foamflower/article/details/4260645#" style="line-height:16px;color:rgb(51, 102, 153);background-position:0 -52px !important;text-decoration:none;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到QQ空间"></a>
+<a href="http://blog.csdn.net/foamflower/article/details/4260645#" style="line-height:16px;color:rgb(51, 102, 153);background-position:0 -104px !important;text-decoration:none;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到新浪微博"></a>
+<a href="http://blog.csdn.net/foamflower/article/details/4260645#" style="line-height:16px;color:rgb(51, 102, 153);background-position:0 -260px !important;text-decoration:none;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到腾讯微博"></a>
+<a href="http://blog.csdn.net/foamflower/article/details/4260645#" style="line-height:16px;color:rgb(51, 102, 153);background-position:0 -208px !important;text-decoration:none;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到人人网"></a>
+<a href="http://blog.csdn.net/foamflower/article/details/4260645#" style="line-height:16px;color:rgb(51, 102, 153);background-position:0 -1612px !important;text-decoration:none;font-size:12px;padding-left:17px;float:left;height:16px;background-image:url(&quot;http://bdimg.share.baidu.com/static/api/css/../img/share/icons_0_16.png?v=91362611.png&quot;);background-repeat:no-repeat;cursor:pointer;margin:6px 6px 6px 0px;" target="_blank" title="分享到微信"></a>
+<span style="visibility:hidden;display:block;height:0px;clear:both;">.</span></div>
+
+
+
+   
+
+    
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+        <div style="display:block;clear:both;width:182px;margin:0px auto;padding:30px 0px 15px;text-align:center;">
+            <dl style="display:inline-block;float:left;width:72px;height:72px;overflow:hidden;margin:0px 2px;background:rgb(255, 121, 0);text-align:center;cursor:pointer;">
+               
+                 <dt style="margin:0px;padding:12px 0px 3px;color:rgb(255, 255, 255);font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27px;line-height:30px;font-family:&quot;Microsoft YaHei&quot;;">顶</dt>
+                <dd style="margin:0px;color:rgb(255, 255, 255);font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:22px;font-family:Arial;">31</dd>
+            </dl>
+           
+              
+            <dl style="display:inline-block;float:left;width:72px;height:72px;overflow:hidden;margin:0px 2px;background:rgb(255, 121, 0);text-align:center;cursor:pointer;">
+              
+                  <dt style="margin:0px;padding:12px 0px 3px;color:rgb(255, 255, 255);font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27px;line-height:30px;font-family:&quot;Microsoft YaHei&quot;;">踩</dt>
+                <dd style="margin:0px;color:rgb(255, 255, 255);font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:22px;font-family:Arial;">0</dd>               
+            </dl>
+            
+        <span style="text-align:center;display:block;height:0px;clear:both;visibility:hidden;">.</span></div>
+     <div><a href="#" style="color:rgb(51, 102, 153);text-decoration:none;" target="_blank"> </a>   </div>
+    <div> <a href="#" style="color:rgb(51, 102, 153);text-decoration:none;" target="_blank"> </a></div>
+    
+
+   <ul style="line-height:24px;display:block;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14px;color:rgb(102, 102, 102);font-family:&quot;Microsoft YaHei&quot;, Arial, Helvetica, sans-serif;clear:both;float:left;margin:0px 0px 5px;padding:10px 0px 0px;margin-top:30px;">
+                <li style="list-style-type:none;clear:both;padding:0px 0px 3px;overflow:hidden;"><span style="color:rgb(255, 255, 255);display:block;width:52px;padding:0px 0px 0px 27px;height:26px;background-color:rgb(153, 153, 153);float:left;font-size:14px;margin-right:7px;background-image:url(&quot;http://static.blog.csdn.net/skin/default/css/../images/blog-page-arr.png&quot;);background-repeat:no-repeat;background-position:9px 8px;">上一篇</span><a href="http://blog.csdn.net/foamflower/article/details/4260319" style="text-decoration:none;display:block;float:left;font-size:14px;color:rgb(51, 51, 51);">Spring Mail实现发送邮件</a></li>
+                <li style="list-style-type:none;clear:both;padding:0px 0px 3px;overflow:hidden;"><span style="color:rgb(255, 255, 255);display:block;width:52px;padding:0px 0px 0px 27px;height:26px;background-color:rgb(153, 153, 153);float:left;font-size:14px;margin-right:7px;background-image:url(&quot;http://static.blog.csdn.net/skin/default/css/../images/blog-page-arr.png&quot;);background-repeat:no-repeat;background-position:9px -22px;">下一篇</span><a href="http://blog.csdn.net/foamflower/article/details/4269085" style="text-decoration:none;display:block;float:left;font-size:14px;color:rgb(51, 51, 51);">如何迅速成为Java高手  </a></li>
+    <span style="color:rgb(102, 102, 102);font-style:normal;font-variant:normal;font-weight:normal;font-size:14px;line-height:24px;font-family:&quot;Microsoft YaHei&quot;, Arial, Helvetica, sans-serif;display:block;height:0px;clear:both;visibility:hidden;">.</span></ul>
+
+    <div style="clear:both;height:10px;"></div>
+
+
+            <div style="overflow:hidden;">
+                    <h4 style="margin:0px;padding:0px;font-size:16px;color:rgb(51, 51, 51);"></h4>
+                    <div style="border:1px solid rgb(187, 187, 187);margin:20px 0px 0px 0px;">
+                        <div style="line-height:45px;border-bottom:1px solid rgb(220, 220, 220);">
+                            相关文章推荐
+                        </div>
+                   
+                        <div style="background:rgb(252, 252, 252);max-height:195px;overflow-y:auto;padding:10px 20px;">                       
+                            <ul style="float:left;width:49%;list-style:none;margin:0px;padding:0px;">    
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/u012733521/article/details/53333331" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例">Spring—Quartz定时调度CronTrigger时间配置格式说明与实例</a>
+                                   </li>
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/u010481606/article/details/70238600" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例">Spring—Quartz定时调度CronTrigger时间配置格式说明与实例</a>
+                                   </li>
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/mwp5212/article/details/72676979" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例">Spring—Quartz定时调度CronTrigger时间配置格式说明与实例</a>
+                                   </li>
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/u013075699/article/details/59483170" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例">Spring—Quartz定时调度CronTrigger时间配置格式说明与实例</a>
+                                   </li>
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/u014044812/article/details/52573142" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例">Spring—Quartz定时调度CronTrigger时间配置格式说明与实例</a>
+                                   </li>
+                            </ul>
+                              <ul style="float:right;width:49%;list-style:none;margin:0px;padding:0px;">      
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/u011007180/article/details/52077053" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例">Spring—Quartz定时调度CronTrigger时间配置格式说明与实例</a>
+                                   </li>
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/u011945064/article/details/52231638" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例">Spring—Quartz定时调度CronTrigger时间配置格式说明与实例</a>
+                                   </li>
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/jiweji88/article/details/52189144" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="Spring—Quartz定时调度CronTrigger时间配置格式说明与实例">Spring—Quartz定时调度CronTrigger时间配置格式说明与实例</a>
+                                   </li>
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/caicai89tu/article/details/69940021" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="一个Main测试的Spring+Quartz配置动态定时任务的方法">一个Main测试的Spring+Quartz配置动态定时任务的方法</a>
+                                   </li>
+                                   <li style="list-style:none;line-height:30px;">
+                                       <em style="vertical-align:middle;font-style:normal;display:inline-block;margin-right:10px;">•</em>
+                                       <a href="http://blog.csdn.net/Smile_Miracle/article/details/70597551" style="text-decoration:none;color:rgb(51, 51, 51);vertical-align:middle;display:inline-block;width:290px;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;" target="_blank" title="Spirng整合Quartz构建MAVEN工程">Spirng整合Quartz构建MAVEN工程</a>
+                                   </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+      
+</div></div></div></div></div></div></div></div><br/></div></span>
+</div></body></html> 

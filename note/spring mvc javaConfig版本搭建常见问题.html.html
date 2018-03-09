@@ -1,0 +1,192 @@
+<html>
+<head>
+  <title>spring mvc javaConfig版本搭建常见问题.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="569"/>
+<h1>spring mvc javaConfig版本搭建常见问题.html</h1>
+
+<div>
+<span><div style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 24px; line-height: normal; font-family: sans-serif; height: 4535px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;"><h2 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 30px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 66px; line-height: 33px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;">今天在spring mvc javaConfig版本框架搭建上耗了一天，终于给搭建出来了，下面是搭建过程中遇到的一些问题，记录下来方便以后复习，也为程序员兄弟们提供参考：</h2><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 55px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"><br/></p><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 104px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;">javaConfig spring mvc核心配置文件中对资源文件处理的适配置配置中MediaType的实例化问题：用一个字符串参数来创建<span style="color: black; display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">org.springframework.http.<span style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(228, 228, 255); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">MediaType</span></span><span style="color: black; background: none 0% 0% / auto repeat scroll padding-box border-box rgb(228, 228, 255); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">实例的时候，用</span><span style="color: black; display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">MediaType.<span style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(228, 228, 255); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">valueOf</span></span><span style="color: black; background: none 0% 0% / auto repeat scroll padding-box border-box rgb(228, 228, 255); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">（String</span>）方法，不能用new MediaType(String)不然会报错；（<span style="border: 0px none rgb(255, 0, 0); color: rgb(255, 0, 0); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(255, 0, 0) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter]: Factory method 'annotationMethodHandlerAdapter' threw exception; nested exception is java.lang.IllegalArgumentException: Invalid token character '/' in token &quot;text/html&quot;</span>）</h3><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"></p><pre style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 13px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 1568px; line-height: 18.5714px; margin: 0px; outline: rgb(51, 51, 51) none 0px; overflow: hidden; padding: 0px; text-decoration: none; white-space: pre-wrap; width: 1863px; word-break: break-all; word-wrap: break-word;">
+package com.springmvc.config;
+
+import com.springmvc.util.FastJsonHttpMessageConverter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by baich on 2016/1/26.
+ */
+@Configuration
+@EnableWebMvc
+@ComponentScan(basePackages = {&quot;com.springmvc.controller&quot;})
+public class SpringServlet extends WebMvcConfigurerAdapter {
+
+    /**
+     * 服务器内部资源解析器
+     * @return
+     */
+    @Bean
+    public InternalResourceViewResolver internalResourceViewResolver() {
+
+        InternalResourceViewResolver irvr = new InternalResourceViewResolver();
+
+        irvr.setPrefix(&quot;/&quot;);
+
+        irvr.setSuffix(&quot;.jsp&quot;);
+
+        return irvr;
+    }
+
+    /**
+     * mediaType supportMediaTypes converter converters
+     * 媒体适配器配置
+     * @return
+     */
+    @Bean
+    public AnnotationMethodHandlerAdapter annotationMethodHandlerAdapter() {
+        AnnotationMethodHandlerAdapter amha = new AnnotationMethodHandlerAdapter();
+
+        FastJsonHttpMessageConverter[] messageConverters = new FastJsonHttpMessageConverter[1];
+
+        FastJsonHttpMessageConverter fastJsonHttpMessageConverter = new FastJsonHttpMessageConverter();
+
+        List&lt;MediaType&gt; supportedMediaTypes = new ArrayList&lt;MediaType&gt;();
+
+//        MediaType mediaType = new MediaType(MediaType.TEXT_HTML_VALUE);
+        MediaType mediaType = MediaType.valueOf(MediaType.TEXT_HTML_VALUE);
+
+        supportedMediaTypes.add(mediaType);
+
+        fastJsonHttpMessageConverter.setSupportedMediaTypes(supportedMediaTypes);
+
+        messageConverters[0] = fastJsonHttpMessageConverter;
+
+        amha.setMessageConverters(messageConverters);
+
+        return amha;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+
+        multipartResolver.setDefaultEncoding(&quot;utf-8&quot;);
+
+        multipartResolver.setMaxUploadSize(2048 * 1024);
+
+        multipartResolver.setMaxInMemorySize(2048);
+
+        return multipartResolver;
+    }
+
+}
+</pre><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"></p><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 26px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;"><br/></h3><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"></p><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 26px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;">javaConfig ComponentScan注解默认包是什么都没有，所以必须自己动手配置指定包（</h3><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 26px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;"><span style="border: 0px none rgb(128, 128, 0); color: rgb(128, 128, 0); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(128, 128, 0) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">@ComponentScan</span>(basePackages = {<span style="border: 0px none rgb(0, 128, 0); color: rgb(0, 128, 0); display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(0, 128, 0) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">&quot;com.springmvc.service.impl&quot;</span>,<span style="border: 0px none rgb(0, 128, 0); color: rgb(0, 128, 0); display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(0, 128, 0) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">&quot;com.springmvc.dao.impl&quot;</span>})）</h3><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 182px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;"><span style="border: 0px none rgb(255, 0, 0); color: rgb(255, 0, 0); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(255, 0, 0) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">（org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'userController': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void com.springmvc.controller.UserController.setUserService(com.springmvc.service.UserService); nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type [com.springmvc.service.UserService] found for dependency: expected at least 1 bean which qualifies as autowire candidate for this dependency. Dependency annotations: {}<br/><br/>
+）</span><br/></h3><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"></p><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 72px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;">fastjson2.7.0和spring4.2.4不匹配，只要把fastjson版本降成2.6.5就行了<span style="border: 0px none rgb(255, 0, 0); color: rgb(255, 0, 0); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(255, 0, 0) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">（</span></h3><pre style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 13px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 18.5714px; margin: 0px; outline: rgb(51, 51, 51) none 0px; overflow: hidden; padding: 0px; text-decoration: none; white-space: pre-wrap; width: 1863px; word-break: break-all; word-wrap: break-word;"><span style="border: 0px none rgb(255, 0, 0); color: rgb(255, 0, 0); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 13px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 18.5714px; margin: 0px; outline: rgb(255, 0, 0) none 0px; padding: 0px; text-decoration: none; white-space: pre-wrap; word-break: break-all; word-wrap: break-word;">com.fasterxml.jackson.databind.type.TypeFactory.constructType(Ljava/lang/reflect/Type;Ljava/lang/Class;)Lcom/fasterxml/jackson/databind/JavaType;</span></pre><span style="border: 0px none rgb(255, 0, 0); color: rgb(255, 0, 0); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(255, 0, 0) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">）</span><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 26px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;"><br/></h3><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 52px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;"><strong style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;"><span style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">事务管理器配置sessionFactory的时候虽然显示的是ref </span><span style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">LocalSessionFactoryBean类对应的bean,但是实际上是ref了</span><span style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">LocalSessionFactoryBean 中的sessionFactory属性，sessionFactory = getBean(&quot;</span><span style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">LocalSessionFactoryBean</span><span style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: inline; font-style: normal; font-variant: normal; font-weight: bold; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">&quot;).getObject()。</span></strong></h3><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 55px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"><a href="http://stackoverflow.com/questions/31281179/error-java-lang-illegalargumentexception-invalid-token-character-in-token" style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: inline; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; word-break: break-all; word-wrap: break-word;" target="_blank">http://stackoverflow.com/questions/31281179/error-java-lang-illegalargumentexception-invalid-token-character-in-token</a></p><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 55px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"><br/></p><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 26px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;"><br/></h3><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 78px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;">写junit测试用例的时候在没有为测试用例注解@WebAppConfiguration的基础上引入了Spring MVC的核心配置文件类报错：<span style="border: 0px none rgb(255, 0, 0); color: rgb(255, 0, 0); display: inline; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 26.4px; margin: 0px; outline: rgb(255, 0, 0) none 0px; padding: 0px; text-decoration: none; word-wrap: break-word;">Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springframework.web.servlet.HandlerMapping]: Factory method 'defaultServletHandlerMapping' threw exception; nested exception is java.lang.IllegalArgumentException: A ServletContext is required to configure default servlet handling</span></h3><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 26px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;">顾名思义，在没有注解@WebAppConfiguration的时候只要不引入spring mvc核心配置就能解决问题，当然了也可以引入@WebAppConfiguration:<br/></h3><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 55px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"><a href="http://www.4byte.cn/question/77524/java-lang-illegalargumentexception-a-servletcontext-is-required-to-configure-default-servlet-handling.html" style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: inline; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; word-break: break-all; word-wrap: break-word;" target="_blank">http://www.4byte.cn/question/77524/java-lang-illegalargumentexception-a-servletcontext-is-required-to-configure-default-servlet-handling.html</a></p><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 55px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"><br/></p><pre style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 13px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 506px; line-height: 18.5714px; margin: 0px; outline: rgb(51, 51, 51) none 0px; overflow: hidden; padding: 0px; text-decoration: none; white-space: pre-wrap; width: 1863px; word-break: break-all; word-wrap: break-word;">
+import com.springmvc.po.User;
+import com.springmvc.service.UserService;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.Test;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+/**
+ * Created by baich on 2016/1/26.
+ */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration(classes = {com.springmvc.config.ApplicationContext.class, com.springmvc.config.SpringServlet.class})
+public class SpringTest {
+    @Autowired
+    private UserService userService;
+    @Test
+    public void save() {
+        User user = new User();
+        user.setName(&quot;yangbo&quot;);
+        user.setGender(&quot;male&quot;);
+        user.setDescribtion(&quot;javaConfig&quot;);
+        userService.save(user);
+    }
+}
+</pre><br/>
+OR
+<p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"></p><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"></p><pre style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 13px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 506px; line-height: 18.5714px; margin: 0px; outline: rgb(51, 51, 51) none 0px; overflow: hidden; padding: 0px; text-decoration: none; white-space: pre-wrap; width: 1863px; word-break: break-all; word-wrap: break-word;">
+import com.springmvc.po.User;
+import com.springmvc.service.UserService;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.junit.Test;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+/**
+ * Created by baich on 2016/1/26.
+ */
+
+@RunWith(SpringJUnit4ClassRunner.class)
+//@WebAppConfiguration
+@ContextConfiguration(classes = {com.springmvc.config.ApplicationContext.class})
+public class SpringTest {
+    @Autowired
+    private UserService userService;
+    @Test
+    public void save() {
+        User user = new User();
+        user.setName(&quot;yangbo&quot;);
+        user.setGender(&quot;male&quot;);
+        user.setDescribtion(&quot;javaConfig&quot;);
+        userService.save(user);
+    }
+}
+</pre><br/><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 55px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"><br/></p><h3 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 24px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 26px; line-height: 26.4px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;">测试编写的时候如果不用注解形式获取bean而采用ApplicationContext的形式获取bean一定要注意getBean(&quot;&quot;)后强转为接口类型，不能强转为实现类类型，不然会报错：</h3><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 55px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"><br/></p><h4 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 18px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 19px; line-height: 19.8px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;">代码</h4><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"></p><pre style="background: none 0% 0% / auto repeat scroll padding-box border-box rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 13px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 398px; line-height: 18.5714px; margin: 0px; outline: rgb(51, 51, 51) none 0px; overflow: hidden; padding: 0px; text-decoration: none; white-space: pre-wrap; width: 1863px; word-break: break-all; word-wrap: break-word;">
+import com.sunsharing.po.User;
+import com.sunsharing.service.impl.UserServiceImpl;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ * Created by baich on 2016/1/27.
+ */
+public class BaseTest {
+    @Test
+    public void test() {
+        ApplicationContext ac = new ClassPathXmlApplicationContext(&quot;applicationContext.xml&quot;);
+        UserServiceImpl userServiceImpl = (UserServiceImpl) ac.getBean(&quot;userService&quot;);
+        User user = new User();
+        user.setName(&quot;yangbo&quot;);
+        user.setGender(&quot;male&quot;);
+        user.setDescribtion(&quot;am a boy&quot;);
+        userServiceImpl.save(user);
+
+    }
+}
+</pre><br/><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"></p><h4 style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: 500; font-stretch: normal; font-size: 18px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 19px; line-height: 19.8px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 0px; text-decoration: none; width: 1863px; word-wrap: break-word;">错误</h4><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 55px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"><span style="border: 0px none rgb(204, 0, 0); color: rgb(204, 0, 0); display: inline; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; line-height: 35px; margin: 0px; outline: rgb(204, 0, 0) none 0px; padding: 0px; text-decoration: none; word-break: break-all; word-wrap: break-word;">java.lang.ClassCastException: com.sun.proxy.$Proxy18 cannot be cast to com.sunsharing.service.impl.UserServiceImpl</span><br/></p><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 20px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"></p><p style="border: 0px none rgb(51, 51, 51); color: rgb(51, 51, 51); display: block; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 28px; font-family: Arial, &quot;Microsoft YaHei&quot;; height: 55px; line-height: 35px; margin: 0px; outline: rgb(51, 51, 51) none 0px; padding: 8px 0px 12px; text-decoration: none; width: 1863px; word-break: break-all; word-wrap: break-word;"><br/></p></div></span>
+</div></body></html> 

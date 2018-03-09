@@ -1,0 +1,458 @@
+<html>
+<head>
+  <title>Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--library打包成jar并且混淆 - Engineer-Jsp的专栏 - CSDN博客</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="5481"/>
+<h1>Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--library打包成jar并且混淆 - Engineer-Jsp的专栏 - CSDN博客</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div><div><div><div><h1> Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--library打包成jar并且混淆 </h1><div><div></div></div></div>
+
+
+    
+    <div>
+        
+        <div>
+            
+            <span>2542人阅读</span>
+            
+            <span> <a href="#" target="_blank" title="收藏">收藏</a></span>
+             
+
+        </div>
+    </div>    
+    
+        <div>         
+            <p>版权声明：本文为博主原创文章，未经博主允许不得转载。 <a href="http://blog.csdn.net/jspping/article/details/66968367" target="_blank">http://blog.csdn.net/jspping/article/details/66968367</a></p>
+        </div>
+
+
+
+
+
+
+
+<p><strong>在android 应用层开发的时候咱们技术人员都或多或少都会接触一些SDK比如so、jar等，这些都是数据类公司提供给互联网开发公司的关于技术核心类</strong></p><p><strong>方便的东西，因为是核心所以加密加固是必不可少的工作，本博今天就向大家介绍jar的封装打包以及混淆，完成自己的SDK！在此之前需要给大家说</strong></p><p><strong>说so，so是由C/C++语言编译而来，其反编译难度更大，因为反编译之后就是汇编语言，需要懂汇编才能看懂，更重要的是即使懂汇编把其复原也是相</strong></p><p><strong>当大的工程，尤其是一些大公司的SDK，那就更别说了，而jar呢反编译的难度就相比so要小很多，所以这也是很多包名和key的验证都放在so的原因！</strong></p><p><strong>jar加密加固无外乎就是混淆了，只要你在这个行业做了一段时间就会知道个大概了，混淆就是把 keep 命令之外的变量名、类名、函数名、</strong></p><p><strong>attributes、parameter name等全部混淆成一些小写字母之类的，这样这个SDK看起来就会异常的紊乱，但是先前提到过，只要在这个行业做过一段时</strong></p><p><strong>间，即使混淆了部分，但大部分的语法还是可以寻到其根源的，所以比较好的方式就是推荐so+jar</strong></p><p><strong>①通过library打包自己的SDK</strong></p><p><strong>这是笔者自己写的一个SDK，里面主要是用来管理wifi、ap、服务端的文件快传、摄像监控的rtsp推流框架、asyntask管理、网络编程、相机管理，硬加速、局域网组播、二维码</strong></p><p><strong>生成和解析等，是用于一个大项目的核心代码，主要是用来降低架构与UI的耦合性，其次就是为了安全，废话不多说先开始介绍library的封装，打包成jar 的SDK最后介绍jar SDK</strong></p><p><strong>的混淆加固</strong></p><p><strong>首先看看library的构成，如下图：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center.png" type="image/png" data-filename="Center.png" height="608" width="289"/></div><p></p><p><strong>AndroidManifest.xml 清单文件的配置，如下代码：</strong></p><div><ol><li>&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</li><li>    package=&quot;jsp.rtsp.server.camera&quot; &gt;  </li><li>    &lt;application  </li><li>        android:allowBackup=&quot;true&quot;</li><li>        android:label=&quot;@string/app_name&quot;</li><li>        android:supportsRtl=&quot;true&quot; &gt;  </li><li>    &lt;/application&gt;  </li><li>&lt;/manifest&gt;  </li></ol></div><pre>&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    package=&quot;jsp.rtsp.server.camera&quot; &gt;
+
+    &lt;application
+        android:allowBackup=&quot;true&quot;
+        android:label=&quot;@string/app_name&quot;
+        android:supportsRtl=&quot;true&quot; &gt;
+    &lt;/application&gt;
+
+&lt;/manifest&gt;</pre><br/><br/><strong>我们可以理解为这是一个新建的android application project，因为这本身就是一个ndroid application project，只是特殊的而已，新建一个ndroid application project</strong><p><strong>然后修改AndroidManifest.xml清单文件去掉不必要的xml节点，完成这一步之后，进行如下图步骤：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [1].png" type="image/png" data-filename="Center.png" height="771" width="482"/></div><p></p><p><strong>接下来弹出如下提示框，进行如下步骤：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [2].png" type="image/png" data-filename="Center.png" height="675" width="576"/></div><p></p><p><strong>这样一个library的建立就完成了！</strong></p><p><strong>下面介绍library的编译与依赖的编译</strong></p><p><strong>编译的话直接clean就可以编译library，简单粗暴，接着说依赖编译，还是上图描述比较深刻</strong></p><p><strong>还是单机选择一个非library的android项目，如下</strong>：</p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [3].png" type="image/png" data-filename="Center.png" height="746" width="480"/></div><p></p><p><strong>选择properties项后，弹出如下提示框：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [4].png" type="image/png" data-filename="Center.png" height="401" width="576"/></div><p></p><p><strong>点击OK确认后，进行如下步骤：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [5].png" type="image/png" data-filename="Center.png" height="684" width="576"/></div><p></p><p><strong>执行完该步骤之后，项目会生成一个新的东西，如下图：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [6].png" type="image/png" data-filename="Center.png" height="319" width="576"/></div><p></p><p><strong>下面继续说上面的依赖编译，在完成上面的步骤之后，可以开始依赖编译，就是对library项目进行clean，但再此之前需要执行一下步骤，方便清除上一次的library</strong></p><p><strong>缓存，如下图步骤操作，在对library进行clean：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [7].png" type="image/png" data-filename="Center.png" height="278" width="576"/></div><p></p><p><strong>这就是依赖编译，这么做的好处就是可以不用每次更新编译生成新library的时候将jar copy到项目中，非常方便！</strong></p><p><strong>好了，关于library的jar SDK封装就完成了，下面开始讲library SDK的混淆与加密加固了！</strong></p><p><strong>②通过Proguard 混淆 library打包的jar SDK<br/></strong></p><p><strong>Proguard 的使用，Proguard在你的android SDK 路径下的 tools目录下，比如笔者的如下图：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [8].png" type="image/png" data-filename="Center.png" height="173" width="576"/></div><p></p><p><strong>双击打开，下面介绍 Proguard 使用</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [9].png" type="image/png" data-filename="Center.png" height="489" width="576"/></div><p></p><p><strong>点击next之后，可以新增自己需要被混淆的jar以及混淆后的jar输出路径，如下图：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [10].png" type="image/png" data-filename="Center.png" height="485" width="576"/></div><p></p><p><strong>备注：其中的android.jar依赖需要根据自己的SDK版本对应，比如你选择的是6.0，那对应选择SDK目录下的platforms的android-23下的android.jar</strong></p><p><strong>然后选择next进行下一步</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [11].png" type="image/png" data-filename="Center.png" height="488" width="576"/></div><p></p><p><strong>继续 next 执行下一步</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [12].png" type="image/png" data-filename="Center.png" height="484" width="576"/></div><p></p><p><strong>下面介绍怎么样配置混淆，以及混淆的具体操作：</strong></p><p><strong>1.关于类的混淆：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [13].png" type="image/png" data-filename="Center.png" height="484" width="576"/></div><p></p><p><strong>添加不想被混淆的类：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [14].png" type="image/png" data-filename="Center.png" height="539" width="576"/></div><p></p><p><strong>添加不想被混淆的方法：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [15].png" type="image/png" data-filename="Center.png" height="506" width="576"/></div><p></p><p><strong>添加不想被混淆的变量：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [16].png" type="image/png" data-filename="Center.png" height="496" width="576"/></div><p></p><p><strong>关于内部类和内部接口的混淆，其中内部enum也类似</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [17].png" type="image/png" data-filename="Center.png" height="499" width="576"/></div><p></p><p><strong>关于函数和变量方面，笔者怕大家理解不清楚，就随便演示一下，如下图：</strong></p><p><strong>1.不混淆方法演示图：</strong></p><p><strong>首先看实际代码：</strong></p><div><ol><li>/** </li><li> * @author Engineer-Jsp </li><li> * @param android.content.Context context </li><li> * @param jsp.rtsp.server.ap.WiFiApManager.ResponseCallBack call </li><li> * @return jsp.rtsp.server.ap.WiFiApManager </li><li> */</li><li>publicstatic WiFiApManager getInstance(Context context, ResponseCallBack call) {  </li><li>    if (mWiFiApManager == null) {  </li><li>        mWiFiApManager = new WiFiApManager(context, call);  </li><li>    }  </li><li>    return mWiFiApManager;  </li><li>}  </li></ol></div><pre>	/**
+	 * @author Engineer-Jsp
+	 * @param android.content.Context context
+	 * @param jsp.rtsp.server.ap.WiFiApManager.ResponseCallBack call
+	 * @return jsp.rtsp.server.ap.WiFiApManager
+	 */
+	public static WiFiApManager getInstance(Context context, ResponseCallBack call) {
+		if (mWiFiApManager == null) {
+			mWiFiApManager = new WiFiApManager(context, call);
+		}
+		return mWiFiApManager;
+	}</pre><br/><strong>再看混淆的配置：</strong><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [18].png" type="image/png" data-filename="Center.png" height="497" width="576"/></div><p></p><p><strong>argument type 看不清吗？没关系，我把它贴出来：</strong></p><p><strong>android.content.Context,jsp.rtsp.server.ap.WiFiApManager$ResponseCallBack<br/></strong></p><p><strong>你们肯定在想，为什么是WiFiApManager$ResponseCallBack而不是WiFiApManager.ResponseCallBack，这个等下会细说给大家，下面继续演示变量的混淆配置</strong></p><p><strong>2. 不混淆变量演示：</strong></p><p><strong>首先看一个内部类代码：</strong></p><div><ol><li>publicclass CameraManager {  </li><li>    privatestatic CameraManager mCameraManager = null;  </li><li>    private MediaStream mMediaStream;  </li><li>    publicstaticinterface CameraCallBack {  </li><li>        void onSuccess(int code, String msg);  </li><li>        void onCameraStop();  </li><li>        void onError(int errcode, String errmsg);  </li><li>    }  </li><li>    /** </li><li>     *  </li><li>     * @author Engineer-Jsp </li><li>     * 内部类的演示 </li><li>     * </li><li>     */</li><li>    publicstaticclass CameraParameters {  </li><li>        publicint width;  </li><li>        publicint height;  </li><li>    }  </li></ol></div><pre>public class CameraManager {
+
+	private static CameraManager mCameraManager = null;
+	private MediaStream mMediaStream;
+
+	public static interface CameraCallBack {
+		void onSuccess(int code, String msg);
+
+		void onCameraStop();
+
+		void onError(int errcode, String errmsg);
+	}
+
+	/**
+	 * 
+	 * @author Engineer-Jsp
+	 * 内部类的演示
+	 *
+	 */
+	public static class CameraParameters {
+		public int width;
+		public int height;
+	}</pre><br/><br/><strong>配置不混淆的变量：</strong><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [19].png" type="image/png" data-filename="Center.png" height="642" width="466"/></div><p></p><p><strong>好了，到此关于混淆的具体配置都已经讲得差不多了，下面还要给大家说说关于内部类、内部接口等的调用为什么有时候用&quot;$&quot;有时用&quot;.&quot;，其实这是跟具体配置和</strong></p><p><strong>代码的写法有关的，还记得在配置混淆的时候的那具体的提示框吗？没错这就是引起调用的关键</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [20].png" type="image/png" data-filename="Center.png" height="488" width="576"/></div><p></p><p><strong>假如上图红色框的2个复选框被勾选了，那么混淆配置以及混淆之后的内部调用是不用带&quot;$&quot;符号的，采用&quot;.&quot;符号，比如：WiFiApManager.ResponseCallBack</strong></p><p><strong>假如上图红色框的2个复选框没有被勾选，那么混淆配置以及混淆之后的内部调用是带&quot;$&quot;符号的，比如：WiFiApManager$ResponseCallBack，在import 导包的时候也是用&quot;$&quot;而不能用点符号，即使是 new 创建新实例对象的时候，如果他是内部类，就必须要带$符号，如下导包和创建新的实例：</strong></p><p><strong>import jsp.rtsp.server.ap.WiFiApManager$ResponseCallBack;<br/></strong></p><p><strong>CameraManager$CameraParameters cameraParameters = CameraManager.getSupportResolution(this);</strong></p><p><strong>所以在不勾选的情况下，建议大家刻意的去使用内部类和内部接口，除非它们不需要暴露给开发者调用，否则最好不要这样写！这样不规范！</strong></p><p><strong>在配置完混淆的具体配置以后，继续next，后面的大概都不用去修改了，一直到 process 选项，选择 process 按钮，就会开始混淆jar</strong></p><p><strong>在该 process 界面下，有以下按钮需要注意，如下图：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [21].png" type="image/png" data-filename="Center.png" height="394" width="576"/></div><p></p><p><strong>混淆后使用jd-gui看效果：</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [22].png" type="image/png" data-filename="Center.png" height="595" width="576"/></div><p></p><p><strong>编译通过后导入项目与依赖该SDK的项目一起编译</strong></p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [23].png" type="image/png" data-filename="Center.png" height="547" width="576"/></div><p></p><p>安装效果图：</p><p></p><div><img src="Android Proguard安全加固教你如何让自己的应用程序或SDK更难被反编译--l_files/Center [24].png" type="image/png" data-filename="Center.png" height="1029" width="576"/></div><p></p><p>其中本项目又涉及了很多so库，所以在jni方面最好是不要混淆native的方法，而且C/C++调用java层的方法最好也不要混淆！</p><p>关于本篇文章的介绍就这么多，谢谢观博！</p><p>附上pro文件：</p><div><ol><li>-injars 'D:\Android\Android-6.0-23.06-Build\workspace\jsp.jar'</li><li>-outjars 'D:\Android\Android-6.0-23.06-Build\workspace\jsp-rtsp-server.jar'</li><li>-libraryjars 'D:\Java\jre7\lib\rt.jar'</li><li>-libraryjars 'D:\Android\Android-6.0-23.06-Build\workspace\jsp-rtsp-server\libs\zxing.jar'</li><li>-libraryjars 'D:\Android\Android-6.0-23.06-Build\android-6.0-sdk\platforms\android-23\android.jar'</li><li>-dontshrink  </li><li>-keeppackagenames  </li><li>-keep,allowshrinking class jsp.rtsp.server.ap.WiFiApManager {  </li><li>    *** closeWifiAp(...);  </li><li>    publicstatic jsp.rtsp.server.ap.WiFiApManager getInstance(android.content.Context,jsp.rtsp.server.ap.WiFiApManager$ResponseCallBack);  </li><li>    *** getWiFiApAddress(...);  </li><li>    *** openWifiAp(...);  </li><li>    *** onDestroy(...);  </li><li>}  </li><li>-keep,allowshrinking interface  jsp.rtsp.server.ap.WiFiApManager$ResponseCallBack {  </li><li>    void onWiFiApQrcodeBitmapCall(android.graphics.Bitmap);  </li><li>}  </li><li>-keep,allowshrinking class jsp.rtsp.server.camera.CameraManager {  </li><li>    publicstatic jsp.rtsp.server.camera.CameraManager getInstance(android.content.Context,android.view.SurfaceView,jsp.rtsp.server.camera.CameraManager$CameraCallBack);  </li><li>    *** updateResolution(...);  </li><li>    *** setDgree(...);  </li><li>    *** startStream(...);  </li><li>    *** getRtspAddress(...);  </li><li>    *** stopStream(...);  </li><li>    android.hardware.Camera getCamera(...);  </li><li>    *** setRtspAddress(...);  </li><li>    *** createCamera(...);  </li><li>    *** startPreview(...);  </li><li>    *** stopPreview(...);  </li><li>    *** destroyCamera(...);  </li><li>    *** switchCamera(...);  </li><li>    *** reStartStream(...);  </li><li>    publicstaticvoid setSupportResolution(android.content.Context);  </li><li>    publicstatic jsp.rtsp.server.camera.CameraManager$CameraParameters getSupportResolution(android.content.Context);  </li><li>}  </li><li>-keep,allowshrinking interface  jsp.rtsp.server.camera.CameraManager$CameraCallBack {  </li><li>    void onSuccess(int,java.lang.String);  </li><li>    void onCameraStop(...);  </li><li>    void onError(int,java.lang.String);  </li><li>}  </li><li>-keep,allowshrinking publicclass jsp.rtsp.server.camera.CameraManager$CameraParameters {  </li><li>    publicint width;  </li><li>    publicint height;  </li><li>}  </li><li>-keep,allowshrinking class org.easydarwin.easyipcamera.camera.EasyIPCamera {  </li><li>    publicstaticvoid onIPCameraCallBack(int,int,byte[],int);  </li><li>}  </li><li># Keep - Applications. Keep all application classes, along with their 'main'</li><li># methods.  </li><li>-keepclasseswithmembers publicclass * {  </li><li>    publicstaticvoid main(java.lang.String[]);  </li><li>}  </li><li># Also keep - Enumerations. Keep the special static methods that are required in  </li><li># enumeration classes.  </li><li>-keepclassmembers enum  * {  </li><li>    publicstatic **[] values();  </li><li>    publicstatic ** valueOf(java.lang.String);  </li><li>}  </li><li># Also keep - Database drivers. Keep all implementations of java.sql.Driver.  </li><li>-keep class * extends java.sql.Driver  </li><li># Also keep - Swing UI L&amp;F. Keep all extensions of javax.swing.plaf.ComponentUI,  </li><li># along with the special 'createUI' method.  </li><li>-keep class * extends javax.swing.plaf.ComponentUI {  </li><li>    publicstatic javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent);  </li><li>}  </li><li># Keep names - Native method names. Keep all nativeclass/method names.  </li><li>-keepclasseswithmembers,allowshrinking class * {  </li><li>    native &lt;methods&gt;;  </li><li>}  </li><li># Remove - System method calls. Remove all invocations of System  </li><li># methods without side effects whose return values are not used.  </li><li>-assumenosideeffects publicclass java.lang.System {  </li><li>    publicstaticlong currentTimeMillis();  </li><li>    static java.lang.Class getCallerClass();  </li><li>    publicstaticint identityHashCode(java.lang.Object);  </li><li>    publicstatic java.lang.SecurityManager getSecurityManager();  </li><li>    publicstatic java.util.Properties getProperties();  </li><li>    publicstatic java.lang.String getProperty(java.lang.String);  </li><li>    publicstatic java.lang.String getenv(java.lang.String);  </li><li>    publicstatic java.lang.String mapLibraryName(java.lang.String);  </li><li>    publicstatic java.lang.String getProperty(java.lang.String,java.lang.String);  </li><li>}  </li><li># Remove - Math method calls. Remove all invocations of Math  </li><li># methods without side effects whose return values are not used.  </li><li>-assumenosideeffects publicclass java.lang.Math {  </li><li>    publicstaticdouble sin(double);  </li><li>    publicstaticdouble cos(double);  </li><li>    publicstaticdouble tan(double);  </li><li>    publicstaticdouble asin(double);  </li><li>    publicstaticdouble acos(double);  </li><li>    publicstaticdouble atan(double);  </li><li>    publicstaticdouble toRadians(double);  </li><li>    publicstaticdouble toDegrees(double);  </li><li>    publicstaticdouble exp(double);  </li><li>    publicstaticdouble log(double);  </li><li>    publicstaticdouble log10(double);  </li><li>    publicstaticdouble sqrt(double);  </li><li>    publicstaticdouble cbrt(double);  </li><li>    publicstaticdouble IEEEremainder(double,double);  </li><li>    publicstaticdouble ceil(double);  </li><li>    publicstaticdouble floor(double);  </li><li>    publicstaticdouble rint(double);  </li><li>    publicstaticdouble atan2(double,double);  </li><li>    publicstaticdouble pow(double,double);  </li><li>    publicstaticint round(float);  </li><li>    publicstaticlong round(double);  </li><li>    publicstaticdouble random();  </li><li>    publicstaticint abs(int);  </li><li>    publicstaticlong abs(long);  </li><li>    publicstaticfloat abs(float);  </li><li>    publicstaticdouble abs(double);  </li><li>    publicstaticint max(int,int);  </li><li>    publicstaticlong max(long,long);  </li><li>    publicstaticfloat max(float,float);  </li><li>    publicstaticdouble max(double,double);  </li><li>    publicstaticint min(int,int);  </li><li>    publicstaticlong min(long,long);  </li><li>    publicstaticfloat min(float,float);  </li><li>    publicstaticdouble min(double,double);  </li><li>    publicstaticdouble ulp(double);  </li><li>    publicstaticfloat ulp(float);  </li><li>    publicstaticdouble signum(double);  </li><li>    publicstaticfloat signum(float);  </li><li>    publicstaticdouble sinh(double);  </li><li>    publicstaticdouble cosh(double);  </li><li>    publicstaticdouble tanh(double);  </li><li>    publicstaticdouble hypot(double,double);  </li><li>    publicstaticdouble expm1(double);  </li><li>    publicstaticdouble log1p(double);  </li><li>}  </li><li># Remove - Number method calls. Remove all invocations of Number  </li><li># methods without side effects whose return values are not used.  </li><li>-assumenosideeffects publicclass java.lang.* extends java.lang.Number {  </li><li>    publicstatic java.lang.String toString(byte);  </li><li>    publicstatic java.lang.Byte valueOf(byte);  </li><li>    publicstaticbyte parseByte(java.lang.String);  </li><li>    publicstaticbyte parseByte(java.lang.String,int);  </li><li>    publicstatic java.lang.Byte valueOf(java.lang.String,int);  </li><li>    publicstatic java.lang.Byte valueOf(java.lang.String);  </li><li>    publicstatic java.lang.Byte decode(java.lang.String);  </li><li>    publicint compareTo(java.lang.Byte);  </li><li>    publicstatic java.lang.String toString(short);  </li><li>    publicstaticshort parseShort(java.lang.String);  </li><li>    publicstaticshort parseShort(java.lang.String,int);  </li><li>    publicstatic java.lang.Short valueOf(java.lang.String,int);  </li><li>    publicstatic java.lang.Short valueOf(java.lang.String);  </li><li>    publicstatic java.lang.Short valueOf(short);  </li><li>    publicstatic java.lang.Short decode(java.lang.String);  </li><li>    publicstaticshort reverseBytes(short);  </li><li>    publicint compareTo(java.lang.Short);  </li><li>    publicstatic java.lang.String toString(int,int);  </li><li>    publicstatic java.lang.String toHexString(int);  </li><li>    publicstatic java.lang.String toOctalString(int);  </li><li>    publicstatic java.lang.String toBinaryString(int);  </li><li>    publicstatic java.lang.String toString(int);  </li><li>    publicstaticint parseInt(java.lang.String,int);  </li><li>    publicstaticint parseInt(java.lang.String);  </li><li>    publicstatic java.lang.Integer valueOf(java.lang.String,int);  </li><li>    publicstatic java.lang.Integer valueOf(java.lang.String);  </li><li>    publicstatic java.lang.Integer valueOf(int);  </li><li>    publicstatic java.lang.Integer getInteger(java.lang.String);  </li><li>    publicstatic java.lang.Integer getInteger(java.lang.String,int);  </li><li>    publicstatic java.lang.Integer getInteger(java.lang.String,java.lang.Integer);  </li><li>    publicstatic java.lang.Integer decode(java.lang.String);  </li><li>    publicstaticint highestOneBit(int);  </li><li>    publicstaticint lowestOneBit(int);  </li><li>    publicstaticint numberOfLeadingZeros(int);  </li><li>    publicstaticint numberOfTrailingZeros(int);  </li><li>    publicstaticint bitCount(int);  </li><li>    publicstaticint rotateLeft(int,int);  </li><li>    publicstaticint rotateRight(int,int);  </li><li>    publicstaticint reverse(int);  </li><li>    publicstaticint signum(int);  </li><li>    publicstaticint reverseBytes(int);  </li><li>    publicint compareTo(java.lang.Integer);  </li><li>    publicstatic java.lang.String toString(long,int);  </li><li>    publicstatic java.lang.String toHexString(long);  </li><li>    publicstatic java.lang.String toOctalString(long);  </li><li>    publicstatic java.lang.String toBinaryString(long);  </li><li>    publicstatic java.lang.String toString(long);  </li><li>    publicstaticlong parseLong(java.lang.String,int);  </li><li>    publicstaticlong parseLong(java.lang.String);  </li><li>    publicstatic java.lang.Long valueOf(java.lang.String,int);  </li><li>    publicstatic java.lang.Long valueOf(java.lang.String);  </li><li>    publicstatic java.lang.Long valueOf(long);  </li><li>    publicstatic java.lang.Long decode(java.lang.String);  </li><li>    publicstatic java.lang.Long getLong(java.lang.String);  </li><li>    publicstatic java.lang.Long getLong(java.lang.String,long);  </li><li>    publicstatic java.lang.Long getLong(java.lang.String,java.lang.Long);  </li><li>    publicstaticlong highestOneBit(long);  </li><li>    publicstaticlong lowestOneBit(long);  </li><li>    publicstaticint numberOfLeadingZeros(long);  </li><li>    publicstaticint numberOfTrailingZeros(long);  </li><li>    publicstaticint bitCount(long);  </li><li>    publicstaticlong rotateLeft(long,int);  </li><li>    publicstaticlong rotateRight(long,int);  </li><li>    publicstaticlong reverse(long);  </li><li>    publicstaticint signum(long);  </li><li>    publicstaticlong reverseBytes(long);  </li><li>    publicint compareTo(java.lang.Long);  </li><li>    publicstatic java.lang.String toString(float);  </li><li>    publicstatic java.lang.String toHexString(float);  </li><li>    publicstatic java.lang.Float valueOf(java.lang.String);  </li><li>    publicstatic java.lang.Float valueOf(float);  </li><li>    publicstaticfloat parseFloat(java.lang.String);  </li><li>    publicstaticboolean isNaN(float);  </li><li>    publicstaticboolean isInfinite(float);  </li><li>    publicstaticint floatToIntBits(float);  </li><li>    publicstaticint floatToRawIntBits(float);  </li><li>    publicstaticfloat intBitsToFloat(int);  </li><li>    publicstaticint compare(float,float);  </li><li>    publicboolean isNaN();  </li><li>    publicboolean isInfinite();  </li><li>    publicint compareTo(java.lang.Float);  </li><li>    publicstatic java.lang.String toString(double);  </li><li>    publicstatic java.lang.String toHexString(double);  </li><li>    publicstatic java.lang.Double valueOf(java.lang.String);  </li><li>    publicstatic java.lang.Double valueOf(double);  </li><li>    publicstaticdouble parseDouble(java.lang.String);  </li><li>    publicstaticboolean isNaN(double);  </li><li>    publicstaticboolean isInfinite(double);  </li><li>    publicstaticlong doubleToLongBits(double);  </li><li>    publicstaticlong doubleToRawLongBits(double);  </li><li>    publicstaticdouble longBitsToDouble(long);  </li><li>    publicstaticint compare(double,double);  </li><li>    publicboolean isNaN();  </li><li>    publicboolean isInfinite();  </li><li>    publicint compareTo(java.lang.Double);  </li><li>    public &lt;init&gt;(byte);  </li><li>    public &lt;init&gt;(short);  </li><li>    public &lt;init&gt;(int);  </li><li>    public &lt;init&gt;(long);  </li><li>    public &lt;init&gt;(float);  </li><li>    public &lt;init&gt;(double);  </li><li>    public &lt;init&gt;(java.lang.String);  </li><li>    publicbyte byteValue();  </li><li>    publicshort shortValue();  </li><li>    publicint intValue();  </li><li>    publiclong longValue();  </li><li>    publicfloat floatValue();  </li><li>    publicdouble doubleValue();  </li><li>    publicint compareTo(java.lang.Object);  </li><li>    publicboolean equals(java.lang.Object);  </li><li>    publicint hashCode();  </li><li>    public java.lang.String toString();  </li><li>}  </li><li># Remove - String method calls. Remove all invocations of String  </li><li># methods without side effects whose return values are not used.  </li><li>-assumenosideeffects publicclass java.lang.String {  </li><li>    public &lt;init&gt;();  </li><li>    public &lt;init&gt;(byte[]);  </li><li>    public &lt;init&gt;(byte[],int);  </li><li>    public &lt;init&gt;(byte[],int,int);  </li><li>    public &lt;init&gt;(byte[],int,int,int);  </li><li>    public &lt;init&gt;(byte[],int,int,java.lang.String);  </li><li>    public &lt;init&gt;(byte[],java.lang.String);  </li><li>    public &lt;init&gt;(char[]);  </li><li>    public &lt;init&gt;(char[],int,int);  </li><li>    public &lt;init&gt;(java.lang.String);  </li><li>    public &lt;init&gt;(java.lang.StringBuffer);  </li><li>    publicstatic java.lang.String copyValueOf(char[]);  </li><li>    publicstatic java.lang.String copyValueOf(char[],int,int);  </li><li>    publicstatic java.lang.String valueOf(boolean);  </li><li>    publicstatic java.lang.String valueOf(char);  </li><li>    publicstatic java.lang.String valueOf(char[]);  </li><li>    publicstatic java.lang.String valueOf(char[],int,int);  </li><li>    publicstatic java.lang.String valueOf(double);  </li><li>    publicstatic java.lang.String valueOf(float);  </li><li>    publicstatic java.lang.String valueOf(int);  </li><li>    publicstatic java.lang.String valueOf(java.lang.Object);  </li><li>    publicstatic java.lang.String valueOf(long);  </li><li>    publicboolean contentEquals(java.lang.StringBuffer);  </li><li>    publicboolean endsWith(java.lang.String);  </li><li>    publicboolean equalsIgnoreCase(java.lang.String);  </li><li>    publicboolean equals(java.lang.Object);  </li><li>    publicboolean matches(java.lang.String);  </li><li>    publicboolean regionMatches(boolean,int,java.lang.String,int,int);  </li><li>    publicboolean regionMatches(int,java.lang.String,int,int);  </li><li>    publicboolean startsWith(java.lang.String);  </li><li>    publicboolean startsWith(java.lang.String,int);  </li><li>    publicbyte[] getBytes();  </li><li>    publicbyte[] getBytes(java.lang.String);  </li><li>    publicchar charAt(int);  </li><li>    publicchar[] toCharArray();  </li><li>    publicint compareToIgnoreCase(java.lang.String);  </li><li>    publicint compareTo(java.lang.Object);  </li><li>    publicint compareTo(java.lang.String);  </li><li>    publicint hashCode();  </li><li>    publicint indexOf(int);  </li><li>    publicint indexOf(int,int);  </li><li>    publicint indexOf(java.lang.String);  </li><li>    publicint indexOf(java.lang.String,int);  </li><li>    publicint lastIndexOf(int);  </li><li>    publicint lastIndexOf(int,int);  </li><li>    publicint lastIndexOf(java.lang.String);  </li><li>    publicint lastIndexOf(java.lang.String,int);  </li><li>    publicint length();  </li><li>    public java.lang.CharSequence subSequence(int,int);  </li><li>    public java.lang.String concat(java.lang.String);  </li><li>    public java.lang.String replaceAll(java.lang.String,java.lang.String);  </li><li>    public java.lang.String replace(char,char);  </li><li>    public java.lang.String replaceFirst(java.lang.String,java.lang.String);  </li><li>    public java.lang.String[] split(java.lang.String);  </li><li>    public java.lang.String[] split(java.lang.String,int);  </li><li>    public java.lang.String substring(int);  </li><li>    public java.lang.String substring(int,int);  </li><li>    public java.lang.String toLowerCase();  </li><li>    public java.lang.String toLowerCase(java.util.Locale);  </li><li>    public java.lang.String toString();  </li><li>    public java.lang.String toUpperCase();  </li><li>    public java.lang.String toUpperCase(java.util.Locale);  </li><li>    public java.lang.String trim();  </li><li>}  </li><li># Remove - StringBuffer method calls. Remove all invocations of StringBuffer  </li><li># methods without side effects whose return values are not used.  </li><li>-assumenosideeffects publicclass java.lang.StringBuffer {  </li><li>    public &lt;init&gt;();  </li><li>    public &lt;init&gt;(int);  </li><li>    public &lt;init&gt;(java.lang.String);  </li><li>    public &lt;init&gt;(java.lang.CharSequence);  </li><li>    public java.lang.String toString();  </li><li>    publicchar charAt(int);  </li><li>    publicint capacity();  </li><li>    publicint codePointAt(int);  </li><li>    publicint codePointBefore(int);  </li><li>    publicint indexOf(java.lang.String,int);  </li><li>    publicint lastIndexOf(java.lang.String);  </li><li>    publicint lastIndexOf(java.lang.String,int);  </li><li>    publicint length();  </li><li>    public java.lang.String substring(int);  </li><li>    public java.lang.String substring(int,int);  </li><li>}  </li><li># Remove - StringBuilder method calls. Remove all invocations of StringBuilder  </li><li># methods without side effects whose return values are not used.  </li><li>-assumenosideeffects publicclass java.lang.StringBuilder {  </li><li>    public &lt;init&gt;();  </li><li>    public &lt;init&gt;(int);  </li><li>    public &lt;init&gt;(java.lang.String);  </li><li>    public &lt;init&gt;(java.lang.CharSequence);  </li><li>    public java.lang.String toString();  </li><li>    publicchar charAt(int);  </li><li>    publicint capacity();  </li><li>    publicint codePointAt(int);  </li><li>    publicint codePointBefore(int);  </li><li>    publicint indexOf(java.lang.String,int);  </li><li>    publicint lastIndexOf(java.lang.String);  </li><li>    publicint lastIndexOf(java.lang.String,int);  </li><li>    publicint length();  </li><li>    public java.lang.String substring(int);  </li><li>    public java.lang.String substring(int,int);  </li><li>}  </li></ol></div><pre>-injars 'D:\Android\Android-6.0-23.06-Build\workspace\jsp.jar'
+-outjars 'D:\Android\Android-6.0-23.06-Build\workspace\jsp-rtsp-server.jar'
+
+-libraryjars 'D:\Java\jre7\lib\rt.jar'
+-libraryjars 'D:\Android\Android-6.0-23.06-Build\workspace\jsp-rtsp-server\libs\zxing.jar'
+-libraryjars 'D:\Android\Android-6.0-23.06-Build\android-6.0-sdk\platforms\android-23\android.jar'
+
+-dontshrink
+-keeppackagenames
+
+
+-keep,allowshrinking class jsp.rtsp.server.ap.WiFiApManager {
+    *** closeWifiAp(...);
+    public static jsp.rtsp.server.ap.WiFiApManager getInstance(android.content.Context,jsp.rtsp.server.ap.WiFiApManager$ResponseCallBack);
+    *** getWiFiApAddress(...);
+    *** openWifiAp(...);
+    *** onDestroy(...);
+}
+
+-keep,allowshrinking interface  jsp.rtsp.server.ap.WiFiApManager$ResponseCallBack {
+    void onWiFiApQrcodeBitmapCall(android.graphics.Bitmap);
+}
+
+-keep,allowshrinking class jsp.rtsp.server.camera.CameraManager {
+    public static jsp.rtsp.server.camera.CameraManager getInstance(android.content.Context,android.view.SurfaceView,jsp.rtsp.server.camera.CameraManager$CameraCallBack);
+    *** updateResolution(...);
+    *** setDgree(...);
+    *** startStream(...);
+    *** getRtspAddress(...);
+    *** stopStream(...);
+    android.hardware.Camera getCamera(...);
+    *** setRtspAddress(...);
+    *** createCamera(...);
+    *** startPreview(...);
+    *** stopPreview(...);
+    *** destroyCamera(...);
+    *** switchCamera(...);
+    *** reStartStream(...);
+    public static void setSupportResolution(android.content.Context);
+    public static jsp.rtsp.server.camera.CameraManager$CameraParameters getSupportResolution(android.content.Context);
+}
+
+-keep,allowshrinking interface  jsp.rtsp.server.camera.CameraManager$CameraCallBack {
+    void onSuccess(int,java.lang.String);
+    void onCameraStop(...);
+    void onError(int,java.lang.String);
+}
+
+-keep,allowshrinking public class jsp.rtsp.server.camera.CameraManager$CameraParameters {
+    public int width;
+    public int height;
+}
+
+-keep,allowshrinking class org.easydarwin.easyipcamera.camera.EasyIPCamera {
+    public static void onIPCameraCallBack(int,int,byte[],int);
+}
+
+# Keep - Applications. Keep all application classes, along with their 'main'
+# methods.
+-keepclasseswithmembers public class * {
+    public static void main(java.lang.String[]);
+}
+
+# Also keep - Enumerations. Keep the special static methods that are required in
+# enumeration classes.
+-keepclassmembers enum  * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Also keep - Database drivers. Keep all implementations of java.sql.Driver.
+-keep class * extends java.sql.Driver
+
+# Also keep - Swing UI L&amp;F. Keep all extensions of javax.swing.plaf.ComponentUI,
+# along with the special 'createUI' method.
+-keep class * extends javax.swing.plaf.ComponentUI {
+    public static javax.swing.plaf.ComponentUI createUI(javax.swing.JComponent);
+}
+
+# Keep names - Native method names. Keep all native class/method names.
+-keepclasseswithmembers,allowshrinking class * {
+    native &lt;methods&gt;;
+}
+
+# Remove - System method calls. Remove all invocations of System
+# methods without side effects whose return values are not used.
+-assumenosideeffects public class java.lang.System {
+    public static long currentTimeMillis();
+    static java.lang.Class getCallerClass();
+    public static int identityHashCode(java.lang.Object);
+    public static java.lang.SecurityManager getSecurityManager();
+    public static java.util.Properties getProperties();
+    public static java.lang.String getProperty(java.lang.String);
+    public static java.lang.String getenv(java.lang.String);
+    public static java.lang.String mapLibraryName(java.lang.String);
+    public static java.lang.String getProperty(java.lang.String,java.lang.String);
+}
+
+# Remove - Math method calls. Remove all invocations of Math
+# methods without side effects whose return values are not used.
+-assumenosideeffects public class java.lang.Math {
+    public static double sin(double);
+    public static double cos(double);
+    public static double tan(double);
+    public static double asin(double);
+    public static double acos(double);
+    public static double atan(double);
+    public static double toRadians(double);
+    public static double toDegrees(double);
+    public static double exp(double);
+    public static double log(double);
+    public static double log10(double);
+    public static double sqrt(double);
+    public static double cbrt(double);
+    public static double IEEEremainder(double,double);
+    public static double ceil(double);
+    public static double floor(double);
+    public static double rint(double);
+    public static double atan2(double,double);
+    public static double pow(double,double);
+    public static int round(float);
+    public static long round(double);
+    public static double random();
+    public static int abs(int);
+    public static long abs(long);
+    public static float abs(float);
+    public static double abs(double);
+    public static int max(int,int);
+    public static long max(long,long);
+    public static float max(float,float);
+    public static double max(double,double);
+    public static int min(int,int);
+    public static long min(long,long);
+    public static float min(float,float);
+    public static double min(double,double);
+    public static double ulp(double);
+    public static float ulp(float);
+    public static double signum(double);
+    public static float signum(float);
+    public static double sinh(double);
+    public static double cosh(double);
+    public static double tanh(double);
+    public static double hypot(double,double);
+    public static double expm1(double);
+    public static double log1p(double);
+}
+
+# Remove - Number method calls. Remove all invocations of Number
+# methods without side effects whose return values are not used.
+-assumenosideeffects public class java.lang.* extends java.lang.Number {
+    public static java.lang.String toString(byte);
+    public static java.lang.Byte valueOf(byte);
+    public static byte parseByte(java.lang.String);
+    public static byte parseByte(java.lang.String,int);
+    public static java.lang.Byte valueOf(java.lang.String,int);
+    public static java.lang.Byte valueOf(java.lang.String);
+    public static java.lang.Byte decode(java.lang.String);
+    public int compareTo(java.lang.Byte);
+    public static java.lang.String toString(short);
+    public static short parseShort(java.lang.String);
+    public static short parseShort(java.lang.String,int);
+    public static java.lang.Short valueOf(java.lang.String,int);
+    public static java.lang.Short valueOf(java.lang.String);
+    public static java.lang.Short valueOf(short);
+    public static java.lang.Short decode(java.lang.String);
+    public static short reverseBytes(short);
+    public int compareTo(java.lang.Short);
+    public static java.lang.String toString(int,int);
+    public static java.lang.String toHexString(int);
+    public static java.lang.String toOctalString(int);
+    public static java.lang.String toBinaryString(int);
+    public static java.lang.String toString(int);
+    public static int parseInt(java.lang.String,int);
+    public static int parseInt(java.lang.String);
+    public static java.lang.Integer valueOf(java.lang.String,int);
+    public static java.lang.Integer valueOf(java.lang.String);
+    public static java.lang.Integer valueOf(int);
+    public static java.lang.Integer getInteger(java.lang.String);
+    public static java.lang.Integer getInteger(java.lang.String,int);
+    public static java.lang.Integer getInteger(java.lang.String,java.lang.Integer);
+    public static java.lang.Integer decode(java.lang.String);
+    public static int highestOneBit(int);
+    public static int lowestOneBit(int);
+    public static int numberOfLeadingZeros(int);
+    public static int numberOfTrailingZeros(int);
+    public static int bitCount(int);
+    public static int rotateLeft(int,int);
+    public static int rotateRight(int,int);
+    public static int reverse(int);
+    public static int signum(int);
+    public static int reverseBytes(int);
+    public int compareTo(java.lang.Integer);
+    public static java.lang.String toString(long,int);
+    public static java.lang.String toHexString(long);
+    public static java.lang.String toOctalString(long);
+    public static java.lang.String toBinaryString(long);
+    public static java.lang.String toString(long);
+    public static long parseLong(java.lang.String,int);
+    public static long parseLong(java.lang.String);
+    public static java.lang.Long valueOf(java.lang.String,int);
+    public static java.lang.Long valueOf(java.lang.String);
+    public static java.lang.Long valueOf(long);
+    public static java.lang.Long decode(java.lang.String);
+    public static java.lang.Long getLong(java.lang.String);
+    public static java.lang.Long getLong(java.lang.String,long);
+    public static java.lang.Long getLong(java.lang.String,java.lang.Long);
+    public static long highestOneBit(long);
+    public static long lowestOneBit(long);
+    public static int numberOfLeadingZeros(long);
+    public static int numberOfTrailingZeros(long);
+    public static int bitCount(long);
+    public static long rotateLeft(long,int);
+    public static long rotateRight(long,int);
+    public static long reverse(long);
+    public static int signum(long);
+    public static long reverseBytes(long);
+    public int compareTo(java.lang.Long);
+    public static java.lang.String toString(float);
+    public static java.lang.String toHexString(float);
+    public static java.lang.Float valueOf(java.lang.String);
+    public static java.lang.Float valueOf(float);
+    public static float parseFloat(java.lang.String);
+    public static boolean isNaN(float);
+    public static boolean isInfinite(float);
+    public static int floatToIntBits(float);
+    public static int floatToRawIntBits(float);
+    public static float intBitsToFloat(int);
+    public static int compare(float,float);
+    public boolean isNaN();
+    public boolean isInfinite();
+    public int compareTo(java.lang.Float);
+    public static java.lang.String toString(double);
+    public static java.lang.String toHexString(double);
+    public static java.lang.Double valueOf(java.lang.String);
+    public static java.lang.Double valueOf(double);
+    public static double parseDouble(java.lang.String);
+    public static boolean isNaN(double);
+    public static boolean isInfinite(double);
+    public static long doubleToLongBits(double);
+    public static long doubleToRawLongBits(double);
+    public static double longBitsToDouble(long);
+    public static int compare(double,double);
+    public boolean isNaN();
+    public boolean isInfinite();
+    public int compareTo(java.lang.Double);
+    public &lt;init&gt;(byte);
+    public &lt;init&gt;(short);
+    public &lt;init&gt;(int);
+    public &lt;init&gt;(long);
+    public &lt;init&gt;(float);
+    public &lt;init&gt;(double);
+    public &lt;init&gt;(java.lang.String);
+    public byte byteValue();
+    public short shortValue();
+    public int intValue();
+    public long longValue();
+    public float floatValue();
+    public double doubleValue();
+    public int compareTo(java.lang.Object);
+    public boolean equals(java.lang.Object);
+    public int hashCode();
+    public java.lang.String toString();
+}
+
+# Remove - String method calls. Remove all invocations of String
+# methods without side effects whose return values are not used.
+-assumenosideeffects public class java.lang.String {
+    public &lt;init&gt;();
+    public &lt;init&gt;(byte[]);
+    public &lt;init&gt;(byte[],int);
+    public &lt;init&gt;(byte[],int,int);
+    public &lt;init&gt;(byte[],int,int,int);
+    public &lt;init&gt;(byte[],int,int,java.lang.String);
+    public &lt;init&gt;(byte[],java.lang.String);
+    public &lt;init&gt;(char[]);
+    public &lt;init&gt;(char[],int,int);
+    public &lt;init&gt;(java.lang.String);
+    public &lt;init&gt;(java.lang.StringBuffer);
+    public static java.lang.String copyValueOf(char[]);
+    public static java.lang.String copyValueOf(char[],int,int);
+    public static java.lang.String valueOf(boolean);
+    public static java.lang.String valueOf(char);
+    public static java.lang.String valueOf(char[]);
+    public static java.lang.String valueOf(char[],int,int);
+    public static java.lang.String valueOf(double);
+    public static java.lang.String valueOf(float);
+    public static java.lang.String valueOf(int);
+    public static java.lang.String valueOf(java.lang.Object);
+    public static java.lang.String valueOf(long);
+    public boolean contentEquals(java.lang.StringBuffer);
+    public boolean endsWith(java.lang.String);
+    public boolean equalsIgnoreCase(java.lang.String);
+    public boolean equals(java.lang.Object);
+    public boolean matches(java.lang.String);
+    public boolean regionMatches(boolean,int,java.lang.String,int,int);
+    public boolean regionMatches(int,java.lang.String,int,int);
+    public boolean startsWith(java.lang.String);
+    public boolean startsWith(java.lang.String,int);
+    public byte[] getBytes();
+    public byte[] getBytes(java.lang.String);
+    public char charAt(int);
+    public char[] toCharArray();
+    public int compareToIgnoreCase(java.lang.String);
+    public int compareTo(java.lang.Object);
+    public int compareTo(java.lang.String);
+    public int hashCode();
+    public int indexOf(int);
+    public int indexOf(int,int);
+    public int indexOf(java.lang.String);
+    public int indexOf(java.lang.String,int);
+    public int lastIndexOf(int);
+    public int lastIndexOf(int,int);
+    public int lastIndexOf(java.lang.String);
+    public int lastIndexOf(java.lang.String,int);
+    public int length();
+    public java.lang.CharSequence subSequence(int,int);
+    public java.lang.String concat(java.lang.String);
+    public java.lang.String replaceAll(java.lang.String,java.lang.String);
+    public java.lang.String replace(char,char);
+    public java.lang.String replaceFirst(java.lang.String,java.lang.String);
+    public java.lang.String[] split(java.lang.String);
+    public java.lang.String[] split(java.lang.String,int);
+    public java.lang.String substring(int);
+    public java.lang.String substring(int,int);
+    public java.lang.String toLowerCase();
+    public java.lang.String toLowerCase(java.util.Locale);
+    public java.lang.String toString();
+    public java.lang.String toUpperCase();
+    public java.lang.String toUpperCase(java.util.Locale);
+    public java.lang.String trim();
+}
+
+# Remove - StringBuffer method calls. Remove all invocations of StringBuffer
+# methods without side effects whose return values are not used.
+-assumenosideeffects public class java.lang.StringBuffer {
+    public &lt;init&gt;();
+    public &lt;init&gt;(int);
+    public &lt;init&gt;(java.lang.String);
+    public &lt;init&gt;(java.lang.CharSequence);
+    public java.lang.String toString();
+    public char charAt(int);
+    public int capacity();
+    public int codePointAt(int);
+    public int codePointBefore(int);
+    public int indexOf(java.lang.String,int);
+    public int lastIndexOf(java.lang.String);
+    public int lastIndexOf(java.lang.String,int);
+    public int length();
+    public java.lang.String substring(int);
+    public java.lang.String substring(int,int);
+}
+
+# Remove - StringBuilder method calls. Remove all invocations of StringBuilder
+# methods without side effects whose return values are not used.
+-assumenosideeffects public class java.lang.StringBuilder {
+    public &lt;init&gt;();
+    public &lt;init&gt;(int);
+    public &lt;init&gt;(java.lang.String);
+    public &lt;init&gt;(java.lang.CharSequence);
+    public java.lang.String toString();
+    public char charAt(int);
+    public int capacity();
+    public int codePointAt(int);
+    public int codePointBefore(int);
+    public int indexOf(java.lang.String,int);
+    public int lastIndexOf(java.lang.String);
+    public int lastIndexOf(java.lang.String,int);
+    public int length();
+    public java.lang.String substring(int);
+    public java.lang.String substring(int,int);
+}
+</pre><br/><br/></div></div></div><br/></div></span>
+</div></body></html> 

@@ -1,0 +1,110 @@
+<html>
+<head>
+  <title>如何使用 TRACERT 解决 Windows 中的 TCP/IP 问题</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="4850"/>
+<h1>如何使用 TRACERT 解决 Windows 中的 TCP/IP 问题</h1>
+
+<div><span><div style="-evernote-webclip:true"><br/><div style="font-size: 16px; display: inline-block;"><div style="font-family:sans-serif;text-size-adjust:100%;box-sizing:border-box;font-size:100%;outline:none;"><div style="box-sizing:border-box;font-size:15px;font-family:&quot;Segoe UI&quot;, &quot;Segoe UI Web&quot;, &quot;Segoe UI Symbol&quot;, &quot;Helvetica Neue&quot;, &quot;BBAlpha Sans&quot;, &quot;S60 Sans&quot;, Arial, sans-serif;min-width:320px;color:rgb(0, 0, 0);background-color:rgb(255, 255, 255);outline:0px;overflow-x:hidden;word-wrap:break-word;transition:margin-right 0.5s ease-in-out;"><span style="box-sizing:border-box;"><div style="box-sizing:border-box;outline:none;"><div style="box-sizing:border-box;"><div style="box-sizing:border-box;outline:none;"><div style="box-sizing:border-box;outline:none;"><div style="box-sizing:border-box;outline:none;"><div style="outline:none;box-sizing:border-box;zoom:1;"><div style="outline:none;box-sizing:border-box;zoom:1;"><span style="box-sizing:inherit;display:table;"> </span><div style="outline:none;box-sizing:border-box;zoom:1;float:left;min-height:1px;width:100%;"><span style="box-sizing:inherit;display:table;"> </span>
+    <div style="outline:none;box-sizing:border-box;max-width:calc(1600px + 10%);margin:0px auto;zoom:1;padding-left:18px;padding-right:18px;"><span style="box-sizing:inherit;display:table;"> </span>
+            <div style="box-sizing:border-box;display:block;margin:68px 0px 44px;">
+                <h1 style="box-sizing:border-box;outline:0px;margin-bottom:0px;margin-top:0px;margin:0.67em 0px;letter-spacing:-0.01em;padding:37px 0px 3px;line-height:56px;font-size:46px;font-weight:400;padding-top:0px;padding-bottom:0px;"><span style="font-size:46px;line-height:56px;font-weight:400;letter-spacing:-0.01em;display:table;"> </span>如何使用 TRACERT 解决 Windows 中的 TCP/IP 问题<span style="font-size:46px;line-height:56px;font-weight:400;letter-spacing:-0.01em;clear:both;display:table;"> </span></h1>
+                
+                
+                <span style="box-sizing:border-box;"><div style="box-sizing:border-box;outline:none;"> 
+    <div style="box-sizing:border-box;outline:none;">
+        <span style="box-sizing:border-box;outline:none;font-size:13px;display:inline-block;padding-bottom:7px;line-height:20px;margin-top:0px;padding-left:16px;">适用于：Microsoft Windows XP Home Edition, Microsoft Windows XP Professional Edition</span>
+    </div>
+    
+</div></span>
+                <hr style="margin:0px;box-sizing:content-box;outline:none;border-top-color:rgba(0, 0, 0, 0.2);width:100%;color:rgb(148, 147, 150);padding:0px;border-color:initial;display:block;height:0px;border-width:1px 0px 0px;border-image:initial;border-bottom-style:initial;border-left-style:initial;border-right-color:initial;border-top-style:solid;border-left-color:initial;border-bottom-color:initial;border-right-style:initial;margin-top:12px;margin-bottom:24px;"/>
+            </div>
+    <span style="clear:both;box-sizing:inherit;display:table;"> </span></div>
+<span style="clear:both;box-sizing:inherit;display:table;"> </span></div>
+
+<div style="outline:none;box-sizing:border-box;zoom:1;float:left;min-height:1px;width:100%;"><span style="box-sizing:inherit;display:table;"> </span>
+    <div style="outline:none;box-sizing:border-box;max-width:calc(1600px + 10%);margin:0px auto;zoom:1;padding-left:18px;padding-right:18px;"><span style="box-sizing:inherit;display:table;"> </span>
+        
+
+        
+        
+
+        <span style="box-sizing:border-box;"></span>
+                
+
+        <div style="box-sizing:border-box;outline:none;"></div>
+        
+
+        <div style="box-sizing:border-box;outline:none;">
+            <div style="box-sizing:border-box;outline:none;"><div style="box-sizing:border-box;outline:none;">
+    <div style="box-sizing:border-box;outline:none;margin-bottom:20px;"><div style="box-sizing:border-box;display:block;margin-bottom:12px;">
+    
+    
+    <div style="box-sizing:border-box;outline:none;">
+        <div style="box-sizing:border-box;outline:none;margin-left:-4px;margin-right:-4px;margin-bottom:0px;"><span style="display:table;"> </span>
+            <div style="box-sizing:border-box;outline:none;position:relative;min-height:1px;padding-left:4px;padding-right:4px;float:left;width:100%;">
+                <div style="box-sizing:border-box;outline:none;"><div style="box-sizing:border-box;outline:none;background-color:rgb(242, 242, 242);padding:8px;margin:32px 0px;"><span style="box-sizing:border-box;outline:none;">有关本文的 Microsoft Windows 2000 版本，请参阅 <a href="https://support.microsoft.com/zh-cn/help/162326" style="box-sizing:border-box;background-color:transparent;cursor:pointer;text-decoration:none;color:rgb(0, 103, 184);">162326 </a>.<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/></span></div></div>
+            </div>
+        <span style="display:table;clear:both;"> </span></div>
+    </div>
+</div></div>
+</div><div style="box-sizing:border-box;outline:none;">
+    <div style="box-sizing:border-box;outline:none;margin-bottom:20px;"><div style="box-sizing:border-box;display:block;margin-bottom:12px;">
+    
+    <div style="box-sizing:border-box;outline:none;">
+        <h2 style="margin-bottom:0px;font-size:34px;padding:38px 0px 2px;font-weight:100;box-sizing:border-box;margin-top:0px;line-height:40px;outline:0px;text-align:left;color:rgb(0, 0, 0);padding-bottom:0px;padding-top:0px;"><span style="font-size:34px;line-height:40px;font-weight:100;text-align:left;color:rgb(0, 0, 0);display:table;"> </span>概要<span style="font-size:34px;line-height:40px;font-weight:100;text-align:left;color:rgb(0, 0, 0);clear:both;display:table;"> </span></h2>
+        <hr style="margin:0px;box-sizing:content-box;outline:none;border-top-color:rgba(0, 0, 0, 0.2);width:100%;color:rgb(148, 147, 150);padding:0px;border-color:initial;display:block;height:0px;border-width:1px 0px 0px;border-image:initial;border-bottom-style:initial;border-left-style:initial;border-right-color:initial;border-top-style:solid;border-left-color:initial;border-bottom-color:initial;border-right-style:initial;margin-top:12px;margin-bottom:24px;"/>
+        
+    </div>
+    <div style="box-sizing:border-box;outline:none;">
+        <div style="box-sizing:border-box;outline:none;margin-left:-4px;margin-right:-4px;margin-bottom:0px;"><span style="display:table;"> </span>
+            <div style="box-sizing:border-box;outline:none;position:relative;min-height:1px;padding-left:4px;padding-right:4px;float:left;width:100%;">
+                <div style="box-sizing:border-box;outline:none;"><div style="box-sizing:border-box;outline:none;margin-bottom:12px;">本文介绍了命令行实用程序 TRACERT (Trace Route)，该程序可用于跟踪 Internet 协议 (IP) 数据包传送到目标地址时经过的路径。<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>本文讨论以下主题：<br style="box-sizing:border-box;"/><ul style="box-sizing:border-box;list-style:none;margin:0px;padding:8px 24px;list-style-type:disc;"><li style="box-sizing:border-box;margin-bottom:20px;">如何使用 TRACERT 实用程序</li><li style="box-sizing:border-box;margin-bottom:20px;">如何使用 TRACERT 排除故障</li><li style="box-sizing:border-box;margin-bottom:20px;">如何使用 TRACERT 选项</li></ul></div></div>
+            </div>
+        <span style="display:table;clear:both;"> </span></div>
+    </div>
+</div></div>
+</div><div style="box-sizing:border-box;outline:none;">
+    <div style="box-sizing:border-box;outline:none;margin-bottom:20px;"><div style="box-sizing:border-box;display:block;margin-bottom:12px;">
+    
+    <div style="box-sizing:border-box;outline:none;">
+        <h2 style="margin-bottom:0px;font-size:34px;padding:38px 0px 2px;font-weight:100;box-sizing:border-box;margin-top:0px;line-height:40px;outline:0px;text-align:left;color:rgb(0, 0, 0);padding-bottom:0px;padding-top:0px;"><span style="font-size:34px;line-height:40px;font-weight:100;text-align:left;color:rgb(0, 0, 0);display:table;"> </span>更多信息<span style="font-size:34px;line-height:40px;font-weight:100;text-align:left;color:rgb(0, 0, 0);clear:both;display:table;"> </span></h2>
+        <hr style="margin:0px;box-sizing:content-box;outline:none;border-top-color:rgba(0, 0, 0, 0.2);width:100%;color:rgb(148, 147, 150);padding:0px;border-color:initial;display:block;height:0px;border-width:1px 0px 0px;border-image:initial;border-bottom-style:initial;border-left-style:initial;border-right-color:initial;border-top-style:solid;border-left-color:initial;border-bottom-color:initial;border-right-style:initial;margin-top:12px;margin-bottom:24px;"/>
+        
+    </div>
+    <div style="box-sizing:border-box;outline:none;">
+        <div style="box-sizing:border-box;outline:none;margin-left:-4px;margin-right:-4px;margin-bottom:0px;"><span style="display:table;"> </span>
+            <div style="box-sizing:border-box;outline:none;position:relative;min-height:1px;padding-left:4px;padding-right:4px;float:left;width:100%;">
+                <div style="box-sizing:border-box;outline:none;"><div style="box-sizing:border-box;outline:none;margin-bottom:12px;"><h3 style="box-sizing:border-box;outline:0px;text-align:left;margin-top:24px;margin-bottom:32px;">如何使用 TRACERT 实用程序</h3> TRACERT 诊断实用程序通过向目标地址发送 Internet 控制消息协议 (ICMP) 回显数据包来确定到目标地址的路由。在这些数据包中，TRACERT 使用了不同的 IP“生存期”(TTL) 值。由于要求沿途的路由器在转发数据包前至少必须将 TTL 减少 1，因此 TTL 实际上是一个跃点计数器 (hop counter)。当某个数据包的 TTL 达到零 (0) 时，路由器就会向源计算机发送一个 ICMP“超时”的消息。<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>TRACERT 将发送 TTL 为 1 的第一个回显数据包，并在每次后续传输时将 TTL 增加 1，直到目标地址响应或达到 TTL 的最大值。中间路由器发送回来的 ICMP“超时”消息显示了路由。请注意，有些路由器会丢弃 TTL 失效的数据包而不发出消息，这些数据包对于 TRACERT 来说是不可见的。<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>TRACERT 将会显示一个返回 ICMP“超时”消息的中间路由器的顺序列表。使用带有 <span style="box-sizing:border-box;margin-top:0px;margin-bottom:0px;outline:0px;">-d</span> 选项的 <span style="box-sizing:border-box;margin-top:0px;margin-bottom:0px;outline:0px;">tracert</span> 命令时，TRACERT 将不会对每个 IP 地址执行 DNS 查找，这样，TRACERT 将报告靠近的路由器接口的 IP 地址。<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>以下 <span style="box-sizing:border-box;margin-top:0px;margin-bottom:0px;outline:0px;">tracert</span> 命令和输出的示例中，数据包经过了两个路由器（157.54.48.1 和 11.1.0.67）才到达主机 11.1.0.1。在此示例中，默认网关是 157.54.48.1，网络 11.1.0.0 中的路由器的 IP 地址是 11.1.0.67。<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>命令：<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><div style="box-sizing:border-box;outline:none;padding:8px 16px;"><span style="box-sizing:border-box;outline:none;">C:\&gt;tracert 11.1.0.1</span></div> 命令的输出： <pre style="word-wrap:break-word;overflow:auto;box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;display:block;word-break:break-all;font-size:1em;color:rgb(0, 0, 0);background-color:rgb(255, 255, 255);border:1px solid rgb(230, 230, 230);padding:32px;margin-top:12px;margin-bottom:12px;"><br style="box-sizing:border-box;"/>Tracing route to 11.1.0.1 over a maximum of 30 hops<br style="box-sizing:border-box;"/>   ---------------------------------------------------<br style="box-sizing:border-box;"/>1      2 ms       3 ms       2 ms      157.54.48.1<br style="box-sizing:border-box;"/>2     75 ms      83 ms      88 ms      11.1.0.67<br style="box-sizing:border-box;"/>3     73 ms      79 ms      93 ms      11.1.0.1<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>Trace complete.<br style="box-sizing:border-box;"/> </pre><h3 style="box-sizing:border-box;outline:0px;text-align:left;margin-top:24px;margin-bottom:32px;">如何使用 TRACERT 进行故障排除</h3> 您可以使用 TRACERT 找出数据包在网络中停止的位置。以下示例中，默认网关发现没有到 22.110.0.1 中的主机的有效路径。可能路由器配置有问题，或者 22.110.0.0 网络不存在，因此反映了错误的 IP 地址。<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>命令：<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><div style="box-sizing:border-box;outline:none;padding:8px 16px;"><span style="box-sizing:border-box;outline:none;"> C:\&gt;tracert 22.110.0.1 </span></div>命令的输出：<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><pre style="word-wrap:break-word;overflow:auto;box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;display:block;word-break:break-all;font-size:1em;color:rgb(0, 0, 0);background-color:rgb(255, 255, 255);border:1px solid rgb(230, 230, 230);padding:32px;margin-top:12px;margin-bottom:12px;"><br style="box-sizing:border-box;"/>Tracing route to 22.110.0.1 over a maximum of 30 hops<br style="box-sizing:border-box;"/>   -----------------------------------------------------<br style="box-sizing:border-box;"/>1  157.54.48.1  reports:Destination net unreachable.<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>Trace complete.<br style="box-sizing:border-box;"/> </pre>在几个路径都可以到达相同点或涉及许多中间组件（路由器或网桥）的大型网络中解决问题时，TRACERT 非常有用。<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><h3 style="box-sizing:border-box;outline:0px;text-align:left;margin-top:24px;margin-bottom:32px;">如何使用 TRACERT 选项</h3>有一些命令行选项可以与 TRACERT 一起使用，尽管在标准的故障排除过程中通常并不需要这些选项。<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>以下命令行语法的示例显示了所有可能的选项：<div style="box-sizing:border-box;outline:none;padding:8px 16px;"><span style="box-sizing:border-box;outline:none;"> tracert -d -h <strong style="box-sizing:border-box;font-weight:bold;">maximum_hops </strong> -j <strong style="box-sizing:border-box;font-weight:bold;">host-list </strong> -w <strong style="box-sizing:border-box;font-weight:bold;">timeout</strong><strong style="box-sizing:border-box;font-weight:bold;"> target_host</strong></span></div>参数的作用：<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/><pre style="word-wrap:break-word;overflow:auto;box-sizing:border-box;font-family:Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace;display:block;word-break:break-all;font-size:1em;color:rgb(0, 0, 0);background-color:rgb(255, 255, 255);border:1px solid rgb(230, 230, 230);padding:32px;margin-top:12px;margin-bottom:12px;"><br style="box-sizing:border-box;"/>-d <br style="box-sizing:border-box;"/>指定不将地址解析为主机名<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>-h maximum_hops<br style="box-sizing:border-box;"/>指定搜索目标地址时的最大跃点数<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>-j host-list<br style="box-sizing:border-box;"/>指定沿主机列表的松散源路由<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>-w timeout<br style="box-sizing:border-box;"/>由每个回复的 timeout 指定的等待<br style="box-sizing:border-box;"/>毫秒数<br style="box-sizing:border-box;"/><br style="box-sizing:border-box;"/>target_host<br style="box-sizing:border-box;"/>指定目标主机的名称或 IP 地址。<br style="box-sizing:border-box;"/> </pre></div></div>
+            </div>
+        <span style="display:table;clear:both;"> </span></div>
+    </div>
+</div></div>
+</div>
+<div style="box-sizing:border-box;outline:none;">
+    <div style="box-sizing:border-box;outline:none;"></div>
+</div></div>
+            <div style="box-sizing:border-box;outline:none;"><div style="box-sizing:border-box;outline:none;">
+   <hr style="margin:0px;box-sizing:content-box;outline:none;border-top-color:rgba(0, 0, 0, 0.2);width:100%;color:rgb(148, 147, 150);padding:0px;border-color:initial;display:block;height:0px;border-width:1px 0px 0px;border-image:initial;border-bottom-style:initial;border-left-style:initial;border-right-color:initial;border-top-style:solid;border-left-color:initial;border-bottom-color:initial;border-right-style:initial;margin-top:12px;margin-bottom:12px;"/>
+   <span style="box-sizing:border-box;font-style:normal;font-size:13px;display:inline-block;padding-bottom:7px;line-height:20px;margin-top:0px;">上次更新时间：2017年1月8日</span>
+</div> 
+
+</div>
+        </div>
+    <span style="clear:both;box-sizing:inherit;display:table;"> </span></div>
+    
+    <div style="display:block;box-sizing:border-box;max-width:calc(1600px + 10%);margin:0px auto;zoom:1;padding-left:18px;padding-right:18px;"><span style="box-sizing:inherit;display:table;"> </span>
+        
+    <span style="clear:both;box-sizing:inherit;display:table;"> </span></div>
+<span style="clear:both;box-sizing:inherit;display:table;"> </span></div><span style="clear:both;box-sizing:inherit;display:table;"> </span></div></div></div></div></div></div></div></span></div></div></div><br/></div></span>
+</div></body></html> 

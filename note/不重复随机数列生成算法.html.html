@@ -1,0 +1,159 @@
+<html>
+<head>
+  <title>不重复随机数列生成算法.html</title>
+  <basefont face="微软雅黑" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/306387 (zh-CN, DDL); Windows/10.0.0 (Win64);"/>
+  <style>
+    body, td {
+      font-family: 微软雅黑;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="581"/>
+<h1>不重复随机数列生成算法.html</h1>
+
+<div>
+<span><div><h2><br/></h2></div><div><p>首先我们来看命题：</p><p>给定一个正整数n，需要输出一个长度为n的数组，数组元素是随机数，范围为0 – n-1，且元素不能重复。比如 n = 3 时，需要获取一个长度为3的数组，元素范围为0-2，</p><p>比如 0,2,1。</p><p>这个问题的通常解决方案就是设计一个 hashtable ，然后循环获取随机数，再到 hashtable 中找，如果hashtable 中没有这个数，则输出。下面给出这种算法的代码</p><div><pre>
+        <span>public</span> <span>static</span> <span>int</span>[] GetRandomSequence0(<span>int</span> total)
+</pre><pre>
+        {
+</pre><pre>
+            <span>int</span>[] hashtable = <span>new</span> <span>int</span>[total];
+</pre><pre>
+            <span>int</span>[] output = <span>new</span> <span>int</span>[total];
+</pre><pre>
+ 
+</pre><pre>
+            Random random = <span>new</span> Random();
+</pre><pre>
+            <span>for</span> (<span>int</span> i = 0; i &lt; total; i++)
+</pre><pre>
+            {
+</pre><pre>
+                <span>int</span> num = random.Next(0, total);
+</pre><pre>
+                <span>while</span> (hashtable[num] &gt; 0)
+</pre><pre>
+                {
+</pre><pre>
+                    num = random.Next(0, total);
+</pre><pre>
+                }
+</pre><pre>
+ 
+</pre><pre>
+                output[i] = num;
+</pre><pre>
+                hashtable[num] = 1;
+</pre><pre>
+            }
+</pre><pre>
+ 
+</pre><pre>
+            <span>return</span> output;
+</pre><pre>
+        }
+</pre></div><p>代码很简单，从 0 到 total - 1 循环获取随机数，再去hashtable 中尝试匹配，如果这个数在hashtable中不存在，则输出，并把这个数在hashtable 中置1，否则循环尝试获取随机数，直到找到一个不在hashtable 中的数为止。这个算法的问题在于需要不断尝试获取随机数，在hashtable 接近满时，这个尝试失败的概率会越来越高。</p><p> </p><p>那么有没有什么算法，不需要这样反复尝试吗？答案是肯定的。</p><p> </p><p><a href="http://images.cnblogs.com/cnblogs_com/eaglet/201101/201101170930138510.png"><img src="不重复随机数列生成算法.html_files/Image.png" type="image/png" data-filename="Image.png" alt="image" border="0" height="43" style="border-color: currentcolor; display: inline;" title="image" width="156"/></a></p><p>如上图所示，我们设计一个顺序的数组，假设n = 4</p><p>第一轮，我们取 0 – 3 之间的随机数，假设为2，这时，我们把数组位置为2的数取出来输出，并把这个数从数组中删除，这时这个数组变成了</p><p><a href="http://images.cnblogs.com/cnblogs_com/eaglet/201101/201101170930157628.png"><img src="不重复随机数列生成算法.html_files/Image [1].png" type="image/png" data-filename="Image.png" alt="image" border="0" height="43" style="border-color: currentcolor; display: inline;" title="image" width="118"/></a></p><p>第二轮，我们再取 0-2 之间的随机数，假设为1，并把这个位置的数输出，同时把这个数从数组删除，以此类推，直到这个数组的长度为0。这时我们就可以得到一个随机的不重复的序列。</p><p>这个算法的好处是不需要用一个hashtable 来存储已获取的数字，不需要反复尝试。算法代码如下：</p><div><pre>
+        <span>public</span> <span>static</span> <span>int</span>[] GetRandomSequence1(<span>int</span> total)
+</pre><pre>
+        {
+</pre><pre>
+            List&lt;<span>int</span>&gt; input = <span>new</span> List&lt;<span>int</span>&gt;();
+</pre><pre>
+            <span>for</span> (<span>int</span> i = 0; i &lt; total; i++)
+</pre><pre>
+            {
+</pre><pre>
+                input.Add(i);
+</pre><pre>
+            }
+</pre><pre>
+ 
+</pre><pre>
+            List&lt;<span>int</span>&gt; output = <span>new</span> List&lt;<span>int</span>&gt;();
+</pre><pre>
+ 
+</pre><pre>
+            Random random = <span>new</span> Random();
+</pre><pre>
+            <span>int</span> end = total;
+</pre><pre>
+            <span>for</span> (<span>int</span> i = 0; i &lt; total; i++)
+</pre><pre>
+            {
+</pre><pre>
+                <span>int</span> num = random.Next(0, end);
+</pre><pre>
+                output.Add(input[num]);
+</pre><pre>
+                input.RemoveAt(num);
+</pre><pre>
+                end--;
+</pre><pre>
+            }
+</pre><pre>
+ 
+</pre><pre>
+            <span>return</span> output.ToArray();
+</pre><pre>
+        }
+</pre></div><p> </p><p>这个算法把两个循环改成了一个循环，算法复杂度大大降低了，按说速度应该比第一个算法要快才对，然而现实往往超出我们的想象，当 total = 100000 时，测试下来，第一个算法用时 44ms, 第二个用时 1038 ms ，慢了很多！这是为什么呢？问题的关键就在这个 input.RemoveAt 上了，我们知道如果要删除一个数组元素，我们需要把这个数组元素后面的所有元素都向前移动1，这个移动操作是非常耗时的，这个算法慢就慢在这里。到这里， 可能有人要说了，那我们不用数组，用链表，那删除不就很快了吗？没错，链表是能解决删除元素的效率问题，但查找的速度又大大降低了，无法像数组那样根据数 组元素下标直接定位到元素。所以用链表也是不行的。到这里似乎我们已经走到了死胡同，难道我们只能用hashtable  反复尝试来做吗？在看下面内容之前，请各位读者先思考5分钟。</p><p><font color="#FF0000">…… 思考5分钟</font></p><p>算法就像一层窗户纸，隔着窗户纸，你永远无法知道里面是什么，一旦捅穿，又觉得非常简单。这个算法对于我，只用了2分钟时间想出来，因 为我经常实现算法，脑子里有一些模式，如果你的大脑还没有完成这种经验的积累，也许你要花比我长很多的时间来考虑这个问题，也许永远也找不到捅穿它的方 法。不过不要紧，我把这个方法公布出来，有了这个方法，你只需轻轻一动，一个完全不同的世界便出现在你的眼前。原来就这么简单……。</p><p> </p><p>还是上面那个例子，假设 n = 4</p><p><a href="http://images.cnblogs.com/cnblogs_com/eaglet/201101/201101170930138510.png"><img src="不重复随机数列生成算法.html_files/Image [2].png" type="image/png" data-filename="Image.png" alt="image" border="0" height="43" style="border-color: currentcolor; display: inline;" title="image" width="156"/></a></p><p> </p><p>第一轮，我们随机获得2时，我们不将 2 从数组中移除，而是将数组的最后一个元素移动到2的位置</p><p><a href="http://images.cnblogs.com/cnblogs_com/eaglet/201101/201101170930184512.png"><img src="不重复随机数列生成算法.html_files/Image [3].png" type="image/png" data-filename="Image.png" alt="image" border="0" height="65" style="border-color: currentcolor; display: inline;" title="image" width="156"/></a></p><p>这时数组变成了</p><p><a href="http://images.cnblogs.com/cnblogs_com/eaglet/201101/201101170930206728.png"><img src="不重复随机数列生成算法.html_files/Image [4].png" type="image/png" data-filename="Image.png" alt="image" border="0" height="43" style="border-color: currentcolor; display: inline;" title="image" width="156"/></a></p><p>第二轮我们对 0-2 取随机数，这时数组可用的最后一个元素位置已经变成了2，而不是3。假设这时取到随机数为1</p><p>我们再把下标为2 的元素移动到下标1，这时数组变成了</p><p><a href="http://images.cnblogs.com/cnblogs_com/eaglet/201101/201101170930227483.png"><img src="不重复随机数列生成算法.html_files/Image [5].png" type="image/png" data-filename="Image.png" alt="image" border="0" height="43" style="border-color: currentcolor; display: inline;" title="image" width="156"/></a></p><p>以此类推，直到取出n个元素为止。</p><p>这个算法的优点是不需要用一个hashtable 来存储已获取的数字，不需要反复尝试，也不用像上一个算法那样删除数组元素，要做的只是每次把数组有效位置的最后一个元素移动到当前位置就可以了，这样算法的复杂度就降低为 O(n) ，速度大大提高。</p><p>经测试，在 n= 100000 时，这个算法的用时仅为7ms。</p><p>下面给出这个算法的实现代码</p><div><pre>
+        <span>/// &lt;summary&gt;</span></pre><pre>
+        <span>/// Designed by eaglet</span></pre><pre>
+        <span>/// &lt;/summary&gt;</span></pre><pre>
+        <span>/// &lt;param name=&quot;total&quot;&gt;&lt;/param&gt;</span></pre><pre>
+        <span>/// &lt;returns&gt;&lt;/returns&gt;</span></pre><pre>
+        <span>public</span> <span>static</span> <span>int</span>[] GetRandomSequence2(<span>int</span> total)
+</pre><pre>
+        {
+</pre><pre>
+ 
+</pre><pre>
+            <span>int</span>[] sequence = <span>new</span> <span>int</span>[total];
+</pre><pre>
+            <span>int</span>[] output = <span>new</span> <span>int</span>[total];
+</pre><pre>
+ 
+</pre><pre>
+            <span>for</span> (<span>int</span> i = 0; i &lt; total; i++)
+</pre><pre>
+            {
+</pre><pre>
+                sequence[i] = i;
+</pre><pre>
+            }
+</pre><pre>
+ 
+</pre><pre>
+            Random random = <span>new</span> Random();
+</pre><pre>
+ 
+</pre><pre>
+            <span>int</span> end = total - 1;
+</pre><pre>
+ 
+</pre><pre>
+            <span>for</span> (<span>int</span> i = 0; i &lt; total; i++)
+</pre><pre>
+            {
+</pre><pre>
+                <span>int</span> num = random.Next(0, end + 1);
+</pre><pre>
+                output[i] = sequence[num];
+</pre><pre>
+                sequence[num] = sequence[end];
+</pre><pre>
+                end--;
+</pre><pre>
+            }
+</pre><pre>
+ 
+</pre><pre>
+            <span>return</span> output;
+</pre><pre>
+        }
+</pre></div><p> </p><p>下面是n 等于1万，10万和100万时的测试数据，时间单位为毫秒。从测试数据看GetRandomSequence2的用时和n基本成正比，线性增长的，这个和 理论上的算法复杂度O(n)也是一致的，另外两个算法则随着n的增大，用时超过了线性增长。在1百万时，我的算法比用hashtable的算法要快10倍 以上。</p><p> </p><table border="1" cellpadding="0" cellspacing="0" width="340"><tbody><tr><td width="164"> </td><td width="49">10000</td><td width="58">100000</td><td width="67">1000000</td></tr><tr><td width="164">GetRandomSequence0</td><td width="49">5</td><td width="58">44</td><td width="67">1075</td></tr><tr><td width="164">GetRandomSequence1</td><td width="49">11</td><td width="58">1038</td><td width="67">124205</td></tr><tr><td width="164">GetRandomSequence2</td><td width="49">1</td><td width="58">7</td><td width="67">82</td></tr></tbody></table></div><div><h2><br/></h2></div><div><p>本文将讲述一个高效的不重复随机数列的生成算法，其效率比通常用hashtable 消重的方法要快很多。</p><p>作者：eaglet 转载请注明出处。</p></div></span>
+</div></body></html> 
