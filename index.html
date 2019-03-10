@@ -176,9 +176,13 @@
                         <i class="fa fa-bullhorn fa-4x "></i>
                     </div>
                     <div class="media-body">
-                        <h3 class="media-heading">孟郊《游子吟》（唐代）</h3>
+                        <h3 class="media-heading">孟郊《游子吟》（唐代）
+                            <audio id="music01" src="1.m4a" loop="loop">你的浏览器不支持audio标签。</audio>
+                            <a href="javascript:playPause();"><i class="fa fa-headphones" id="music_btn01"></i></a></h3>
                         <p>
-                            慈母手中线，游子身上衣。
+                            慈母手中线，游子身上衣。<br/>
+                            临行密密缝，意恐迟迟归。<br/>
+                            谁言寸草心，报得三春晖。
                         </p>
                     </div>
                 </div>
@@ -279,5 +283,23 @@
 <script src="assets/plugins/jquery.easing.min.js"></script>
 <!-- CUSTOM SCRIPTS  -->
 <script src="assets/js/custom.js"></script>
+<script>
+    function playPause() {
+        var music = document.getElementById('music01');
+        // var music_btn = document.getElementById('music_btn01');
+        if (music.paused){
+            music.play();
+            var $this=$("#music_btn01"); //播放图片
+            $this.removeClass("fa-headphones");
+            $this.addClass("fa-pause");
+        }
+        else{
+            music.pause();
+            var $this=$("#music_btn01"); //播放图片
+            $this.removeClass("fa-pause");
+            $this.addClass("fa-headphones");
+        }
+    }
+</script>
 </body>
 </html>
