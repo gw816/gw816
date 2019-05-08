@@ -4,7 +4,7 @@ var gitalk = new Gitalk({
   	"repo": "www.igavin.cc",
   	"owner": "igavin",
   	"admin": ["igavin"],
-  	"id": location.pathname,
+  	"id": window.location.pathname,
   	"distractionFreeMode": false
 	});
 gitalk.render("gitalk-container");
