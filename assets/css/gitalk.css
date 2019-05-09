@@ -1174,12 +1174,12 @@
 }
 .gt-container .gt-comment-like {
   top: 0;
-  right: 1em;
+  right: 0;
 }
 .gt-container .gt-comment-edit,
 .gt-container .gt-comment-reply {
   top: 0;
-  right: 0;
+  right: 2em;
 }
 .gt-container .gt-comment-body {
   color: #333 !important;
