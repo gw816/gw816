@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://igavin.cc/</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/base/</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/base/base.html</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/base/helloworld.html</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/linux/</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/linux/shell.html</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/git/</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/git/multiUser.html</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/algorithm/</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/algorithm/complexity.html</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/algorithm/space.html</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/algorithm/bubble.html</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/other/</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/other/gradleYesAppNo.html</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://igavin.cc/blog/.</loc>
+  <lastmod>2019-05-31T09:23:58+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>
